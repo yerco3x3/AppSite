@@ -1,0 +1,2382 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Llavero de Sitios</title>
+<meta name="description" content="Consulta de sitios por zonal: POP, llavero, N° de cliente eléctrico y claves de acceso. Acceso solo para usuarios aprobados.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0F1B26">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B6B7C'/%3E%3Cg fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round'%3E%3Ccircle cx='11' cy='20' r='5'/%3E%3Cpath d='M14.6 16.4 25 6M20 11l3 3M17.5 13.5l2 2'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+
+/* Layout: consola de operaciones. Barra superior oscura; debajo un marco con tres paneles
+   (filtros | resultados | ficha). En tablet los filtros pasan a una hoja; en teléfono la
+   lista ocupa la pantalla y la ficha se abre a pantalla completa. */
+:root {
+  --canvas: #EEF1F4; --panel: #FFFFFF; --panel-2: #F6F8FA; --hover: #F1F4F7;
+  --line: #E0E5EA; --line-2: #CBD3DB;
+  --ink: #13202C; --ink-2: #3E4C59; --muted: #66727F;
+  --accent: #0B6B7C; --accent-hover: #08596A; --accent-ink: #FFFFFF; --accent-soft: #E4F1F3; --accent-track: #CCE3E7;
+  --bar: #0F1B26; --bar-2: #18283A; --bar-ink: #E8EEF3; --bar-muted: #93A5B5; --bar-line: #253648;
+  --ok: #1D7247; --ok-soft: #E3F2E9; --warn: #8F5300; --warn-soft: #FCF0DA; --crit: #B32318; --crit-soft: #FCE7E4; --info: #3A566E; --info-soft: #E8EEF3;
+  --shadow-pop: 0 12px 32px rgba(15, 27, 38, .18), 0 2px 6px rgba(15, 27, 38, .08);
+  --f-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-cond: "IBM Plex Sans Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r: 8px; --r-l: 12px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --canvas: #0B1218; --panel: #111A22; --panel-2: #0E161D; --hover: #16212B;
+    --line: #1F2B36; --line-2: #2C3B48;
+    --ink: #E3EAF0; --ink-2: #B4C1CC; --muted: #8394A3;
+    --accent: #4EB2C3; --accent-hover: #6CC2D1; --accent-ink: #04242B; --accent-soft: #11303A; --accent-track: #1A3C46;
+    --bar: #080E13; --bar-2: #121D27; --bar-ink: #E3EAF0; --bar-muted: #8394A3; --bar-line: #1F2B36;
+    --ok: #5FC48F; --ok-soft: #12301F; --warn: #EDB04F; --warn-soft: #33260E; --crit: #F2867A; --crit-soft: #391915; --info: #A3BBD0; --info-soft: #182634;
+    --shadow-pop: 0 16px 40px rgba(0, 0, 0, .55);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --canvas: #0B1218; --panel: #111A22; --panel-2: #0E161D; --hover: #16212B;
+  --line: #1F2B36; --line-2: #2C3B48;
+  --ink: #E3EAF0; --ink-2: #B4C1CC; --muted: #8394A3;
+  --accent: #4EB2C3; --accent-hover: #6CC2D1; --accent-ink: #04242B; --accent-soft: #11303A; --accent-track: #1A3C46;
+  --bar: #080E13; --bar-2: #121D27; --bar-ink: #E3EAF0; --bar-muted: #8394A3; --bar-line: #1F2B36;
+  --ok: #5FC48F; --ok-soft: #12301F; --warn: #EDB04F; --warn-soft: #33260E; --crit: #F2867A; --crit-soft: #391915; --info: #A3BBD0; --info-soft: #182634;
+  --shadow-pop: 0 16px 40px rgba(0, 0, 0, .55);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--canvas); color: var(--ink); font: 400 15px/1.5 var(--f-sans); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 40; background: var(--bar); }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+svg.i { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.num { font-variant-numeric: tabular-nums; }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* ---------- Barra superior ---------- */
+.topbar { background: var(--bar); color: var(--bar-ink); border-bottom: 1px solid var(--bar-line); }
+.topbar-in { display: flex; align-items: center; gap: 16px; min-height: 56px; padding-block: 8px; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; margin-right: auto; }
+.mark { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); flex: none; }
+.mark svg.i { width: 18px; height: 18px; stroke-width: 2; }
+.brand-txt { display: flex; align-items: baseline; gap: 12px; min-width: 0; flex-wrap: wrap; row-gap: 0; }
+.brand h1 { margin: 0; font: 600 17px/1.2 var(--f-sans); letter-spacing: -.005em; white-space: nowrap; }
+.brand .zone { font-size: 13px; color: var(--bar-muted); white-space: nowrap; display: inline-flex; align-items: center; gap: 12px; }
+.brand .zone::before { content: ""; width: 1px; height: 14px; background: var(--bar-line); }
+.bar-meta { font-size: 13px; color: var(--bar-muted); display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.bar-meta svg.i { width: 15px; height: 15px; }
+.bar-actions { display: flex; align-items: center; gap: 8px; }
+.bbtn { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 12px; border-radius: var(--r); border: 1px solid var(--bar-line); background: transparent; color: var(--bar-ink); font-size: 14px; font-weight: 500; white-space: nowrap; transition: background .15s, border-color .15s; }
+.bbtn:hover { background: var(--bar-2); border-color: var(--bar-muted); }
+.bbtn[aria-pressed="true"] { background: var(--bar-2); border-color: var(--accent); color: var(--bar-ink); }
+.bbtn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.bbtn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.bbtn svg.i { width: 16px; height: 16px; }
+@media (max-width: 1080px) { .bar-meta { display: none; } }
+@media (max-width: 720px) {
+  .bbtn .lbl { display: none; }
+  .bbtn { width: 44px; height: 44px; padding: 0; justify-content: center; }
+  .brand .zone { display: none; }
+}
+
+.notice { display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px; margin-top: 12px; border-radius: var(--r); background: var(--info-soft); color: var(--info); font-size: 14px; }
+.notice.warn { background: var(--warn-soft); color: var(--warn); }
+
+/* ---------- Marco de trabajo ---------- */
+.workspace { padding-block: 16px; }
+.frame { display: grid; grid-template-columns: minmax(0, 1fr); }
+.pane-facets { display: none; }
+@media (min-width: 880px) {
+  html, body { height: 100%; }
+  body { overflow: hidden; }
+  .app { height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); }
+  .workspace { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); }
+  .notice { margin: 0 0 12px; }
+  .frame { min-height: 0; grid-template-columns: minmax(330px, 380px) minmax(0, 1fr); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); overflow: hidden; }
+  .pane { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+  .pane-list { border-right: 1px solid var(--line); display: grid; grid-template-rows: auto minmax(0, 1fr); overflow: hidden; }
+  .pane-list .scroll { overflow-y: auto; min-height: 0; overscroll-behavior: contain; }
+}
+@media (min-width: 1200px) {
+  .frame { grid-template-columns: 248px minmax(340px, 390px) minmax(0, 1fr); }
+  .pane-facets { display: block; border-right: 1px solid var(--line); background: var(--panel-2); }
+  .btn-filters { display: none !important; }
+}
+
+/* ---------- Filtros ---------- */
+.facets { padding: 18px 16px 24px; display: grid; gap: 22px; }
+.fgroup h3, .cov h3 { margin: 0 0 6px; font-size: 12px; font-weight: 600; letter-spacing: .02em; color: var(--muted); }
+.fitem { width: 100%; display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 34px; padding: 4px 8px; margin-inline: -8px; width: calc(100% + 16px); border: 0; border-radius: 6px; background: transparent; text-align: left; font-size: 14px; color: var(--ink-2); }
+.fitem:hover { background: var(--hover); color: var(--ink); }
+.fitem .box { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--line-2); display: grid; place-items: center; background: var(--panel); }
+.fitem .box svg.i { width: 12px; height: 12px; stroke-width: 2.6; opacity: 0; }
+.fitem[aria-pressed="true"] { color: var(--ink); font-weight: 500; }
+.fitem[aria-pressed="true"] .box { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.fitem[aria-pressed="true"] .box svg.i { opacity: 1; }
+.fitem .n { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cov { display: grid; gap: 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+.meter { display: grid; gap: 6px; }
+.meter-top { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--ink-2); }
+.meter-top b { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.meter-top span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
+.track { height: 6px; border-radius: 999px; background: var(--accent-track); overflow: hidden; }
+.track i { display: block; height: 100%; border-radius: 999px; background: var(--accent); }
+
+/* ---------- Lista ---------- */
+.list-head { display: grid; gap: 10px; padding: 14px 16px 12px; border-bottom: 1px solid var(--line); background: var(--panel); }
+@media (max-width: 879.98px) {
+  .list-head { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px))); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--canvas); border-bottom: 0; padding-top: 12px; }
+}
+.search { position: relative; display: flex; align-items: center; border: 1px solid var(--line-2); border-radius: var(--r); background: var(--panel); transition: border-color .15s, box-shadow .15s; }
+.search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.search > svg.i { position: absolute; left: 12px; color: var(--muted); pointer-events: none; }
+.search input { flex: 1; min-width: 0; height: 44px; border: 0; outline: none; background: transparent; padding: 0 8px 0 40px; font-size: 16px; }
+.search input::placeholder { color: var(--muted); }
+.search input::-webkit-search-cancel-button { display: none; }
+.kbd { font: 500 12px/20px var(--f-mono); min-width: 22px; text-align: center; padding: 0 6px; margin-right: 10px; border: 1px solid var(--line-2); border-bottom-width: 2px; border-radius: 5px; color: var(--muted); }
+@media (hover: none) { .kbd { display: none; } }
+.iconbtn { width: 36px; height: 36px; margin-right: 4px; display: grid; place-items: center; border: 0; border-radius: 6px; background: transparent; color: var(--muted); flex: none; }
+.iconbtn:hover { background: var(--hover); color: var(--ink); }
+.tools { display: flex; align-items: center; gap: 8px; min-height: 32px; }
+.tools .count { font-size: 13px; color: var(--muted); margin-right: auto; font-variant-numeric: tabular-nums; }
+.tbtn { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--line-2); background: var(--panel); font-size: 13px; font-weight: 500; color: var(--ink-2); }
+.tbtn:hover { border-color: var(--muted); color: var(--ink); }
+.tbtn svg.i { width: 15px; height: 15px; }
+.tbtn .badge-n { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); font-size: 11px; font-weight: 600; line-height: 18px; text-align: center; }
+.sortsel { position: relative; display: inline-flex; align-items: center; }
+.sortsel select { appearance: none; min-height: 32px; padding: 0 28px 0 10px; border-radius: 6px; border: 1px solid var(--line-2); background: var(--panel); font-size: 13px; font-weight: 500; color: var(--ink-2); }
+.sortsel svg.i { position: absolute; right: 8px; width: 14px; height: 14px; pointer-events: none; color: var(--muted); }
+.active-f { display: flex; flex-wrap: wrap; gap: 6px; }
+.fchip { display: inline-flex; align-items: center; gap: 4px; min-height: 28px; padding: 0 4px 0 10px; border-radius: 6px; background: var(--accent-soft); color: var(--ink); font-size: 13px; font-weight: 500; border: 0; }
+.fchip svg.i { width: 14px; height: 14px; }
+.fchip span.x { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 4px; }
+.fchip:hover span.x { background: var(--accent-track); }
+.linkbtn { border: 0; background: none; padding: 0 4px; min-height: 28px; font-size: 13px; font-weight: 500; color: var(--accent); }
+.linkbtn:hover { text-decoration: underline; }
+.recents { display: flex; align-items: center; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.recents::-webkit-scrollbar { display: none; }
+.recents .lbl { font-size: 12px; color: var(--muted); flex: none; margin-right: 2px; }
+.rchip { flex: none; min-height: 28px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); font: 500 13px var(--f-mono); color: var(--ink-2); }
+.rchip:hover { border-color: var(--line-2); color: var(--ink); }
+
+.list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 879.98px) { .list { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); overflow: hidden; } }
+.list > li + li { border-top: 1px solid var(--line); }
+.row { width: 100%; display: grid; gap: 3px; padding: 12px 16px; border: 0; background: var(--panel); text-align: left; transition: background .12s; }
+.row:hover { background: var(--hover); }
+.row[aria-current="true"] { background: var(--accent-soft); }
+.r1 { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.r-pop { font: 600 15px/1.3 var(--f-mono); letter-spacing: .01em; color: var(--ink); }
+.row[aria-current="true"] .r-pop { color: var(--accent); }
+.r-ll { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; color: var(--muted); white-space: nowrap; }
+.r-ll b { font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.r-ll svg.i { width: 14px; height: 14px; }
+.r-name { font-size: 14px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.r3 { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin-top: 3px; min-height: 22px; font-size: 13px; color: var(--muted); }
+.r3 .f { display: inline-flex; align-items: center; gap: 5px; }
+.r3 .f svg.i { width: 14px; height: 14px; }
+.r3 .f b { font: 500 13px var(--f-mono); color: var(--ink-2); }
+.r3 .f.code b { color: var(--accent); }
+
+.badge { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: 5px; font-size: 12px; font-weight: 600; white-space: nowrap; background: var(--info-soft); color: var(--info); }
+.badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.badge.warn { background: var(--warn-soft); color: var(--warn); }
+.badge.crit { background: var(--crit-soft); color: var(--crit); }
+
+.state { padding: 36px 24px; text-align: center; color: var(--muted); font-size: 14px; display: grid; gap: 6px; justify-items: center; }
+.state strong { color: var(--ink); font-size: 15px; font-weight: 600; }
+.skel { height: 74px; background: linear-gradient(90deg, var(--panel), var(--hover), var(--panel)); background-size: 200% 100%; animation: sk 1.4s ease-in-out infinite; }
+@keyframes sk { to { background-position: -200% 0; } }
+
+/* ---------- Ficha ---------- */
+.pane-detail { min-width: 0; background: var(--panel); }
+@media (max-width: 879.98px) {
+  .pane-detail { display: none; }
+  .pane-detail.open {
+    display: block; position: fixed; inset: 0; z-index: 30; overflow-y: auto; background: var(--canvas);
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    animation: rise .2s ease-out;
+  }
+}
+@keyframes rise { from { transform: translateY(12px); opacity: .4; } }
+.d-bar { display: none; }
+@media (max-width: 879.98px) {
+  .d-bar { display: flex; align-items: center; gap: 8px; position: sticky; top: 0; z-index: 2; min-height: 52px; padding-top: env(safe-area-inset-top, 0px); background: var(--bar); color: var(--bar-ink); }
+  .d-bar .back { color: var(--bar-ink); }
+  .d-bar .back:hover { background: var(--bar-2); }
+}
+.back { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 12px 0 6px; margin-left: -6px; border: 0; border-radius: var(--r); background: transparent; font-weight: 500; font-size: 15px; }
+.rec { container-type: inline-size; }
+.rec-in { max-width: 860px; padding: 28px 32px 40px; display: grid; gap: 28px; }
+@media (max-width: 879.98px) { .rec-in { padding: 20px 0 8px; gap: 20px; } }
+.d-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px 24px; }
+.d-id { min-width: 0; flex: 1 1 280px; display: grid; gap: 4px; }
+.d-pop { margin: 0; font: 600 34px/1.05 var(--f-cond); letter-spacing: .005em; word-break: break-word; }
+.d-name { margin: 0; font-size: 19px; font-weight: 500; color: var(--ink-2); text-wrap: balance; }
+.d-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.d-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 14px; border-radius: var(--r); border: 1px solid var(--line-2); background: var(--panel); font-size: 14px; font-weight: 500; color: var(--ink); white-space: nowrap; transition: background .15s, border-color .15s; }
+.btn:hover { background: var(--hover); border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.btn svg.i { width: 16px; height: 16px; }
+
+/* Datos clave: lo que se pide en terreno */
+.keyfacts { display: grid; grid-template-columns: minmax(0, 1fr); border: 1px solid var(--line); border-radius: var(--r-l); background: var(--panel); overflow: hidden; }
+.kf { display: grid; gap: 4px; align-content: start; padding: 16px 18px; min-width: 0; }
+.kf + .kf { border-top: 1px solid var(--line); }
+@container (min-width: 600px) {
+  .keyfacts { grid-template-columns: minmax(0, .7fr) minmax(0, 1.15fr) minmax(0, 1.15fr); }
+  .kf + .kf { border-top: 0; border-left: 1px solid var(--line); }
+}
+.kf-l { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; letter-spacing: .02em; color: var(--muted); }
+.kf-l svg.i { width: 14px; height: 14px; }
+.kf-v { display: flex; align-items: center; gap: 8px; min-height: 40px; }
+.kf-v .val { font: 600 26px/1.1 var(--f-mono); letter-spacing: .02em; font-variant-numeric: tabular-nums; word-break: break-all; }
+.kf-v .val.cond { font-family: var(--f-cond); font-size: 30px; letter-spacing: 0; }
+.kf-v .val.na { font: 500 15px var(--f-sans); color: var(--muted); letter-spacing: 0; }
+.kf-s { font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cbtn { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); }
+.cbtn:hover { color: var(--accent); border-color: var(--accent); }
+.cbtn svg.i { width: 15px; height: 15px; }
+.reveal { border: 0; background: none; padding: 0 2px; font-size: 13px; font-weight: 500; color: var(--accent); min-height: 32px; }
+.reveal:hover { text-decoration: underline; }
+
+.sec { display: grid; gap: 4px; }
+.sec h2 { margin: 0 0 6px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--ink); padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.sec h2 svg.i { width: 16px; height: 16px; color: var(--muted); }
+.fields { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
+.fields > div { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 10px 0; }
+.fields > div + div { border-top: 1px dashed var(--line); }
+@container (min-width: 560px) { .fields > div { grid-template-columns: 180px minmax(0, 1fr); gap: 16px; align-items: baseline; } }
+.fields dt { font-size: 13px; color: var(--muted); }
+.fields dd { margin: 0; font-size: 15px; color: var(--ink); min-width: 0; word-break: break-word; }
+.fields dd .mono { font: 500 15px var(--f-mono); }
+.fields dd.muted { color: var(--muted); }
+.codes { display: grid; gap: 8px; }
+.code { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.code .val { font: 600 20px/1.2 var(--f-mono); letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+.code .val.txt { font: 500 15px var(--f-sans); letter-spacing: 0; }
+.code .lab { font-size: 14px; color: var(--ink-2); }
+.notes { margin: 0; padding: 12px 14px; border-radius: var(--r); background: var(--panel-2); border: 1px solid var(--line); white-space: pre-line; font-size: 14px; line-height: 1.6; max-width: 62ch; }
+.rec-foot { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 13px; color: var(--muted); padding-top: 14px; border-top: 1px solid var(--line); }
+.rec-foot span { display: inline-flex; align-items: center; gap: 6px; }
+.rec-foot svg.i { width: 14px; height: 14px; }
+
+.welcome { padding: 48px 32px; max-width: 560px; display: grid; gap: 18px; }
+.welcome h2 { margin: 0; font-size: 20px; font-weight: 600; }
+.welcome p { margin: 0; color: var(--ink-2); }
+.welcome .sub { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .02em; margin-bottom: -8px; }
+.welcome ul { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.welcome li + li { border-top: 1px solid var(--line); }
+.welcome .wrow { width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 0; background: var(--panel); text-align: left; }
+.welcome .wrow:hover { background: var(--hover); }
+.welcome .wrow b { font: 600 14px var(--f-mono); min-width: 72px; }
+.welcome .wrow span { color: var(--ink-2); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shortcuts { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; font-size: 14px; color: var(--ink-2); align-items: center; }
+.shortcuts .kbd { margin: 0; justify-self: start; }
+
+/* ---------- Diálogos ---------- */
+dialog { border: 1px solid var(--line); padding: 0; border-radius: var(--r-l); background: var(--panel); color: var(--ink); width: min(620px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); box-shadow: var(--shadow-pop); }
+dialog::backdrop { background: rgba(8, 14, 19, .5); }
+.dlg-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+.dlg-h h2 { margin: 0; font-size: 17px; font-weight: 600; }
+.dlg-b { padding: 20px; display: grid; gap: 16px; }
+.dlg-b p { margin: 0; }
+.dlg-f { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; padding: 14px 20px; border-top: 1px solid var(--line); background: var(--panel-2); }
+#fdlg { width: min(380px, calc(100vw - 32px)); }
+#fdlg[open] { display: flex; flex-direction: column; }
+#fdlg .facets { padding: 16px 20px; overflow-y: auto; flex: 1 1 auto; min-height: 0; }
+@media (max-width: 879.98px) {
+  #fdlg { width: 100%; max-width: 100%; margin: auto 0 0; border-radius: var(--r-l) var(--r-l) 0 0; max-height: 85dvh; padding-bottom: env(safe-area-inset-bottom, 0px); }
+}
+.drop { display: grid; justify-items: center; gap: 6px; text-align: center; padding: 28px 18px; border: 1.5px dashed var(--line-2); border-radius: var(--r); background: var(--panel-2); cursor: pointer; transition: border-color .15s, background .15s; }
+.drop:hover, .drop.over { border-color: var(--accent); background: var(--accent-soft); }
+.drop svg.i { width: 28px; height: 28px; color: var(--accent); }
+.drop strong { font-size: 15px; font-weight: 600; }
+.drop small { color: var(--muted); font-size: 13px; }
+.hint { font-size: 13px; color: var(--muted); }
+.cols { display: flex; flex-wrap: wrap; gap: 6px; }
+.cols span { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 5px; background: var(--info-soft); color: var(--info); }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.stats div { padding: 12px 14px; display: grid; gap: 2px; }
+.stats div + div { border-left: 1px solid var(--line); }
+.stats b { font: 600 24px/1.1 var(--f-mono); font-variant-numeric: tabular-nums; }
+.stats span { font-size: 13px; color: var(--muted); }
+.changes { max-height: 220px; overflow: auto; border: 1px solid var(--line); border-radius: var(--r); }
+.changes table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.changes th, .changes td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.changes th { position: sticky; top: 0; background: var(--panel-2); font-size: 12px; font-weight: 600; color: var(--muted); }
+.changes td:first-child { font: 600 13px var(--f-mono); white-space: nowrap; }
+.warns { margin: 0; padding-left: 18px; color: var(--warn); font-size: 14px; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
+.check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--accent); }
+.bar { height: 8px; border-radius: 999px; background: var(--accent-track); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+.err { color: var(--crit); background: var(--crit-soft); padding: 12px 14px; border-radius: var(--r); font-size: 14px; }
+.spin { width: 20px; height: 20px; border-radius: 50%; border: 2.5px solid var(--line-2); border-top-color: var(--accent); animation: rot .8s linear infinite; flex: none; }
+@keyframes rot { to { transform: rotate(360deg); } }
+
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 16px); opacity: 0; pointer-events: none; z-index: 60; display: flex; align-items: center; gap: 8px; background: var(--bar); color: var(--bar-ink); padding: 10px 16px; border-radius: var(--r); font-size: 14px; font-weight: 500; box-shadow: var(--shadow-pop); transition: opacity .16s, transform .16s; max-width: calc(100vw - 32px); }
+.toast svg.i { width: 16px; height: 16px; color: var(--accent); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 879.98px) {
+  .workspace { padding-block: 0 24px; }
+  .rec { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ===== Página web: acceso, aprobación, usuarios y cargas ===== */
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+.brand { margin-right: 4px; }
+.spacer { flex: 1 1 auto; }
+.topbar-in { flex-wrap: wrap; row-gap: 8px; }
+
+/* Pantalla de carga */
+.boot { position: fixed; inset: 0; display: grid; place-items: center; background: var(--canvas); z-index: 80; }
+.boot .spin { width: 28px; height: 28px; border-width: 3px; }
+
+/* Navegación de administrador */
+.tabs { display: flex; align-items: center; gap: 2px; }
+.tabs a { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 12px; border-radius: var(--r); color: var(--bar-muted); text-decoration: none; font-size: 14px; font-weight: 500; white-space: nowrap; }
+.tabs a:hover { color: var(--bar-ink); background: var(--bar-2); }
+.tabs a[aria-current="page"] { color: var(--bar-ink); background: var(--bar-2); box-shadow: inset 0 -2px 0 var(--accent); }
+.tbadge { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--warn-soft); color: var(--warn); font-size: 12px; font-weight: 600; line-height: 20px; text-align: center; }
+
+/* Selector de zonal */
+.zsel { position: relative; display: inline-flex; align-items: center; }
+.zsel select { appearance: none; min-height: 36px; max-width: 220px; padding: 0 32px 0 12px; border-radius: var(--r); border: 1px solid var(--bar-line); background: var(--bar-2); color: var(--bar-ink); font-size: 14px; font-weight: 500; }
+.zsel select:hover { border-color: var(--bar-muted); }
+.zsel select option { background: var(--panel); color: var(--ink); }
+.zsel svg.i { position: absolute; right: 10px; width: 14px; height: 14px; pointer-events: none; color: var(--bar-muted); }
+
+/* Menú de usuario */
+.avatar { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--bar-line); background: var(--bar-2); color: var(--bar-ink); font-size: 13px; font-weight: 600; display: grid; place-items: center; flex: none; }
+.avatar:hover { border-color: var(--bar-muted); }
+.umenu { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 60px); right: max(16px, env(safe-area-inset-right, 0px)); z-index: 50; width: min(300px, calc(100vw - 32px)); background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: var(--r-l); box-shadow: var(--shadow-pop); overflow: hidden; }
+.umenu-h { padding: 14px 16px; display: grid; gap: 2px; border-bottom: 1px solid var(--line); }
+.umenu-h strong { font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+.umenu-h span { font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
+.umenu-h .badge { justify-self: start; margin-top: 6px; }
+.umenu button { width: 100%; display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px; border: 0; background: var(--panel); text-align: left; font-size: 14px; color: var(--ink); }
+.umenu button:hover { background: var(--hover); }
+.umenu button + button { border-top: 1px solid var(--line); }
+
+@media (max-width: 1440px) { .bar-meta { display: none; } }
+@media (max-width: 1320px) {
+  #btnMask .lbl, #btnExport .lbl { display: none; }
+  #btnMask, #btnExport { width: 36px; padding: 0; justify-content: center; }
+}
+@media (max-width: 720px) {
+  .topbar-in { flex-wrap: wrap; row-gap: 8px; }
+  .brand h1 { display: none; }
+  .spacer { display: none; }
+  .zsel { flex: 1 1 auto; min-width: 0; }
+  .zsel select { width: 100%; max-width: none; min-height: 44px; }
+  .avatar { width: 44px; height: 44px; }
+  .tabs { order: 10; width: 100%; overflow-x: auto; scrollbar-width: none; margin-inline: -4px; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs a { min-height: 40px; }
+  .umenu { top: calc(env(safe-area-inset-top, 0px) + 64px); }
+  #btnExport, #btnImport { display: none !important; }
+}
+@media (min-width: 720.02px) { .umenu .m-only { display: none; } }
+
+/* Etiqueta de zonal en la lista */
+.ztag { font: 600 11px/18px var(--f-mono); padding: 0 6px; border-radius: 4px; background: var(--info-soft); color: var(--info); margin-right: 8px; vertical-align: 1px; }
+
+/* ---------- Ingreso y registro ---------- */
+.auth { min-height: 100%; display: grid; grid-template-columns: minmax(0, 1fr); background: var(--canvas); }
+@media (min-width: 900px) { .auth { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); height: 100%; overflow: auto; } }
+.auth-brand { background: var(--bar); color: var(--bar-ink); padding: calc(env(safe-area-inset-top, 0px) + 28px) max(24px, env(safe-area-inset-right, 0px)) 28px max(24px, env(safe-area-inset-left, 0px)); display: grid; align-content: space-between; gap: 32px; }
+@media (min-width: 900px) { .auth-brand { padding: 48px 56px; } }
+.auth-brand .brand { gap: 14px; }
+.auth-brand .brand h1 { display: block; font-size: 19px; }
+.auth-lead { display: grid; gap: 14px; max-width: 46ch; }
+.auth-lead h2 { margin: 0; font: 600 30px/1.15 var(--f-sans); letter-spacing: -.01em; text-wrap: balance; }
+@media (max-width: 899.98px) { .auth-lead h2 { font-size: 22px; } }
+.auth-lead p { margin: 0; color: var(--bar-muted); font-size: 15px; }
+.zlist { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--bar-line); border: 1px solid var(--bar-line); border-radius: var(--r); overflow: hidden; max-width: 420px; }
+.zlist li { background: var(--bar); padding: 10px 14px; display: grid; gap: 1px; }
+.zlist b { font: 600 13px var(--f-mono); color: var(--accent); }
+.zlist span { font-size: 14px; color: var(--bar-ink); }
+@media (max-width: 899.98px) { .zlist { display: none; } }
+.auth-foot { font-size: 13px; color: var(--bar-muted); }
+@media (max-width: 899.98px) { .auth-foot { display: none; } }
+.auth-panel { display: grid; place-items: center; padding: 32px max(16px, env(safe-area-inset-right, 0px)) calc(32px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.auth-card { width: min(420px, 100%); display: grid; gap: 22px; }
+.auth-card h2 { margin: 0; font-size: 22px; font-weight: 600; }
+.auth-card .lead { margin: -14px 0 0; color: var(--ink-2); font-size: 15px; }
+.seg2 { display: grid; grid-template-columns: 1fr 1fr; padding: 3px; border-radius: var(--r); background: var(--hover); border: 1px solid var(--line); }
+.seg2 button { min-height: 38px; border: 0; border-radius: 6px; background: transparent; font-size: 14px; font-weight: 500; color: var(--ink-2); }
+.seg2 button[aria-selected="true"] { background: var(--panel); color: var(--ink); box-shadow: 0 1px 2px rgba(15, 27, 38, .12); }
+.form { display: grid; gap: 16px; }
+.field-f { display: grid; gap: 6px; }
+.field-f label { font-size: 14px; font-weight: 500; color: var(--ink); }
+.field-f input { height: 46px; padding: 0 14px; border-radius: var(--r); border: 1px solid var(--line-2); background: var(--panel); font-size: 16px; outline: none; transition: border-color .15s, box-shadow .15s; }
+.field-f input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.field-f .help { font-size: 13px; color: var(--muted); }
+.pw { position: relative; display: flex; }
+.pw input { flex: 1; min-width: 0; padding-right: 48px; }
+.pw button { position: absolute; right: 4px; top: 4px; width: 38px; height: 38px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); display: grid; place-items: center; }
+.pw button:hover { color: var(--ink); background: var(--hover); }
+.btn-block { width: 100%; min-height: 46px; font-size: 15px; }
+.form-links { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 14px; }
+.form-links button { border: 0; background: none; padding: 0; color: var(--accent); font-weight: 500; min-height: 32px; }
+.form-links button:hover { text-decoration: underline; }
+.msg { padding: 12px 14px; border-radius: var(--r); font-size: 14px; display: flex; gap: 10px; align-items: flex-start; }
+.msg.ok { background: var(--ok-soft); color: var(--ok); }
+.msg.err { background: var(--crit-soft); color: var(--crit); }
+.msg.info { background: var(--info-soft); color: var(--info); }
+.note { font-size: 13px; color: var(--muted); padding-top: 14px; border-top: 1px solid var(--line); }
+
+/* ---------- Espera de aprobación ---------- */
+.wait { min-height: 100%; display: grid; place-items: center; padding: 32px max(16px, env(safe-area-inset-right, 0px)) 32px max(16px, env(safe-area-inset-left, 0px)); background: var(--canvas); }
+.wait-card { width: min(480px, 100%); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); padding: 32px; display: grid; gap: 16px; }
+@media (max-width: 480px) { .wait-card { padding: 24px; } }
+.wait-ic { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; background: var(--warn-soft); color: var(--warn); }
+.wait-ic.crit { background: var(--crit-soft); color: var(--crit); }
+.wait-ic svg.i { width: 22px; height: 22px; }
+.wait-card h2 { margin: 0; font-size: 20px; font-weight: 600; text-wrap: balance; }
+.wait-card p { margin: 0; color: var(--ink-2); }
+.wait-who { font-size: 14px; color: var(--muted); padding: 10px 12px; border-radius: var(--r); background: var(--panel-2); border: 1px solid var(--line); overflow-wrap: anywhere; }
+.wait-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- Páginas de administración ---------- */
+.page { padding-block: 24px 40px; }
+@media (min-width: 880px) { .page { min-height: 0; overflow-y: auto; } }
+.page-in { max-width: 1120px; margin: 0 auto; display: grid; gap: 18px; }
+.page-h { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+.page-h h2 { margin: 0; font-size: 22px; font-weight: 600; }
+.page-h p { margin: 4px 0 0; color: var(--ink-2); font-size: 14px; max-width: 70ch; }
+.utabs { display: inline-flex; padding: 3px; border-radius: var(--r); background: var(--panel); border: 1px solid var(--line); gap: 2px; flex-wrap: wrap; }
+.utabs button { display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 12px; border: 0; border-radius: 6px; background: transparent; font-size: 14px; font-weight: 500; color: var(--ink-2); }
+.utabs button[aria-selected="true"] { background: var(--accent-soft); color: var(--ink); }
+.utabs .n { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tbl { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); overflow: hidden; }
+.urow { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 16px 18px; align-items: center; }
+.urow + .urow { border-top: 1px solid var(--line); }
+.urow.head { display: none; }
+@media (min-width: 980px) {
+  .urow { grid-template-columns: minmax(0, 1.5fr) 150px minmax(0, 1.4fr) minmax(200px, auto); gap: 20px; padding: 14px 18px; }
+  .urow.head { display: grid; padding-block: 10px; background: var(--panel-2); font-size: 12px; font-weight: 600; color: var(--muted); }
+}
+.who { display: grid; gap: 1px; min-width: 0; }
+.who strong { font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.who span { font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.who .you { font-size: 11px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 1px 6px; border-radius: 4px; margin-left: 6px; vertical-align: 1px; }
+.rolesel { position: relative; display: inline-flex; align-items: center; }
+.rolesel select { appearance: none; min-height: 36px; padding: 0 30px 0 10px; border-radius: 6px; border: 1px solid var(--line-2); background: var(--panel); font-size: 14px; font-weight: 500; }
+.rolesel svg.i { position: absolute; right: 8px; width: 14px; height: 14px; pointer-events: none; color: var(--muted); }
+.zt { display: flex; flex-wrap: wrap; gap: 6px; }
+.zt button { min-height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--line-2); background: var(--panel); font-size: 13px; font-weight: 500; color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px; }
+.zt button b { font-family: var(--f-mono); font-weight: 600; font-size: 12px; }
+.zt button:hover { border-color: var(--muted); color: var(--ink); }
+.zt button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+.zt button[disabled] { cursor: default; opacity: .75; }
+.zt .all { font-size: 13px; color: var(--muted); }
+.uacts { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; }
+@media (min-width: 980px) { .uacts { justify-content: flex-end; } }
+.btn.sm { min-height: 34px; padding: 0 12px; font-size: 13px; }
+.btn.danger { color: var(--crit); }
+.btn.danger:hover { border-color: var(--crit); background: var(--crit-soft); }
+.lbl-m { display: none; font-size: 12px; font-weight: 600; color: var(--muted); }
+@media (max-width: 979.98px) { .lbl-m { display: block; margin-bottom: 4px; } }
+.empty-t { padding: 40px 24px; text-align: center; color: var(--muted); font-size: 14px; }
+.empty-t strong { display: block; color: var(--ink); font-size: 15px; margin-bottom: 4px; }
+.ctable { width: 100%; border-collapse: collapse; font-size: 14px; }
+.ctable th, .ctable td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.ctable th { background: var(--panel-2); font-size: 12px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.ctable tr:last-child td { border-bottom: 0; }
+.ctable td.n { font-variant-numeric: tabular-nums; text-align: right; }
+.ctable th.n { text-align: right; }
+.ctable .mono { font-family: var(--f-mono); font-weight: 600; font-size: 13px; }
+.tscroll { overflow-x: auto; }
+.map { display: grid; gap: 8px; }
+.map-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r); background: var(--panel-2); font-size: 14px; }
+.map-row .src { flex: 1 1 160px; min-width: 0; }
+.map-row .src b { font-weight: 600; }
+.map-row .src span { color: var(--muted); }
+.map-row select { min-height: 36px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--line-2); background: var(--panel); font-size: 14px; }
+.map-row select.need { border-color: var(--warn); box-shadow: 0 0 0 3px var(--warn-soft); }
+.setup { max-width: 640px; margin: 48px auto; padding: 0 16px; display: grid; gap: 14px; }
+.setup code { font-family: var(--f-mono); font-size: 13px; background: var(--hover); padding: 1px 6px; border-radius: 4px; }
+.kf-s { white-space: normal; }
+
+</style>
+<script src="config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+<div class="boot" id="boot" role="status" aria-label="Cargando"><div class="spin" aria-hidden="true"></div></div>
+
+<!-- ===== Ingreso / registro ===== -->
+<section class="auth" id="authView" hidden>
+  <div class="auth-brand">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 19 4"/><path d="m15.5 7.5 2.5 2.5"/><path d="m13.5 9.5 2 2"/></svg></div>
+      <h1>Llavero de Sitios</h1>
+    </div>
+    <div class="auth-lead">
+      <h2>Llaveros, claves y N° de cliente de cada sitio, al alcance del equipo en terreno</h2>
+      <p>Acceso solo para personal aprobado. Cada técnico ve las zonales que tiene asignadas.</p>
+      <ul class="zlist" aria-label="Zonales">
+        <li><b>Z15</b><span>Valdivia</span></li><li><b>Z16</b><span>Osorno</span></li>
+        <li><b>Z17</b><span>Puerto Montt</span></li><li><b>Z18</b><span>Chiloé</span></li>
+      </ul>
+    </div>
+    <p class="auth-foot">La información de acceso a los sitios es confidencial. No compartas tu cuenta.</p>
+  </div>
+  <div class="auth-panel">
+    <div class="auth-card" id="authCard"></div>
+  </div>
+</section>
+
+<!-- ===== Espera de aprobación / sin acceso ===== -->
+<section class="wait" id="waitView" hidden><div class="wait-card" id="waitCard"></div></section>
+
+<!-- ===== Aplicación ===== -->
+<div class="app" id="appView" hidden>
+  <header class="topbar">
+    <div class="topbar-in gutter">
+      <div class="brand">
+        <div class="mark" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 19 4"/><path d="m15.5 7.5 2.5 2.5"/><path d="m13.5 9.5 2 2"/></svg></div>
+        <h1>Llavero de Sitios</h1>
+      </div>
+      <nav class="tabs" id="tabs" aria-label="Secciones" hidden>
+        <a href="#sitios" data-view="sitios">Sitios</a>
+        <a href="#usuarios" data-view="usuarios">Usuarios<span class="tbadge" id="pendBadge" hidden></span></a>
+        <a href="#cargas" data-view="cargas">Cargas</a>
+      </nav>
+      <div class="spacer"></div>
+      <label class="zsel" id="zselWrap"><span class="sr-only">Zonal</span><select id="zonalSel"></select>
+        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></label>
+      <span class="bar-meta" id="barMeta"></span>
+      <div class="bar-actions">
+        <button class="bbtn" id="btnMask" type="button" aria-pressed="false"></button>
+        <button class="bbtn" id="btnExport" type="button" hidden>
+          <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
+          <span class="lbl">Descargar Excel</span>
+        </button>
+        <button class="bbtn primary" id="btnImport" type="button" hidden>
+          <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V9"/><path d="m7 14 5-5 5 5"/><path d="M5 4h14"/></svg>
+          <span class="lbl">Cargar Excel</span>
+        </button>
+        <button class="avatar" id="btnUser" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="umenu"></button>
+      </div>
+    </div>
+  </header>
+  <div class="umenu" id="umenu" role="menu" hidden></div>
+
+  <!-- Sitios -->
+  <div class="workspace gutter" id="viewSitios">
+    <div class="notice" id="notice" role="status" hidden></div>
+    <div class="frame">
+      <aside class="pane pane-facets" aria-label="Filtros"><div class="facets" id="facets"></div></aside>
+      <section class="pane-list" aria-label="Sitios">
+        <div class="list-head">
+          <div class="search">
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <label for="q" class="sr-only">Buscar sitio</label>
+            <input id="q" type="search" inputmode="search" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Buscar POP, nombre o llavero" aria-controls="list">
+            <button class="iconbtn" id="qClear" type="button" aria-label="Borrar búsqueda" hidden><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+            <span class="kbd" id="qKbd" aria-hidden="true">/</span>
+          </div>
+          <div class="tools">
+            <span class="count" id="count" aria-live="polite"></span>
+            <button class="tbtn btn-filters" id="btnFilters" type="button">
+              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtros<span class="badge-n" id="fCount" hidden></span>
+            </button>
+            <label class="sortsel"><span class="sr-only">Ordenar por</span>
+              <select id="sort"><option value="pop">Ordenar: POP</option><option value="llavero">Ordenar: Llavero</option><option value="nombre">Ordenar: Nombre</option></select>
+              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </label>
+          </div>
+          <div class="active-f" id="activeF" hidden></div>
+          <div class="recents" id="recents" hidden></div>
+        </div>
+        <div class="scroll"><ul class="list" id="list"></ul></div>
+      </section>
+      <section class="pane pane-detail" id="detail" aria-label="Ficha del sitio"></section>
+    </div>
+  </div>
+
+  <!-- Usuarios -->
+  <div class="page gutter" id="viewUsuarios" hidden>
+    <div class="page-in">
+      <div class="page-h">
+        <div><h2>Usuarios</h2><p>Aprueba las cuentas nuevas, asigna las zonales que cada persona puede ver y define quién es administrador.</p></div>
+        <div class="utabs" id="utabs" role="tablist" aria-label="Estado"></div>
+      </div>
+      <div class="tbl" id="utable"></div>
+    </div>
+  </div>
+
+  <!-- Cargas -->
+  <div class="page gutter" id="viewCargas" hidden>
+    <div class="page-in">
+      <div class="page-h"><div><h2>Historial de cargas</h2><p>Planillas subidas por los administradores, con los sitios agregados, actualizados y quitados en cada zonal.</p></div></div>
+      <div class="tbl tscroll" id="ctable"></div>
+    </div>
+  </div>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlgTitle"><div id="dlgBody"></div></dialog>
+<dialog id="fdlg" aria-labelledby="fdlgTitle">
+  <div class="dlg-h"><h2 id="fdlgTitle">Filtros</h2><button type="button" class="iconbtn" data-fdlg="close" aria-label="Cerrar"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="facets" id="facets2"></div>
+  <div class="dlg-f"><button type="button" class="btn" id="fClear">Limpiar</button><button type="button" class="btn primary" data-fdlg="close">Ver sitios</button></div>
+</dialog>
+<dialog id="cdlg" aria-labelledby="cdlgTitle"><div id="cdlgBody"></div></dialog>
+<input type="file" id="file" accept=".xlsx,.xlsm,.xls,.csv,.ods" hidden>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ===== Lector de planillas (.xlsx) por streaming + normalización de sitios ===== */
+/* Lee el ZIP del .xlsx a mano y descomprime con DecompressionStream('deflate-raw'),
+   así una planilla inflada (1 millón de filas vacías con formato) se procesa
+   en segundos: se deja de leer apenas terminan los datos. */
+
+const XL = (() => {
+  const td = new TextDecoder('utf-8');
+
+  function readZip(u8) {
+    const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+    let eocd = -1;
+    for (let i = u8.length - 22; i >= Math.max(0, u8.length - 65557); i--) {
+      if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+    }
+    if (eocd < 0) throw new Error('El archivo no es un Excel .xlsx válido.');
+    const count = dv.getUint16(eocd + 10, true);
+    let p = dv.getUint32(eocd + 16, true);
+    const entries = {};
+    for (let n = 0; n < count; n++) {
+      if (dv.getUint32(p, true) !== 0x02014b50) break;
+      const method = dv.getUint16(p + 10, true);
+      const csize = dv.getUint32(p + 20, true);
+      const size = dv.getUint32(p + 24, true);
+      const nlen = dv.getUint16(p + 28, true);
+      const elen = dv.getUint16(p + 30, true);
+      const clen = dv.getUint16(p + 32, true);
+      const off = dv.getUint32(p + 42, true);
+      const name = td.decode(u8.subarray(p + 46, p + 46 + nlen));
+      entries[name.replace(/^\//, '')] = { method, csize, size, off };
+      p += 46 + nlen + elen + clen;
+    }
+    return entries;
+  }
+
+  function entryData(u8, e) {
+    const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+    const nlen = dv.getUint16(e.off + 26, true);
+    const elen = dv.getUint16(e.off + 28, true);
+    const start = e.off + 30 + nlen + elen;
+    return u8.subarray(start, start + e.csize);
+  }
+
+  // Entrega el texto descomprimido por trozos; onText devuelve false para detenerse.
+  async function streamText(u8, e, onText) {
+    const raw = entryData(u8, e);
+    if (e.method === 0) { onText(td.decode(raw), true); return; }
+    if (e.method !== 8) throw new Error('Compresión no soportada en el archivo.');
+    const ds = new DecompressionStream('deflate-raw');
+    const reader = new Blob([raw]).stream().pipeThrough(ds).getReader();
+    const dec = new TextDecoder('utf-8');
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) { onText(dec.decode(), true); break; }
+      if (onText(dec.decode(value, { stream: true }), false) === false) {
+        try { await reader.cancel(); } catch (_) {}
+        break;
+      }
+    }
+  }
+
+  async function readText(u8, entries, name) {
+    const e = entries[name];
+    if (!e) return null;
+    let out = '';
+    await streamText(u8, e, (t) => { out += t; });
+    return out;
+  }
+
+  function decodeXml(s) {
+    return s
+      .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
+      .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+      .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(parseInt(d, 10)))
+      .replace(/&amp;/g, '&')
+      .replace(/_x([0-9A-Fa-f]{4})_/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
+  }
+
+  function richText(xml) {
+    xml = xml.replace(/<rPh\b[\s\S]*?<\/rPh>/g, '');
+    let out = '';
+    const re = /<t\b[^>]*?(?:\/>|>([\s\S]*?)<\/t>)/g;
+    let m;
+    while ((m = re.exec(xml))) out += m[1] ? decodeXml(m[1]) : '';
+    return out;
+  }
+
+  function colIndex(ref) {
+    const letters = /^[A-Z]+/.exec(ref);
+    if (!letters) return -1;
+    let n = 0;
+    for (const ch of letters[0]) n = n * 26 + (ch.charCodeAt(0) - 64);
+    return n - 1;
+  }
+
+  function attr(s, name) {
+    const m = new RegExp('\\b' + name + '="([^"]*)"').exec(s);
+    return m ? m[1] : null;
+  }
+
+  function resolvePath(base, target) {
+    if (target.startsWith('/')) return target.slice(1);
+    const parts = base.split('/'); parts.pop();
+    for (const seg of target.split('/')) {
+      if (seg === '..') parts.pop(); else if (seg && seg !== '.') parts.push(seg);
+    }
+    return parts.join('/');
+  }
+
+  function relsMap(xml) {
+    const out = {};
+    if (!xml) return out;
+    const re = /<Relationship\b([^>]*?)\/?>/g;
+    let m;
+    while ((m = re.exec(xml))) out[attr(m[1], 'Id')] = { type: attr(m[1], 'Type') || '', target: attr(m[1], 'Target') || '' };
+    return out;
+  }
+
+  function cleanComment(text) {
+    let t = text.replace(/\r/g, '');
+    if (/\[Threaded comment\]/i.test(t)) {
+      const i = t.search(/\n\s*(Comment|Comentario):\s*\n/i);
+      if (i >= 0) t = t.slice(i).replace(/^\s*(Comment|Comentario):\s*/i, '');
+      t = t.replace(/\n\s*(Reply|Respuesta):\s*/gi, '\n');
+    }
+    const lines = t.split('\n').map((l) => l.trim());
+    if (lines.length > 1 && /^[^\d:]{1,40}:$/.test(lines[0])) lines.shift();
+    return lines.filter(Boolean).join('\n').trim();
+  }
+
+  async function parseXlsx(u8, onProgress) {
+    const entries = readZip(u8);
+    const wbPath = entries['xl/workbook.xml'] ? 'xl/workbook.xml' : Object.keys(entries).find((n) => /workbook\.xml$/.test(n));
+    if (!wbPath) throw new Error('No se encontró la hoja de cálculo dentro del archivo.');
+    const wbXml = await readText(u8, entries, wbPath);
+    const wbDir = wbPath.split('/').slice(0, -1).join('/');
+    const wbRels = relsMap(await readText(u8, entries, wbDir + '/_rels/' + wbPath.split('/').pop() + '.rels'));
+
+    const ssXmlName = Object.values(wbRels).find((r) => /sharedStrings$/.test(r.type));
+    const ssPath = ssXmlName ? resolvePath(wbPath, ssXmlName.target) : 'xl/sharedStrings.xml';
+    const ssXml = await readText(u8, entries, ssPath);
+    const shared = [];
+    if (ssXml) {
+      const re = /<si\b[^>]*>([\s\S]*?)<\/si>/g;
+      let m;
+      while ((m = re.exec(ssXml))) shared.push(richText(m[1]));
+    }
+
+    const sheets = [];
+    const sheetRe = /<sheet\b([^>]*?)\/?>/g;
+    let sm;
+    while ((sm = sheetRe.exec(wbXml))) {
+      const a = sm[1];
+      const state = attr(a, 'state');
+      if (state === 'hidden' || state === 'veryHidden') continue;
+      const rid = attr(a, 'r:id') || attr(a, 'id');
+      const rel = wbRels[rid];
+      if (!rel || !/worksheet$/.test(rel.type)) continue;
+      sheets.push({ name: decodeXml(attr(a, 'name') || 'Hoja'), path: resolvePath(wbPath, rel.target) });
+    }
+
+    const out = [];
+    for (const sh of sheets) {
+      const e = entries[sh.path];
+      if (!e) continue;
+      // Comentarios (notas) de la hoja
+      const shDir = sh.path.split('/').slice(0, -1).join('/');
+      const shRels = relsMap(await readText(u8, entries, shDir + '/_rels/' + sh.path.split('/').pop() + '.rels'));
+      const comments = {};
+      for (const r of Object.values(shRels)) {
+        if (!/\/comments$/.test(r.type)) continue;
+        const cx = await readText(u8, entries, resolvePath(sh.path, r.target));
+        if (!cx) continue;
+        const cre = /<comment\b([^>]*?)>([\s\S]*?)<\/comment>/g;
+        let cm;
+        while ((cm = cre.exec(cx))) {
+          const ref = attr(cm[1], 'ref');
+          const txt = cleanComment(richText(cm[2]));
+          if (ref && txt) comments[ref] = txt;
+        }
+      }
+
+      const rows = [];
+      let buf = '';
+      let seen = false;
+      let emptyRun = 0;
+      let stop = false;
+      let processed = 0;
+      const rowRe = /<row\b([^>]*?)(?:\/>|>([\s\S]*?)<\/row>)/g;
+      const cellRe = /<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g;
+      await streamText(u8, e, (chunk) => {
+        buf += chunk;
+        rowRe.lastIndex = 0;
+        let lastEnd = 0;
+        let m;
+        while ((m = rowRe.exec(buf))) {
+          lastEnd = rowRe.lastIndex;
+          processed++;
+          const rnum = parseInt(attr(m[1], 'r'), 10) || (rows.length ? rows[rows.length - 1].r + 1 : 1);
+          const cells = [];
+          let has = false;
+          if (m[2]) {
+            cellRe.lastIndex = 0;
+            let c;
+            while ((c = cellRe.exec(m[2]))) {
+              if (!c[2]) continue;
+              const ca = c[1];
+              const ref = attr(ca, 'r');
+              const t = attr(ca, 't') || 'n';
+              let v = null;
+              if (t === 'inlineStr') {
+                v = richText(c[2]);
+              } else {
+                const vm = /<v>([\s\S]*?)<\/v>/.exec(c[2]);
+                if (vm) {
+                  const raw = decodeXml(vm[1]);
+                  if (t === 's') v = shared[parseInt(raw, 10)] ?? '';
+                  else if (t === 'b') v = raw === '1' ? 'Sí' : 'No';
+                  else if (t === 'e') v = null;
+                  else if (t === 'n') { const num = Number(raw); v = Number.isFinite(num) ? String(num) : raw; }
+                  else v = raw;
+                }
+              }
+              const idx = ref ? colIndex(ref) : cells.length;
+              if (v !== null && String(v).trim() !== '') { cells[idx] = String(v); has = true; }
+            }
+          }
+          if (has) {
+            rows.push({ r: rnum, cells });
+            seen = true;
+            emptyRun = 0;
+          } else {
+            emptyRun++;
+            if ((seen && emptyRun > 3000) || (!seen && emptyRun > 20000)) { stop = true; break; }
+          }
+        }
+        buf = buf.slice(lastEnd);
+        if (onProgress && processed % 2000 < 50) onProgress(processed);
+        return !stop;
+      });
+      out.push({ name: sh.name, rows, comments });
+    }
+    return out;
+  }
+
+  return { parseXlsx, readZip, cleanComment };
+})();
+
+/* ===== Normalización: de filas a fichas de sitio ===== */
+const SITES = (() => {
+  const norm = (s) => String(s ?? '')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase().replace(/[°º#.:_\n\r\t\/()-]/g, ' ').replace(/\s+/g, ' ').trim();
+
+  const FIELD_LABELS = {
+    pop: 'POP', nombre: 'Nombre', llavero: 'Llavero', cliente: 'N° Cliente',
+    cia: 'CIA Eléctrica', clave: 'Clave de acceso', notas: 'Notas de acceso', zona: 'Zona'
+  };
+
+  function classifyHeader(h) {
+    const n = norm(h);
+    if (!n) return null;
+    if (/\bllavero\b/.test(n) || n === 'n llave' || n === 'numero llave') return 'llavero';
+    if (/\bclave\b|codigo de acceso|codigo acceso|\bpin\b|pinpass|combinacion|\bcandado\b/.test(n)) return 'clave';
+    if (/\bcliente\b/.test(n)) return 'cliente';
+    if (/^cia\b|\bcia electrica|compania|distribuidora|empresa electrica|^electrica$/.test(n)) return 'cia';
+    if (/^pop\b|^codigo( pop| sitio)?$|^cod( sitio)?$|^sitio$|^id sitio$|^site( id)?$|^nemonico$/.test(n)) return 'pop';
+    if (/^nombre\b|^site name$|^name$/.test(n)) return 'nombre';
+    if (/\bnota|observ|comentario|^acceso$|instruccion/.test(n)) return 'notas';
+    if (/^zona$|^region$/.test(n)) return 'zona';
+    return null;
+  }
+
+  // Busca claves (4 a 6 dígitos) en un texto y les asigna una etiqueta.
+  function extractCodes(text) {
+    const codes = [];
+    if (!text) return codes;
+    const lines = String(text).split(/\n+/).map((l) => l.trim()).filter(Boolean);
+    lines.forEach((line, i) => {
+      const re = /(?<![\d])(\d{4,6})(?![\d])(?!\s*(?:mts?|metros|m\b|km))/gi;
+      let m;
+      while ((m = re.exec(line))) {
+        let label = line.replace(m[0], ' ').replace(/[:()\[\]]/g, ' ').replace(/\s+/g, ' ').trim();
+        if (!label && i > 0) label = lines[i - 1];
+        if (/^\d+$/.test(label)) label = '';
+        label = label ? label.charAt(0).toUpperCase() + label.slice(1).toLowerCase() : 'Clave';
+        label = label.replace(/pin ?pass/gi, 'PIN PASS').replace(/\bporton\b/gi, 'portón').replace(/^porton/i, 'Portón');
+        if (!codes.some((c) => c.code === m[1])) codes.push({ code: m[1], label });
+      }
+    });
+    return codes;
+  }
+
+  const TAGS = [
+    ['sin-llaves', 'Sin llaves', /no\s+tienen?\s+llaves?|sin\s+llaves?|abierto\s+sin/i],
+    ['nodo', 'Nodo transmisión', /nodo\s*tra?n?smision|nodo\s*transmisi[oó]n/i],
+    ['poste', 'Poste', /\bposte\b/i],
+    ['azotea', 'Azotea', /azotea/i],
+    ['pinpass', 'PIN PASS', /pin\s*pass(?!\s*eliminad)/i],
+    ['vandalizado', 'Vandalizado', /vandaliz/i]
+  ];
+
+  function tagsFor(text) {
+    const n = String(text || '').normalize('NFD').replace(/[̀-ͯ]/g, '');
+    return TAGS.filter(([, , re]) => re.test(n)).map(([id]) => id);
+  }
+
+  const clean = (v) => String(v ?? '').replace(/\r\n?/g, '\n').replace(/\u00a0/g, ' ').replace(/\t/g, ' ').replace(/[ ]{2,}/g, ' ').replace(/ *\n */g, '\n').trim();
+
+  function docId(codes) {
+    return codes.join('+').replace(/[^A-Za-z0-9_\-.~:@+]/g, '_').slice(0, 180) || 'SIN_CODIGO';
+  }
+
+  // Convierte las hojas leídas en sitios. Devuelve { sites, columns, warnings, sheetsUsed }
+  function fromSheets(sheets, fileName) {
+    const sites = new Map();
+    const columns = new Set();
+    const warnings = [];
+    const sheetsUsed = [];
+    for (const sh of sheets) {
+      if (/instruc|ayuda|l[eé]eme|readme/i.test(sh.name)) continue;
+      let headerIdx = -1, map = null;
+      for (let i = 0; i < Math.min(sh.rows.length, 15); i++) {
+        const m = {};
+        const used = new Set();
+        let hits = 0;
+        sh.rows[i].cells.forEach((v, ci) => {
+          if (v == null || !clean(v)) return;
+          const f = classifyHeader(v);
+          if (f && !used.has(f)) { m[ci] = f; used.add(f); hits++; }
+          else m[ci] = { extra: clean(v).replace(/\n/g, ' ') };
+        });
+        if (Object.values(m).includes('pop') && hits >= 2) { headerIdx = i; map = m; break; }
+      }
+      if (headerIdx < 0) { warnings.push(`La hoja "${sh.name}" no tiene una columna POP reconocible; se omitió.`); continue; }
+      sheetsUsed.push(sh.name);
+      Object.values(map).forEach((f) => columns.add(typeof f === 'string' ? f : 'extra:' + f.extra));
+      const headerRow = sh.rows[headerIdx].r;
+      const popCol = Number(Object.keys(map).find((k) => map[k] === 'pop'));
+      let skipped = 0;
+      for (const row of sh.rows.slice(headerIdx + 1)) {
+        const popRaw = clean(row.cells[popCol]);
+        if (!popRaw) { skipped++; continue; }
+        const codes = popRaw.split(/[\n,;\/]+/).map((c) => c.replace(/\s+/g, '').toUpperCase()).filter(Boolean);
+        if (!codes.length) { skipped++; continue; }
+        const s = { id: docId(codes), codes, pop: codes.join(' / '), fields: {}, extras: {}, notes: [] };
+        for (const [ci, f] of Object.entries(map)) {
+          const v = clean(row.cells[ci]);
+          if (!v) continue;
+          if (typeof f === 'object') { s.extras[f.extra] = v; continue; }
+          if (f === 'pop') continue;
+          if (f === 'notas') { s.notes.push(v); continue; }
+          s.fields[f] = v;
+        }
+        // Notas de celda (comentarios) en cualquier columna de la fila
+        for (const [ref, txt] of Object.entries(sh.comments)) {
+          const rn = parseInt(ref.replace(/^[A-Z]+/, ''), 10);
+          if (rn === row.r && rn !== headerRow) s.notes.push(txt);
+        }
+        if (s.notes.length) columns.add('notas');
+        sites.set(s.id, merge(sites.get(s.id), s, sh.name));
+      }
+      if (skipped) warnings.push(`${skipped} fila${skipped === 1 ? '' : 's'} de "${sh.name}" sin POP se omitieron.`);
+    }
+    const list = [...sites.values()].map((s) => finalize(s, fileName));
+    return { sites: list, columns: [...columns], warnings, sheetsUsed };
+  }
+
+  function merge(prev, s, sheetName) {
+    s.sheet = sheetName;
+    if (!prev) return s;
+    return {
+      ...prev, ...s,
+      fields: { ...prev.fields, ...s.fields },
+      extras: { ...prev.extras, ...s.extras },
+      notes: [...new Set([...prev.notes, ...s.notes])]
+    };
+  }
+
+  function titleZone(z) {
+    z = clean(z);
+    if (!z) return '';
+    return z.toLowerCase().replace(/(^|\s|-)(\p{L})/gu, (a, b, c) => b + c.toUpperCase());
+  }
+
+  // Ficha final tal como se guarda en la base de datos
+  function finalize(s, fileName) {
+    const f = s.fields;
+    const notas = [...new Set(s.notes)].join('\n');
+    let llavero = f.llavero || '';
+    if (/^\d+(\.0+)?$/.test(llavero)) llavero = String(parseInt(llavero, 10));
+    let cliente = f.cliente || '';
+    const clienteNA = /^no\s*aplica$/i.test(cliente);
+    if (clienteNA) cliente = 'No aplica';
+    let cia = f.cia || '';
+    if (/^no\s*aplica$/i.test(cia)) cia = 'No aplica';
+    const claveTxt = f.clave || '';
+    let claves = extractCodes(claveTxt);
+    if (claveTxt && !claves.length) claves = [{ code: claveTxt, label: 'Acceso' }];
+    if (!claveTxt) claves = extractCodes(notas);
+    const tags = tagsFor(notas + '\n' + claveTxt);
+    const out = {
+      pop: s.pop, codes: s.codes,
+      nombre: (f.nombre || '').split(/\n+/).map((x) => x.trim()).filter(Boolean).join(' / '),
+      llavero, cliente, cia, claves, notas,
+      tags, zona: titleZone(f.zona || s.sheet || ''),
+      extras: s.extras
+    };
+    // Qué columnas venían en el archivo (para no borrar datos al actualizar)
+    out._present = Object.keys(f);
+    if (notas) out._present.push('notas');
+    out._id = s.id;
+    return out;
+  }
+
+  return { fromSheets, extractCodes, tagsFor, norm, classifyHeader, FIELD_LABELS, TAGS };
+})();
+
+// node: module.exports = { XL, SITES };
+
+</script>
+<script>
+/* ===== Escritor mínimo de .xlsx (sin librerías) y lector de CSV ===== */
+const XW = (() => {
+  const enc = new TextEncoder();
+  const CRC = (() => {
+    const t = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; }
+    return t;
+  })();
+  function crc32(u8) { let c = 0xffffffff; for (let i = 0; i < u8.length; i++) c = CRC[(c ^ u8[i]) & 0xff] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; }
+
+  function zip(files) {
+    const parts = [], central = [];
+    let offset = 0;
+    for (const [name, text] of files) {
+      const data = enc.encode(text);
+      const nameB = enc.encode(name);
+      const crc = crc32(data);
+      const lh = new DataView(new ArrayBuffer(30));
+      lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true);
+      lh.setUint16(8, 0, true); lh.setUint32(14, crc, true); lh.setUint32(18, data.length, true);
+      lh.setUint32(22, data.length, true); lh.setUint16(26, nameB.length, true);
+      parts.push(new Uint8Array(lh.buffer), nameB, data);
+      const ch = new DataView(new ArrayBuffer(46));
+      ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true);
+      ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true); ch.setUint32(16, crc, true);
+      ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true);
+      ch.setUint16(28, nameB.length, true); ch.setUint32(42, offset, true);
+      central.push(new Uint8Array(ch.buffer), nameB);
+      offset += 30 + nameB.length + data.length;
+    }
+    const cdSize = central.reduce((a, b) => a + b.length, 0);
+    const eo = new DataView(new ArrayBuffer(22));
+    eo.setUint32(0, 0x06054b50, true); eo.setUint16(8, files.length, true); eo.setUint16(10, files.length, true);
+    eo.setUint32(12, cdSize, true); eo.setUint32(16, offset, true);
+    return new Blob([...parts, ...central, new Uint8Array(eo.buffer)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  }
+
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+    .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '');
+  const colName = (i) => { let s = ''; i++; while (i > 0) { const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; };
+  const safeSheet = (n, used) => {
+    let s = String(n || 'Sitios').replace(/[\\\/?*\[\]:]/g, ' ').slice(0, 31).trim() || 'Sitios';
+    let k = s, i = 2; while (used.has(k.toLowerCase())) k = s.slice(0, 28) + ' ' + i++;
+    used.add(k.toLowerCase()); return k;
+  };
+
+  // sheets: [{name, header:[...], widths:[...], rows:[[cell]]}]; cell = string | number
+  function workbook(sheets) {
+    const used = new Set();
+    const names = sheets.map((s) => safeSheet(s.name, used));
+    const files = [];
+    files.push(['[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' +
+      names.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('') + '</Types>']);
+    files.push(['_rels/.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>']);
+    files.push(['xl/workbook.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' +
+      names.map((n, i) => `<sheet name="${esc(n)}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join('') + '</sheets></workbook>']);
+    files.push(['xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      names.map((_, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join('') +
+      `<Relationship Id="rId${names.length + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`]);
+    files.push(['xl/styles.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Arial"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF15212B"/></patternFill></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="3"><xf xfId="0" fontId="0" fillId="0" borderId="0" numFmtId="49" applyNumberFormat="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf><xf xfId="0" fontId="1" fillId="2" borderId="0" numFmtId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf xfId="0" fontId="0" fillId="0" borderId="0" numFmtId="0" applyAlignment="1"><alignment vertical="top"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>']);
+    sheets.forEach((s, si) => {
+      const all = [s.header, ...s.rows];
+      const last = colName(s.header.length - 1) + all.length;
+      const cols = '<cols>' + s.header.map((_, i) => `<col min="${i + 1}" max="${i + 1}" width="${(s.widths && s.widths[i]) || 16}" customWidth="1"/>`).join('') + '</cols>';
+      const body = all.map((row, ri) => {
+        const r = ri + 1;
+        return `<row r="${r}"${ri === 0 ? ' ht="22" customHeight="1"' : ''}>` + row.map((v, ci) => {
+          if (v === null || v === undefined || v === '') return '';
+          const ref = colName(ci) + r;
+          if (ri === 0) return `<c r="${ref}" s="1" t="inlineStr"><is><t>${esc(v)}</t></is></c>`;
+          if (typeof v === 'number') return `<c r="${ref}" s="2"><v>${v}</v></c>`;
+          return `<c r="${ref}" s="0" t="inlineStr"><is><t xml:space="preserve">${esc(v)}</t></is></c>`;
+        }).join('') + '</row>';
+      }).join('');
+      files.push([`xl/worksheets/sheet${si + 1}.xml`, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
+        `<dimension ref="A1:${last}"/><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>` +
+        cols + '<sheetData>' + body + `</sheetData><autoFilter ref="A1:${last}"/></worksheet>`]);
+    });
+    return zip(files);
+  }
+
+  // CSV con separador , o ; (Excel en español usa ;)
+  function parseCsv(text) {
+    text = text.replace(/^﻿/, '');
+    const first = text.split(/\r?\n/, 1)[0] || '';
+    const sep = (first.match(/;/g) || []).length > (first.match(/,/g) || []).length ? ';' : (first.includes('\t') && !first.includes(',') ? '\t' : ',');
+    const rows = [];
+    let row = [], cell = '', q = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) {
+        if (ch === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; }
+        else cell += ch;
+      } else if (ch === '"') q = true;
+      else if (ch === sep) { row.push(cell); cell = ''; }
+      else if (ch === '\n' || ch === '\r') {
+        if (ch === '\r' && text[i + 1] === '\n') i++;
+        row.push(cell); rows.push(row); row = []; cell = '';
+      } else cell += ch;
+    }
+    if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
+    return rows
+      .map((cells, i) => ({ r: i + 1, cells: cells.map((c) => (c.trim() === '' ? undefined : c)) }))
+      .filter((r) => r.cells.some((c) => c !== undefined));
+  }
+
+  return { workbook, parseCsv, crc32 };
+})();
+
+// node: module.exports = { XW };
+
+</script>
+<script>
+/* ===== Llavero de Sitios · página web con Firebase ===== */
+(() => {
+  const CFG = window.LLAVERO_CONFIG || {};
+  const $ = (s, el = document) => el.querySelector(s);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const twoMQ = window.matchMedia('(min-width: 880px)');
+  const collator = new Intl.Collator('es', { numeric: true, sensitivity: 'base' });
+  const NA = /^no aplica$/i;
+  const ROLES = { pendiente: ['Pendiente', 'warn'], tecnico: ['Técnico', 'info'], admin: ['Administrador', 'ok'], bloqueado: ['Bloqueado', 'crit'] };
+  const TAG_INFO = {
+    vandalizado: ['Vandalizado', 'crit'], 'sin-llaves': ['Sin llaves', 'warn'],
+    nodo: ['Nodo transmisión', 'info'], poste: ['Poste', 'info'], azotea: ['Azotea', 'info'], pinpass: ['PIN PASS', 'info']
+  };
+  const FIELD_NAMES = { nombre: 'Nombre', llavero: 'Llavero', cliente: 'N° cliente', cia: 'Compañía', claves: 'Clave', notas: 'Notas', extras: 'Otros datos', tags: 'Etiquetas' };
+  const SITE_COLS = ['id', 'pop', 'codes', 'nombre', 'llavero', 'cliente', 'cia', 'claves', 'notas', 'tags', 'extras', 'archivo', 'actualizado', 'actualizado_por'];
+
+  const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (_) { return d; } };
+  const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} };
+  const lsDel = (k) => { try { localStorage.removeItem(k); } catch (_) {} };
+
+  const S = {
+    auth: null, fs: null, user: null, loggingOut: false, profile: null, zonales: [], zname: new Map(),
+    sites: [], byKey: new Map(), groups: [],
+    q: '', filters: new Set(), sort: 'pop', activeKey: null, results: [], zonal: 'all',
+    mask: !!lsGet('llavero-ocultar-claves', false), revealed: new Set(), recent: [],
+    view: 'sitios', users: [], utab: 'pendiente', pendSel: new Map(), cargas: [],
+    status: 'loading', offline: false, lastLoad: 0, busy: false
+  };
+
+  const I = (d) => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
+  const icons = {
+    copy: I('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/>'),
+    bolt: I('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'),
+    lock: I('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),
+    tag: I('<path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="8" cy="8" r="1.6"/>'),
+    id: I('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10h5M7 14h8"/>'),
+    back: I('<path d="m15 5-7 7 7 7"/>'),
+    upload: I('<path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/>'),
+    x: I('<path d="M6 6l12 12M18 6 6 18"/>'),
+    check: I('<path d="m5 12 5 5 9-10"/>'),
+    info: I('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
+    clock: I('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
+    file: I('<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/>'),
+    eye: I('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),
+    eyeOff: I('<path d="M3 3l18 18"/><path d="M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6C3.8 8.4 2 12 2 12s3.5 7 10 7c1.8 0 3.3-.5 4.6-1.2"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>'),
+    mail: I('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>'),
+    hourglass: I('<path d="M6 3h12M6 21h12M7 3v4l5 5-5 5v4M17 3v4l-5 5 5 5v4"/>'),
+    ban: I('<circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/>'),
+    map: I('<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>'),
+    out: I('<path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4"/><path d="M10 17l5-5-5-5M15 12H4"/>'),
+    refresh: I('<path d="M20 11a8 8 0 0 0-14.9-3M4 13a8 8 0 0 0 14.9 3"/><path d="M5 3v5h5M19 21v-5h-5"/>'),
+    chev: I('<path d="m6 9 6 6 6-6"/>')
+  };
+
+  /* ================= Utilidades de datos ================= */
+  const nrm = (s) => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const digits = (s) => String(s ?? '').replace(/\D/g, '');
+  const plural = (n, a, b) => `${n} ${n === 1 ? a : b}`;
+  const keyOf = (s) => s.zonal + '/' + s.id;
+  const zLabel = (z) => (S.zname.get(z) ? `${z} ${S.zname.get(z)}` : z);
+  const isAdmin = () => S.profile && S.profile.rol === 'admin';
+  const uid = () => S.user && S.user.uid;
+
+  function splitName(nombre) {
+    const raw = String(nombre || '').trim();
+    const m = /^(.*?)[_\s]+((?:[234]G)?900(?:[_\s].*)?|LIC\b.*|[34]G)$/i.exec(raw);
+    let base = m ? m[1] : raw;
+    const tech = m ? m[2].replace(/_/g, ' ').replace(/\s+/g, ' ').trim() : '';
+    base = base.replace(/_/g, ' ').replace(/\s{2,}/g, ' ').trim();
+    return { base: base || raw, tech };
+  }
+
+  function prep(d) {
+    const s = { ...d };
+    s.codes = Array.isArray(s.codes) && s.codes.length ? s.codes : [String(s.pop || s.id)];
+    s.claves = Array.isArray(s.claves) ? s.claves : [];
+    s.tags = Array.isArray(s.tags) ? s.tags : [];
+    s.extras = s.extras && typeof s.extras === 'object' ? s.extras : {};
+    ['nombre', 'llavero', 'cliente', 'cia', 'notas'].forEach((k) => { if (s[k] == null) s[k] = ''; });
+    const nm = splitName(s.nombre);
+    s._key = keyOf(s); s._base = nm.base; s._tech = nm.tech;
+    s._codesN = s.codes.map((c) => nrm(c));
+    s._nameN = nrm(s.nombre) + ' ' + nrm(s._base);
+    s._cliD = digits(s.cliente);
+    s._hay = nrm([s.codes.join(' '), s.nombre, s._base, s.llavero && 'llavero ' + s.llavero, s.cliente, s._cliD, s.cia, s.zonal, S.zname.get(s.zonal), s.notas,
+      s.claves.map((c) => c.code + ' ' + c.label).join(' '), Object.values(s.extras).join(' ')].filter(Boolean).join(' \n '));
+    return s;
+  }
+  function plainSite(s) { const o = {}; SITE_COLS.forEach((k) => { if (s[k] !== undefined) o[k] = s[k]; }); return o; }
+
+  function visibleZonales() {
+    if (!S.profile) return [];
+    if (isAdmin()) return S.zonales.map((z) => z.id);
+    return S.zonales.map((z) => z.id).filter((z) => (S.profile.zonales || []).includes(z));
+  }
+  const scopeSites = () => (S.zonal === 'all' ? S.sites : S.sites.filter((s) => s.zonal === S.zonal));
+
+  function setSites(rows, fromCache) {
+    S.sites = rows.map(prep);
+    S.byKey = new Map(S.sites.map((s) => [s._key, s]));
+    S.status = 'ready';
+    if (!fromCache) { S.lastLoad = Date.now(); S.offline = false; lsSet('llavero-cache-' + uid(), { sites: rows, zonales: S.zonales, profile: S.profile, at: Date.now() }); }
+    if (S.activeKey && !S.byKey.has(S.activeKey)) S.activeKey = null;
+    rebuildGroups();
+    renderSitesView();
+  }
+  function rebuildGroups() {
+    S.groups = facetGroups();
+    const valid = new Set(S.groups.flatMap((g) => g.items.map((i) => i.id)));
+    [...S.filters].forEach((f) => { if (!valid.has(f)) S.filters.delete(f); });
+  }
+
+  /* ================= Firebase ================= */
+  const ZONALES_BASE = [['Z15', 'Valdivia', 15], ['Z16', 'Osorno', 16], ['Z17', 'Puerto Montt', 17], ['Z18', 'Chiloé', 18]].map(([id, nombre, orden]) => ({ id, nombre, orden }));
+  const ZIDS = ZONALES_BASE.map((z) => z.id);
+  const ts = () => firebase.firestore.FieldValue.serverTimestamp();
+  const toDate = (v) => (v && typeof v.toDate === 'function' ? v.toDate() : v ? new Date(v) : null);
+  function friendly(err) {
+    const c = String((err && err.code) || ''), m = String((err && err.message) || err || '');
+    if (/auth\/(invalid-credential|wrong-password|user-not-found|invalid-login-credentials)/.test(c)) return 'Correo o contraseña incorrectos.';
+    if (c === 'auth/email-already-in-use') return 'Ya existe una cuenta con ese correo. Ingresa o recupera tu contraseña.';
+    if (c === 'auth/weak-password') return 'La contraseña es muy débil. Usa al menos 8 caracteres, con letras y números.';
+    if (c === 'auth/invalid-email') return 'Revisa el correo: no parece una dirección válida.';
+    if (c === 'auth/too-many-requests') return 'Demasiados intentos seguidos. Espera unos minutos y vuelve a intentarlo.';
+    if (c === 'auth/user-disabled') return 'Esta cuenta fue desactivada en Firebase.';
+    if (c === 'auth/operation-not-allowed') return 'El ingreso con correo y contraseña no está activado en Firebase (Authentication > Método de acceso).';
+    if (c === 'auth/unauthorized-domain' || c === 'auth/unauthorized-continue-uri') return 'Esta dirección no está autorizada en Firebase. Agrégala en Authentication > Configuración > Dominios autorizados.';
+    if (c === 'auth/network-request-failed' || c === 'unavailable' || /network|offline|failed to fetch/i.test(m)) return 'No hay conexión con el servidor. Revisa tu internet e inténtalo de nuevo.';
+    if (c === 'permission-denied' || /insufficient permissions/i.test(m)) return 'No tienes permiso para hacer esto.';
+    if (c === 'resource-exhausted') return 'Se alcanzó el límite diario del plan gratis de Firebase. Inténtalo más tarde.';
+    return m || 'Ocurrió un error inesperado.';
+  }
+  const isNetErr = (e) => { const c = String((e && e.code) || ''); return c === 'unavailable' || c === 'auth/network-request-failed' || /network|offline|failed to fetch/i.test(String((e && e.message) || '')) || !navigator.onLine; };
+  const linkSettings = () => ({ url: location.origin + location.pathname });
+  async function conEnlace(fn) {
+    try { return await fn(linkSettings()); }
+    catch (e) { if (/continue-uri|unauthorized-domain/.test(String(e && e.code))) return fn(undefined); throw e; }
+  }
+
+  async function fetchSites() {
+    const vis = visibleZonales();
+    const docs = await Promise.all(vis.map((z) => S.fs.collection('zonales').doc(z).get()));
+    const rows = [];
+    docs.forEach((d, i) => { if (d.exists) (d.data().sitios || []).forEach((s) => rows.push({ ...s, zonal: vis[i] })); });
+    return rows;
+  }
+
+  /* ================= Pantallas ================= */
+  function show(which) {
+    $('#boot').hidden = which !== 'boot';
+    $('#authView').hidden = which !== 'auth';
+    $('#waitView').hidden = which !== 'wait';
+    $('#appView').hidden = which !== 'app';
+  }
+
+  // ---------- Ingreso ----------
+  let authMode = 'login';
+  const pwField = (id, label, auto, help) => `<div class="field-f"><label for="${id}">${label}</label><div class="pw"><input id="${id}" type="password" autocomplete="${auto}" required minlength="8"><button type="button" data-pw="${id}" aria-label="Mostrar contraseña">${icons.eye}</button></div>${help ? `<span class="help">${help}</span>` : ''}</div>`;
+  function renderAuth(mode, msg) {
+    authMode = mode || authMode;
+    const m = authMode;
+    const card = $('#authCard');
+    const msgHtml = msg ? `<div class="msg ${msg[0]}" role="alert">${msg[0] === 'ok' ? icons.check : icons.info}<span>${esc(msg[1])}</span></div>` : '';
+    const tabs = `<div class="seg2" role="tablist"><button type="button" role="tab" data-auth="login" aria-selected="${m === 'login'}">Ingresar</button><button type="button" role="tab" data-auth="signup" aria-selected="${m === 'signup'}">Crear cuenta</button></div>`;
+    if (m === 'login') {
+      card.innerHTML = `<div><h2>Ingresa a tu cuenta</h2></div>${tabs}${msgHtml}
+        <form class="form" id="fLogin" novalidate>
+          <div class="field-f"><label for="lEmail">Correo</label><input id="lEmail" type="email" autocomplete="email" required inputmode="email"></div>
+          ${pwField('lPass', 'Contraseña', 'current-password')}
+          <button class="btn primary btn-block" type="submit">Ingresar</button>
+          <div class="form-links"><button type="button" data-auth="reset">¿Olvidaste tu contraseña?</button></div>
+        </form>`;
+    } else if (m === 'signup') {
+      card.innerHTML = `<div><h2>Crea tu cuenta</h2></div>${tabs}${msgHtml}
+        <form class="form" id="fSignup" novalidate>
+          <div class="field-f"><label for="sName">Nombre y apellido</label><input id="sName" type="text" autocomplete="name" required maxlength="80"></div>
+          <div class="field-f"><label for="sEmail">Correo</label><input id="sEmail" type="email" autocomplete="email" required inputmode="email"><span class="help">Usa tu correo de trabajo: el administrador lo verá al aprobarte.</span></div>
+          ${pwField('sPass', 'Contraseña', 'new-password', 'Mínimo 8 caracteres.')}
+          <button class="btn primary btn-block" type="submit">Crear cuenta</button>
+        </form>
+        <p class="note">Te enviaremos un correo para confirmar tu dirección. Después, un administrador debe aprobar tu cuenta y asignarte las zonales que puedes ver.</p>`;
+    } else if (m === 'reset') {
+      card.innerHTML = `<div><h2>Recupera tu contraseña</h2></div><p class="lead">Te enviaremos un enlace para crear una contraseña nueva.</p>${msgHtml}
+        <form class="form" id="fReset" novalidate>
+          <div class="field-f"><label for="rEmail">Correo</label><input id="rEmail" type="email" autocomplete="email" required inputmode="email"></div>
+          <button class="btn primary btn-block" type="submit">Enviar enlace</button>
+          <div class="form-links"><button type="button" data-auth="login">Volver a ingresar</button></div>
+        </form>`;
+    }
+    const first = card.querySelector('input'); if (first && !msg) setTimeout(() => first.focus(), 30);
+  }
+  function showAuth(mode, msg) { renderAuth(mode, msg); show('auth'); }
+
+  async function submitAuth(form) {
+    const btn = form.querySelector('[type="submit"]');
+    const val = (id) => ($('#' + id) ? $('#' + id).value.trim() : '');
+    btn.dataset.l = btn.dataset.l || btn.textContent;
+    const busy = (on) => { btn.disabled = on; btn.textContent = on ? 'Un momento…' : btn.dataset.l; };
+    const emailOk = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    try {
+      if (form.id === 'fLogin') {
+        const email = val('lEmail'), password = $('#lPass').value;
+        if (!emailOk(email) || !password) return renderAuth('login', ['err', 'Escribe tu correo y tu contraseña.']);
+        busy(true);
+        await S.auth.signInWithEmailAndPassword(email, password);
+      } else if (form.id === 'fSignup') {
+        const nombre = val('sName'), email = val('sEmail'), password = $('#sPass').value;
+        if (nombre.length < 3) return renderAuth('signup', ['err', 'Escribe tu nombre y apellido.']);
+        if (!emailOk(email)) return renderAuth('signup', ['err', 'Revisa el correo: no parece una dirección válida.']);
+        if (password.length < 8) return renderAuth('signup', ['err', 'La contraseña debe tener al menos 8 caracteres.']);
+        busy(true);
+        S.pendingName = nombre;
+        const cred = await S.auth.createUserWithEmailAndPassword(email, password);
+        lsSet('llavero-nombre-' + cred.user.uid, nombre);
+        try { await cred.user.updateProfile({ displayName: nombre }); } catch (_) {}
+        try { await conEnlace((st) => cred.user.sendEmailVerification(st)); } catch (_) {}
+        if (S.user && S.user.uid === cred.user.uid && !S.user.emailVerified) showWait('verificar');
+      } else if (form.id === 'fReset') {
+        const email = val('rEmail');
+        if (!emailOk(email)) return renderAuth('reset', ['err', 'Escribe el correo con que te registraste.']);
+        busy(true);
+        try { await conEnlace((st) => S.auth.sendPasswordResetEmail(email, st)); }
+        catch (e) { if (!/user-not-found|invalid-credential/.test(String(e && e.code))) throw e; }
+        renderAuth('login', ['ok', 'Si existe una cuenta con ese correo, te llegará un enlace para crear una contraseña nueva. Revisa también la carpeta de spam.']);
+      }
+    } catch (e) {
+      busy(false);
+      const keep = form.id === 'fLogin' ? val('lEmail') : '';
+      renderAuth(authMode, ['err', friendly(e)]);
+      if (keep && $('#lEmail')) $('#lEmail').value = keep;
+    }
+  }
+
+  // ---------- Espera ----------
+  function showWait(kind) {
+    const p = S.profile || {};
+    const email = (S.user && S.user.email) || p.email || '';
+    const T = {
+      verificar: [icons.mail, '', 'Confirma tu correo', `Te enviamos un enlace a ${email}. Ábrelo para confirmar tu dirección y luego toca “Ya confirmé mi correo”. Si no lo ves, revisa la carpeta de spam.`],
+      pendiente: [icons.hourglass, '', 'Tu cuenta está esperando aprobación', 'Un administrador debe aprobar tu cuenta y asignarte las zonales que puedes ver. Cuando lo haga, entra de nuevo o toca “Revisar de nuevo”.'],
+      bloqueado: [icons.ban, 'crit', 'Tu acceso está desactivado', 'Si crees que es un error, habla con un administrador de tu zonal.'],
+      sinzonal: [icons.map, '', 'Aún no tienes zonales asignadas', 'Pide a un administrador que te asigne al menos una zonal para ver sus sitios.'],
+      sinperfil: [icons.info, 'crit', 'No se pudo crear tu perfil', 'La base de datos rechazó el registro. Un administrador debe revisar que las reglas de Firestore estén publicadas (archivo firestore.rules).']
+    }[kind];
+    $('#waitCard').innerHTML = `<div class="wait-ic ${T[1]}">${T[0]}</div><h2>${T[2]}</h2><p>${T[3]}</p>
+      <div class="wait-who">Cuenta: <b>${esc(email)}</b>${p.nombre ? ` (${esc(p.nombre)})` : ''}</div>
+      <div class="wait-actions">${kind === 'verificar' ? `<button type="button" class="btn primary" data-act="verified">${icons.check}Ya confirmé mi correo</button><button type="button" class="btn" data-act="resend">${icons.mail}Reenviar correo</button>` : kind !== 'bloqueado' ? `<button type="button" class="btn primary" data-act="recheck">${icons.refresh}Revisar de nuevo</button>` : ''}<button type="button" class="btn" data-act="logout">${icons.out}Cerrar sesión</button></div>`;
+    show('wait');
+  }
+
+  function showSetup(text) {
+    document.body.innerHTML = `<div class="setup"><h2>Falta configurar la conexión</h2><p>${text}</p><p>Abre el archivo <code>config.js</code> y pega la configuración web de tu proyecto de Firebase (apiKey, authDomain, projectId…). Los pasos están en la guía incluida.</p></div>`;
+  }
+
+  /* ================= Sesión ================= */
+  async function onUser(user) {
+    S.user = user;
+    if (!user) {
+      S.profile = null;
+      if (S.loggingOut) { S.loggingOut = false; showAuth('login', ['info', 'Cerraste sesión.']); }
+      else showAuth(authMode === 'signup' || authMode === 'reset' ? authMode : 'login');
+      return;
+    }
+    if (!user.emailVerified) {
+      try { await user.reload(); } catch (_) {}
+      const u2 = S.auth.currentUser;
+      if (!u2 || !u2.emailVerified) { showWait('verificar'); return; }
+      S.user = u2;
+    }
+    await enter();
+  }
+
+  async function crearPerfil() {
+    const u = S.user;
+    const nombre = String(lsGet('llavero-nombre-' + u.uid, '') || u.displayName || (u.email || '').split('@')[0] || 'Sin nombre').trim().slice(0, 80) || 'Sin nombre';
+    const ref = S.fs.collection('perfiles').doc(u.uid);
+    const base = { email: u.email, nombre, creado_en: ts() };
+    let primero = false;
+    try { primero = !(await S.fs.collection('config').doc('admin_inicial').get()).exists; } catch (_) {}
+    if (primero) {
+      try {
+        const b = S.fs.batch();
+        b.set(ref, { ...base, rol: 'admin', zonales: ZIDS.slice() });
+        b.set(S.fs.collection('config').doc('admin_inicial'), { uid: u.uid, creado_en: ts() });
+        await b.commit();
+      } catch (_) { primero = false; }
+    }
+    if (!primero) await ref.set({ ...base, rol: 'pendiente', zonales: [] });
+    const snap = await ref.get();
+    return { id: u.uid, ...snap.data() };
+  }
+
+  async function enter() {
+    show('boot');
+    const id = uid();
+    S.recent = lsGet('llavero-recientes-' + id, []);
+    if (!Array.isArray(S.recent)) S.recent = [];
+    let prof;
+    try {
+      try { await S.user.getIdToken(true); } catch (_) {}
+      const snap = await S.fs.collection('perfiles').doc(id).get();
+      prof = snap.exists ? { id, ...snap.data() } : null;
+      if (!prof) prof = await crearPerfil();
+    } catch (e) {
+      const c = lsGet('llavero-cache-' + id, null);
+      if (isNetErr(e) && c && c.profile && c.profile.rol !== 'bloqueado') {
+        S.profile = c.profile; S.offline = true; enterApp(); setSites(c.sites || [], true); renderNotice();
+        return;
+      }
+      if (String(e && e.code) === 'permission-denied') { S.profile = null; showWait('sinperfil'); return; }
+      showAuth('login', ['err', friendly(e)]);
+      return;
+    }
+    S.profile = prof;
+    if (prof.rol === 'pendiente') return showWait('pendiente');
+    if (prof.rol === 'bloqueado') { lsDel('llavero-cache-' + id); return showWait('bloqueado'); }
+    if (prof.rol === 'tecnico' && !(prof.zonales || []).length) return showWait('sinzonal');
+    const c = lsGet('llavero-cache-' + id, null);
+    const vis = visibleZonales();
+    const saved = lsGet('llavero-zonal-' + id, null);
+    S.zonal = saved && (saved === 'all' ? vis.length > 1 : vis.includes(saved)) ? saved : (vis.length === 1 ? vis[0] : 'all');
+    enterApp();
+    if (c && Array.isArray(c.sites)) setSites(c.sites.filter((s) => vis.includes(s.zonal)), true);
+    await reloadSites();
+    if (isAdmin()) loadUsers();
+    routeFromHash();
+  }
+
+  async function reloadSites() {
+    try {
+      const rows = await fetchSites();
+      setSites(rows, false);
+    } catch (e) {
+      S.offline = isNetErr(e);
+      if (!S.sites.length) S.status = 'error';
+      S.errorMsg = friendly(e);
+      renderSitesView();
+    }
+  }
+
+  async function logout() {
+    closeMenu();
+    lsDel('llavero-cache-' + uid());
+    S.loggingOut = true;
+    S.profile = null; S.sites = []; S.byKey = new Map(); S.users = []; S.activeKey = null; S.filters.clear(); S.q = '';
+    $('#q').value = '';
+    try { history.replaceState(null, '', location.pathname); } catch (_) {}
+    try { await S.auth.signOut(); } catch (_) { S.loggingOut = false; showAuth('login', ['info', 'Cerraste sesión.']); }
+  }
+
+  /* ================= App ================= */
+  function enterApp() {
+    show('app');
+    renderTop();
+  }
+
+  function renderTop() {
+    const p = S.profile || {};
+    $('#tabs').hidden = !isAdmin();
+    document.querySelectorAll('#tabs a').forEach((a) => a.setAttribute('aria-current', a.dataset.view === S.view ? 'page' : 'false'));
+    const pend = S.users.filter((u) => u.rol === 'pendiente').length;
+    const pb = $('#pendBadge'); pb.hidden = !pend; pb.textContent = pend;
+    const vis = visibleZonales();
+    const counts = new Map(); S.sites.forEach((s) => counts.set(s.zonal, (counts.get(s.zonal) || 0) + 1));
+    $('#zonalSel').innerHTML = (vis.length > 1 ? `<option value="all"${S.zonal === 'all' ? ' selected' : ''}>Todas mis zonales</option>` : '') +
+      vis.map((z) => `<option value="${esc(z)}"${S.zonal === z ? ' selected' : ''}>${esc(zLabel(z))}</option>`).join('');
+    $('#zselWrap').hidden = S.view !== 'sitios';
+    const f = S.lastLoad ? new Date(S.lastLoad).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) : '';
+    $('#barMeta').innerHTML = f && S.view === 'sitios' ? `${icons.clock}<span>Datos de las ${esc(f)}</span>` : '';
+    const mb = $('#btnMask');
+    mb.setAttribute('aria-pressed', String(S.mask));
+    mb.title = S.mask ? 'Mostrar las claves en pantalla' : 'Ocultar las claves en pantalla';
+    mb.setAttribute('aria-label', S.mask ? 'Mostrar claves' : 'Ocultar claves');
+    mb.innerHTML = (S.mask ? icons.eyeOff : icons.eye) + `<span class="lbl">${S.mask ? 'Claves ocultas' : 'Ocultar claves'}</span>`;
+    mb.hidden = S.view !== 'sitios';
+    $('#btnImport').hidden = !isAdmin() || S.offline;
+    $('#btnExport').hidden = !isAdmin() || !S.sites.length || S.view !== 'sitios';
+    const ini = (p.nombre || p.email || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+    const ub = $('#btnUser'); ub.textContent = ini; ub.setAttribute('aria-label', `Cuenta de ${p.nombre || p.email || ''}`);
+  }
+
+  function renderNotice() {
+    const el = $('#notice');
+    let msg = '', cls = 'warn';
+    if (S.offline) msg = `Sin conexión. Estás viendo la copia guardada en este equipo${S.lastLoad ? '' : ''}. Los cambios recientes pueden no aparecer.`;
+    else if (S.status === 'error') msg = S.errorMsg || 'No se pudieron cargar los sitios.';
+    el.hidden = !msg;
+    el.className = 'notice' + (cls ? ' ' + cls : '');
+    el.innerHTML = msg ? icons.info + '<span>' + esc(msg) + '</span>' : '';
+  }
+
+  /* ---------- Filtros y búsqueda ---------- */
+  function facetGroups() {
+    const base = scopeSites();
+    const groups = [];
+    const add = (id, title, items) => {
+      const list = items.map((it) => ({ ...it, count: base.filter(it.test).length })).filter((it) => it.count > 0);
+      if (list.length) groups.push({ id, title, items: list });
+    };
+    const tag = (t) => (s) => s.tags.includes(t);
+    add('acc', 'Acceso', [
+      { id: 'acc:clave', label: 'Con clave registrada', test: (s) => s.claves.length > 0 },
+      { id: 'acc:sin-llaves', label: 'Sin llaves', test: tag('sin-llaves') },
+      { id: 'acc:pinpass', label: 'PIN PASS', test: tag('pinpass') },
+      { id: 'acc:vandalizado', label: 'Vandalizado', test: tag('vandalizado') }
+    ]);
+    add('tipo', 'Tipo de sitio', [
+      { id: 'tipo:nodo', label: 'Nodo transmisión', test: tag('nodo') },
+      { id: 'tipo:poste', label: 'Poste', test: tag('poste') },
+      { id: 'tipo:azotea', label: 'Azotea', test: tag('azotea') }
+    ]);
+    const cias = new Map();
+    base.forEach((s) => { if (s.cia) cias.set(s.cia, (cias.get(s.cia) || 0) + 1); });
+    add('cia', 'Compañía eléctrica', [...cias.entries()].sort((a, b) => (NA.test(a[0]) - NA.test(b[0])) || b[1] - a[1])
+      .map(([c]) => ({ id: 'cia:' + c, label: c, test: (s) => s.cia === c })));
+    add('falta', 'Datos faltantes', [
+      { id: 'falta:cliente', label: 'Sin N° de cliente', test: (s) => !s.cliente },
+      { id: 'falta:llavero', label: 'Sin llavero', test: (s) => !s.llavero }
+    ]);
+    return groups;
+  }
+  const facetById = (id) => { for (const g of S.groups) for (const it of g.items) if (it.id === id) return it; return null; };
+
+  function score(s, qn, toks, qd) {
+    for (const t of toks) if (!s._hay.includes(t) && !(/^\d{3,}$/.test(t) && s._cliD.includes(t))) return -1;
+    if (!qn) return 0;
+    const qc = qn.replace(/\s+/g, '');
+    let sc = 1;
+    if (s._codesN.includes(qc)) sc += 1000;
+    else if (s._codesN.some((c) => c.startsWith(qc))) sc += 500;
+    else if (s._codesN.some((c) => c.includes(qc))) sc += 120;
+    if (/^\d+$/.test(qc) && s.llavero === String(parseInt(qc, 10))) sc += 420;
+    if (qd.length >= 4 && s._cliD === qd) sc += 450;
+    else if (qd.length >= 3 && s._cliD.includes(qd)) sc += 200;
+    if (s.claves.some((c) => c.code === qc)) sc += 300;
+    if (nrm(s._base).startsWith(qn)) sc += 160;
+    else if (s._nameN.includes(qn)) sc += 90;
+    return sc;
+  }
+
+  function compute() {
+    const qn = nrm(S.q).replace(/[_/,;]+/g, ' ').replace(/\s+/g, ' ').trim();
+    const toks = qn ? qn.split(' ') : [];
+    const qd = digits(S.q);
+    const active = S.groups.map((g) => g.items.filter((it) => S.filters.has(it.id))).filter((a) => a.length);
+    const res = [];
+    for (const s of scopeSites()) {
+      if (!active.every((arr) => arr.some((it) => it.test(s)))) continue;
+      const sc = score(s, qn, toks, qd);
+      if (sc >= 0) res.push([sc, s]);
+    }
+    const bySort = {
+      pop: (a, b) => collator.compare(a.pop, b.pop),
+      llavero: (a, b) => (parseInt(a.llavero, 10) || 1e9) - (parseInt(b.llavero, 10) || 1e9) || collator.compare(a.pop, b.pop),
+      nombre: (a, b) => collator.compare(a._base, b._base)
+    }[S.sort];
+    res.sort((a, b) => (qn ? b[0] - a[0] : 0) || bySort(a[1], b[1]) || collator.compare(a[1].zonal, b[1].zonal));
+    S.results = res.map((r) => r[1]);
+  }
+
+  /* ---------- Render de sitios ---------- */
+  function fmtDate(iso, short) {
+    if (!iso) return '';
+    const d = toDate(iso);
+    if (!d || isNaN(d)) return '';
+    return d.toLocaleDateString('es-CL', short ? { day: 'numeric', month: 'short', year: 'numeric' } : { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  const isHidden = (s) => S.mask && !S.revealed.has(s._key);
+  const dots = (code) => '•'.repeat(Math.min(Math.max(String(code).length, 4), 8));
+
+  function facetsHtml(withCoverage) {
+    const base = scopeSites();
+    if (!base.length) return '';
+    const groups = S.groups.map((g) => `<div class="fgroup" role="group" aria-labelledby="fg-${g.id}-${withCoverage ? 1 : 2}"><h3 id="fg-${g.id}-${withCoverage ? 1 : 2}">${esc(g.title)}</h3>${g.items.map((it) =>
+      `<button type="button" class="fitem" data-f="${esc(it.id)}" aria-pressed="${S.filters.has(it.id)}"><span class="box">${icons.check}</span><span>${esc(it.label)}</span><span class="n">${it.count}</span></button>`).join('')}</div>`).join('');
+    if (!withCoverage) return groups;
+    const t = base.length;
+    const m = (label, n) => `<div class="meter"><div class="meter-top"><span>${label}</span><span><b>${n}</b> de ${t}</span></div><div class="track" role="img" aria-label="${label}: ${n} de ${t} sitios"><i style="width:${(100 * n / t).toFixed(1)}%"></i></div></div>`;
+    return groups + `<div class="cov"><h3>Datos registrados${S.zonal !== 'all' ? ' en ' + esc(S.zonal) : ''}</h3>
+      ${m('N° de cliente', base.filter((s) => s.cliente).length)}
+      ${m('Llavero', base.filter((s) => s.llavero).length)}
+      ${m('Clave de acceso', base.filter((s) => s.claves.length).length)}</div>`;
+  }
+  function renderFacets() { $('#facets').innerHTML = facetsHtml(true); $('#facets2').innerHTML = facetsHtml(false); }
+
+  function renderHead() {
+    const r = S.results, n = scopeSites().length;
+    const filtered = S.q || S.filters.size;
+    const where = S.zonal === 'all' ? '' : ` en ${zLabel(S.zonal)}`;
+    $('#count').textContent = !n ? '' : filtered ? `${r.length} de ${plural(n, 'sitio', 'sitios')}` : plural(n, 'sitio', 'sitios') + where;
+    const fc = $('#fCount'); fc.hidden = !S.filters.size; fc.textContent = S.filters.size;
+    const af = $('#activeF');
+    af.hidden = !S.filters.size;
+    af.innerHTML = S.filters.size ? [...S.filters].map((id) => { const it = facetById(id); return it ? `<button type="button" class="fchip" data-unf="${esc(id)}" aria-label="Quitar filtro ${esc(it.label)}">${esc(it.label)}<span class="x">${icons.x}</span></button>` : ''; }).join('') + '<button type="button" class="linkbtn" data-unf="*">Limpiar filtros</button>' : '';
+    const rec = S.recent.map((k) => S.byKey.get(k)).filter(Boolean).filter((s) => S.zonal === 'all' || s.zonal === S.zonal).slice(0, 6);
+    const rc = $('#recents');
+    rc.hidden = !(rec.length && !filtered);
+    rc.innerHTML = rec.length ? '<span class="lbl">Recientes</span>' + rec.map((s) => `<button type="button" class="rchip" data-open="${esc(s._key)}" title="${esc(s._base)}">${esc(s.pop)}</button>`).join('') : '';
+  }
+
+  function rowHtml(s) {
+    const cli = s.cliente ? (NA.test(s.cliente) ? '<span class="f">Cliente no aplica</span>' : `<span class="f">${icons.bolt}<b>${esc(s.cliente)}</b></span>`) : '<span class="f">Sin N° cliente</span>';
+    let code = '';
+    if (s.claves.length) {
+      const c = s.claves[0];
+      code = isHidden(s) || !/^\d+$/.test(c.code) ? `<span class="f">${icons.lock}Clave registrada</span>` : `<span class="f code">${icons.lock}<b>${esc(c.code)}</b>${s.claves.length > 1 ? ` +${s.claves.length - 1}` : ''}</span>`;
+    }
+    const flags = ['vandalizado', 'sin-llaves'].filter((t) => s.tags.includes(t)).map((t) => `<span class="badge ${TAG_INFO[t][1]}">${TAG_INFO[t][0]}</span>`).join('');
+    const zt = S.zonal === 'all' && visibleZonales().length > 1 ? `<span class="ztag" title="${esc(zLabel(s.zonal))}">${esc(s.zonal)}</span>` : '';
+    return `<li><button type="button" class="row" data-id="${esc(s._key)}" aria-current="${s._key === S.activeKey}">
+      <span class="r1"><span class="r-pop">${zt}${esc(s.pop)}</span><span class="r-ll">${icons.tag}${s.llavero ? `Llavero <b>${esc(s.llavero)}</b>` : 'Sin llavero'}</span></span>
+      <span class="r-name">${esc(s._base || 'Sin nombre')}</span>
+      <span class="r3">${cli}${code}${flags}</span></button></li>`;
+  }
+
+  function renderList() {
+    const list = $('#list');
+    const base = scopeSites();
+    if (!base.length) {
+      if (S.status === 'loading') { list.innerHTML = '<li class="skel"></li>'.repeat(7); return; }
+      list.innerHTML = `<li class="state"><strong>${S.status === 'error' ? 'No se pudieron cargar los sitios' : `Aún no hay sitios${S.zonal !== 'all' ? ' en ' + esc(zLabel(S.zonal)) : ''}`}</strong><span>${
+        S.status === 'error' ? esc(S.errorMsg || 'Recarga la página para intentarlo de nuevo.') :
+        isAdmin() ? 'Usa “Cargar Excel” y elige la planilla de esta zonal.' : 'Cuando un administrador cargue la planilla, los sitios aparecerán aquí.'}</span></li>`;
+      return;
+    }
+    if (!S.results.length) {
+      list.innerHTML = `<li class="state"><strong>${S.q ? `Sin resultados para “${esc(S.q)}”` : 'Ningún sitio cumple estos filtros'}</strong><span>${S.q ? 'Prueba con el código POP (por ejemplo LA387), el número de llavero o parte del nombre.' : 'Quita algún filtro para ver más sitios.'}</span></li>`;
+      return;
+    }
+    list.innerHTML = S.results.map(rowHtml).join('');
+  }
+
+  const hashOf = (s) => (s.zonal + '-' + s.id).replace(/[^A-Za-z0-9-]/g, '-');
+
+  function welcomeHtml() {
+    const rec = S.recent.map((k) => S.byKey.get(k)).filter(Boolean).slice(0, 5);
+    return `<div class="welcome">
+      <h2>Busca un sitio</h2>
+      <p>Escribe un código POP, el nombre del sitio, el número de llavero, el N° de cliente eléctrico o una clave. Los resultados aparecen mientras escribes.</p>
+      ${rec.length ? `<div class="sub">Vistos recientemente</div><ul>${rec.map((s) => `<li><button type="button" class="wrow" data-open="${esc(s._key)}"><b>${esc(s.pop)}</b><span>${esc(s._base)}</span></button></li>`).join('')}</ul>` : ''}
+      <div class="sub">Atajos de teclado</div>
+      <div class="shortcuts"><span class="kbd">/</span><span>Ir al buscador</span><span class="kbd">↑ ↓</span><span>Moverse por la lista</span><span class="kbd">Enter</span><span>Abrir la ficha</span><span class="kbd">Esc</span><span>Limpiar la búsqueda</span></div>
+    </div>`;
+  }
+
+  function codeVal(s, c, big) {
+    if (isHidden(s)) return `<span class="val" aria-label="Clave oculta">${dots(c.code)}</span>`;
+    const num = /^\d+$/.test(c.code);
+    return `<span class="val${num ? '' : big ? ' na' : ' txt'}">${esc(c.code)}</span>`;
+  }
+
+  function renderDetail() {
+    const el = $('#detail');
+    const s = S.activeKey && S.byKey.get(S.activeKey);
+    if (!s) { el.innerHTML = scopeSites().length && twoMQ.matches ? welcomeHtml() : ''; return; }
+    const hidden = isHidden(s);
+    const revealBtn = hidden ? '<button type="button" class="reveal" data-act="reveal">Mostrar</button>' : '';
+    const copyBtn = (v, what) => `<button type="button" class="cbtn" data-copy="${esc(v)}" data-what="${what}" aria-label="Copiar ${what.toLowerCase()}">${icons.copy}</button>`;
+    const kfLl = s.llavero ? `<span class="val cond">${esc(s.llavero)}</span>` : '<span class="val na">Sin llavero</span>';
+    let kfCli;
+    if (!s.cliente) kfCli = '<span class="val na">Sin registro</span>';
+    else if (NA.test(s.cliente)) kfCli = '<span class="val na">No aplica</span>';
+    else kfCli = `<span class="val">${esc(s.cliente)}</span>${copyBtn(s.cliente, 'N° cliente')}`;
+    const ciaTxt = s.cia ? (NA.test(s.cia) ? 'Compañía no aplica' : s.cia) : 'Compañía sin registro';
+    let kfKey, kfKeySub;
+    if (s.claves.length) {
+      const c = s.claves[0];
+      kfKey = codeVal(s, c, true) + (/^\d+$/.test(c.code) ? copyBtn(c.code, 'Clave') : '') + revealBtn;
+      kfKeySub = (/^\d+$/.test(c.code) ? c.label : 'Indicación de acceso') + (s.claves.length > 1 ? `, y ${plural(s.claves.length - 1, 'clave más', 'claves más')}` : '');
+    } else { kfKey = '<span class="val na">Sin clave registrada</span>'; kfKeySub = s.tags.includes('sin-llaves') ? 'El sitio no tiene llaves' : 'Revisa las notas de acceso'; }
+    const badges = [];
+    if (s.claves.length) badges.push('<span class="badge ok">Clave registrada</span>');
+    Object.keys(TAG_INFO).forEach((t) => { if (s.tags.includes(t)) badges.push(`<span class="badge ${TAG_INFO[t][1]}">${TAG_INFO[t][0]}</span>`); });
+    if (!s.cliente) badges.push('<span class="badge warn">Sin N° de cliente</span>');
+    const codes = s.claves.length ? `<div class="codes">${s.claves.map((c) => {
+      const num = /^\d+$/.test(c.code);
+      return `<div class="code">${codeVal(s, c, false)}${num ? `<span class="lab">${esc(c.label)}</span>${copyBtn(c.code, 'Clave')}` : ''}</div>`;
+    }).join('')}${revealBtn ? `<div>${revealBtn}</div>` : ''}</div>` : '<span class="muted">Sin clave registrada</span>';
+    const extras = Object.entries(s.extras || {}).filter(([, v]) => v);
+    const row = (k, v, cls = '') => `<div><dt>${k}</dt><dd${cls ? ` class="${cls}"` : ''}>${v}</dd></div>`;
+    const notas = hidden ? s.notas.replace(/(?<!\d)\d{4,6}(?!\d)/g, (m) => dots(m)) : s.notas;
+    el.innerHTML = `<div class="d-bar gutter"><button type="button" class="back" data-act="close">${icons.back}Sitios</button></div>
+    <article class="rec"><div class="rec-in">
+      <header class="d-head">
+        <div class="d-id">
+          <h2 class="d-pop">${esc(s.pop)}</h2>
+          <p class="d-name">${esc(s._base || 'Sin nombre')}</p>
+          ${badges.length ? `<div class="d-badges">${badges.join('')}</div>` : ''}
+        </div>
+        <div class="d-actions"><button type="button" class="btn primary" data-act="ficha">${icons.copy}Copiar ficha</button></div>
+      </header>
+      <div class="keyfacts" role="group" aria-label="Datos clave">
+        <div class="kf"><span class="kf-l">${icons.tag}Llavero</span><div class="kf-v">${kfLl}</div><span class="kf-s">${s.llavero ? 'Tablero de llaves' : 'No tiene llavero asignado'}</span></div>
+        <div class="kf"><span class="kf-l">${icons.bolt}N° de cliente eléctrico</span><div class="kf-v">${kfCli}</div><span class="kf-s">${esc(ciaTxt)}</span></div>
+        <div class="kf"><span class="kf-l">${icons.lock}Clave de acceso</span><div class="kf-v">${kfKey}</div><span class="kf-s">${esc(kfKeySub)}</span></div>
+      </div>
+      <section class="sec" aria-labelledby="sec-acc"><h2 id="sec-acc">${icons.lock}Acceso al sitio</h2>
+        <dl class="fields">
+          ${row('Claves', codes)}
+          ${row('Notas de acceso', s.notas ? `<p class="notes">${esc(notas)}</p>` : 'Sin notas', s.notas ? '' : 'muted')}
+        </dl>
+      </section>
+      <section class="sec" aria-labelledby="sec-ele"><h2 id="sec-ele">${icons.bolt}Suministro eléctrico</h2>
+        <dl class="fields">
+          ${row('N° de cliente', s.cliente ? (NA.test(s.cliente) ? 'No aplica' : `<span class="mono">${esc(s.cliente)}</span>`) : 'Sin registro', s.cliente && !NA.test(s.cliente) ? '' : 'muted')}
+          ${row('Compañía eléctrica', s.cia ? esc(s.cia) : 'Sin registro', s.cia ? '' : 'muted')}
+        </dl>
+      </section>
+      <section class="sec" aria-labelledby="sec-id"><h2 id="sec-id">${icons.id}Identificación</h2>
+        <dl class="fields">
+          ${row('Zonal', esc(zLabel(s.zonal)))}
+          ${row(s.codes.length > 1 ? 'Códigos POP' : 'Código POP', `<span class="mono">${esc(s.codes.join(', '))}</span>`)}
+          ${row('Nombre en planilla', esc(String(s.nombre || '').trim() || 'Sin nombre'))}
+          ${s._tech ? row('Tecnología', `<span class="mono">${esc(s._tech)}</span>`) : ''}
+          ${extras.map(([k, v]) => row(esc(k), esc(v))).join('')}
+        </dl>
+      </section>
+      <footer class="rec-foot">
+        ${s.actualizado ? `<span>${icons.clock}Actualizado el ${esc(fmtDate(s.actualizado))}</span>` : ''}
+        ${s.archivo ? `<span>${icons.file}Fuente: ${esc(s.archivo)}</span>` : ''}
+      </footer>
+    </div></article>`;
+  }
+
+  function renderSitesView() {
+    compute();
+    if (twoMQ.matches && !S.activeKey && S.results.length && S.q) S.activeKey = S.results[0]._key;
+    renderTop(); renderNotice(); renderFacets(); renderHead(); renderList(); renderDetail();
+  }
+  function refreshResults(selectTop) {
+    compute();
+    if (selectTop && twoMQ.matches && S.results[0] && (S.q || !S.results.some((s) => s._key === S.activeKey))) S.activeKey = S.results[0]._key;
+    renderHead(); renderList(); renderDetail();
+  }
+
+  function fichaText(s) {
+    const L = [`${s.pop} – ${s._base}`, `Zonal: ${zLabel(s.zonal)}`];
+    L.push(`Llavero: ${s.llavero || 'sin número'}`);
+    L.push(`N° cliente: ${s.cliente || 'sin dato'}${s.cia && !NA.test(s.cia) ? ` (${s.cia})` : ''}`);
+    if (s.claves.length) s.claves.forEach((c) => L.push(/^\d+$/.test(c.code) ? `${c.label}: ${c.code}` : `Acceso: ${c.code}`));
+    else L.push('Clave: sin clave registrada');
+    if (s.notas) L.push('Notas: ' + s.notas.replace(/\n+/g, ' / '));
+    return L.join('\n');
+  }
+
+  /* ================= Interacción ================= */
+  let toastT;
+  function toast(msg) {
+    const t = $('#toast');
+    t.innerHTML = icons.check + '<span>' + esc(msg) + '</span>'; t.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+  function copyText(text, what) {
+    const done = () => toast(`${what || 'Texto'} copiado`);
+    const fallback = () => {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand('copy'); } catch (_) {}
+      ta.remove();
+      ok ? done() : toast('Mantén presionado el texto para copiarlo');
+    };
+    try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback); else fallback(); } catch (_) { fallback(); }
+  }
+
+  function confirmBox(title, text, okLabel, danger) {
+    return new Promise((resolve) => {
+      const d = $('#cdlg');
+      $('#cdlgBody').innerHTML = `<div class="dlg-h"><h2 id="cdlgTitle">${esc(title)}</h2></div><div class="dlg-b"><p>${esc(text)}</p></div>
+        <div class="dlg-f"><button type="button" class="btn" data-c="0">Cancelar</button><button type="button" class="btn ${danger ? 'danger' : 'primary'}" data-c="1">${esc(okLabel)}</button></div>`;
+      const done = (v) => { d.close(); resolve(v); };
+      d.onclick = (e) => { const b = e.target.closest('[data-c]'); if (b) done(b.dataset.c === '1'); };
+      d.oncancel = () => resolve(false);
+      d.showModal();
+      setTimeout(() => d.querySelector('[data-c="1"]').focus(), 20);
+    });
+  }
+
+  function addRecent(k) { S.recent = [k, ...S.recent.filter((x) => x !== k)].slice(0, 8); lsSet('llavero-recientes-' + uid(), S.recent); }
+
+  function select(k, open) {
+    if (S.activeKey !== k) S.revealed.clear();
+    S.activeKey = k;
+    const s = S.byKey.get(k);
+    const hadFocus = document.activeElement && document.activeElement.classList.contains('row');
+    renderList(); renderDetail();
+    if (hadFocus && twoMQ.matches) { const row = document.querySelector(`.row[data-id="${CSS.escape(k)}"]`); if (row) row.focus({ preventScroll: true }); }
+    if (open && s) {
+      addRecent(k); renderHead();
+      const h = '#' + hashOf(s);
+      if (location.hash !== h) { try { history.replaceState(null, '', h); } catch (_) {} }
+      if (!twoMQ.matches) openDetail(); else $('#detail').scrollTop = 0;
+    }
+  }
+  function openDetail() {
+    const d = $('#detail'); d.classList.add('open'); d.scrollTop = 0; document.documentElement.style.overflow = 'hidden';
+    try { history.pushState({ ficha: 1 }, '', location.hash || '#'); } catch (_) {}
+    const b = d.querySelector('.back'); if (b) b.focus({ preventScroll: true });
+  }
+  function closeDetail(fromPop) {
+    const d = $('#detail');
+    if (!d.classList.contains('open')) return;
+    d.classList.remove('open'); document.documentElement.style.overflow = '';
+    if (!fromPop) { try { history.back(); } catch (_) {} }
+    const row = document.querySelector(`.row[data-id="${CSS.escape(S.activeKey || '')}"]`); if (row) row.focus({ preventScroll: false });
+  }
+
+  function setView(v) {
+    if (!isAdmin()) v = 'sitios';
+    S.view = v;
+    $('#viewSitios').hidden = v !== 'sitios';
+    $('#viewUsuarios').hidden = v !== 'usuarios';
+    $('#viewCargas').hidden = v !== 'cargas';
+    renderTop();
+    if (v === 'usuarios') { renderUsers(); loadUsers(); }
+    if (v === 'cargas') loadCargas();
+  }
+  function routeFromHash() {
+    const h = decodeURIComponent(location.hash.slice(1));
+    if (h === 'usuarios' || h === 'cargas') { setView(h); return; }
+    setView('sitios');
+    if (!h) return;
+    const H = h.toUpperCase();
+    const s = S.sites.find((x) => hashOf(x).toUpperCase() === H || x.codes.some((c) => c.toUpperCase() === H));
+    if (!s) return;
+    if (S.zonal !== 'all' && S.zonal !== s.zonal) { S.zonal = s.zonal; rebuildGroups(); }
+    S.activeKey = s._key; renderSitesView();
+    if (!twoMQ.matches) openDetail();
+  }
+
+  function toggleFilter(id) {
+    if (id === '*') S.filters.clear();
+    else if (S.filters.has(id)) S.filters.delete(id); else S.filters.add(id);
+    renderFacets(); refreshResults(true);
+  }
+
+  function closeMenu() { $('#umenu').hidden = true; $('#btnUser').setAttribute('aria-expanded', 'false'); }
+  function openMenu() {
+    const p = S.profile || {};
+    const r = ROLES[p.rol] || ['', 'info'];
+    const zs = isAdmin() ? 'Todas las zonales' : (p.zonales || []).map(zLabel).join(', ');
+    $('#umenu').innerHTML = `<div class="umenu-h"><strong>${esc(p.nombre || 'Sin nombre')}</strong><span>${esc(p.email || '')}</span><span>${esc(zs)}</span><span class="badge ${r[1]}">${r[0]}</span></div>
+      ${isAdmin() && !S.offline ? `<button type="button" role="menuitem" class="m-only" data-act="import">${icons.upload}Cargar Excel</button>` : ''}
+      ${isAdmin() && S.sites.length ? `<button type="button" role="menuitem" class="m-only" data-act="export">${icons.file}Descargar Excel</button>` : ''}
+      <button type="button" role="menuitem" data-act="reload">${icons.refresh}Actualizar datos</button>
+      <button type="button" role="menuitem" data-act="logout">${icons.out}Cerrar sesión</button>`;
+    $('#umenu').hidden = false; $('#btnUser').setAttribute('aria-expanded', 'true');
+    $('#umenu button').focus();
+  }
+
+  function bind() {
+    document.addEventListener('submit', (e) => { const f = e.target; if (f.closest('#authCard')) { e.preventDefault(); submitAuth(f); } });
+    const qi = $('#q');
+    qi.addEventListener('input', () => { S.q = qi.value; $('#qClear').hidden = !qi.value; $('#qKbd').hidden = !!qi.value; refreshResults(true); });
+    qi.addEventListener('keydown', (e) => {
+      const r = S.results;
+      if (e.key === 'Escape' && qi.value) { qi.value = ''; qi.dispatchEvent(new Event('input')); return; }
+      if (!r.length) return;
+      let i = r.findIndex((s) => s._key === S.activeKey);
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault(); i = e.key === 'ArrowDown' ? Math.min(r.length - 1, i + 1) : Math.max(0, i - 1);
+        S.revealed.clear(); S.activeKey = r[i]._key; renderList(); renderDetail();
+        const row = document.querySelector('.row[aria-current="true"]'); if (row) row.scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter') { e.preventDefault(); select((r[i] || r[0])._key, true); }
+    });
+    $('#qClear').addEventListener('click', () => { qi.value = ''; qi.dispatchEvent(new Event('input')); qi.focus(); });
+    $('#sort').addEventListener('change', (e) => { S.sort = e.target.value; refreshResults(false); });
+    $('#zonalSel').addEventListener('change', (e) => {
+      S.zonal = e.target.value; lsSet('llavero-zonal-' + uid(), S.zonal);
+      if (S.activeKey && S.zonal !== 'all' && !S.activeKey.startsWith(S.zonal + '/')) S.activeKey = null;
+      rebuildGroups(); renderSitesView();
+    });
+    document.addEventListener('click', (e) => {
+      const t = e.target;
+      const pw = t.closest('[data-pw]'); if (pw) { const inp = $('#' + pw.dataset.pw); const show = inp.type === 'password'; inp.type = show ? 'text' : 'password'; pw.innerHTML = show ? icons.eyeOff : icons.eye; pw.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña'); return; }
+      const au = t.closest('[data-auth]'); if (au) { renderAuth(au.dataset.auth); return; }
+      const f = t.closest('[data-f]'); if (f) { toggleFilter(f.dataset.f); return; }
+      const u = t.closest('[data-unf]'); if (u) { toggleFilter(u.dataset.unf); return; }
+      const o = t.closest('[data-open]'); if (o) { select(o.dataset.open, true); return; }
+      if (t.closest('[data-dlg="close"]')) { $('#dlg').close(); return; }
+      if (t.closest('[data-fdlg="close"]')) { $('#fdlg').close(); return; }
+      const a = t.closest('[data-act]');
+      if (a && (a.closest('#waitCard') || a.closest('#umenu'))) {
+        if (a.dataset.act === 'logout') logout();
+        if (a.dataset.act === 'recheck') enter();
+        if (a.dataset.act === 'verified') verifiedCheck();
+        if (a.dataset.act === 'resend') { conEnlace((st) => S.user.sendEmailVerification(st)).then(() => toast('Correo reenviado'), (er) => toast(friendly(er))); }
+        if (a.dataset.act === 'import') { closeMenu(); openImport(); }
+        if (a.dataset.act === 'export') { closeMenu(); exportExcel(); }
+        if (a.dataset.act === 'reload') { closeMenu(); reloadSites().then(() => { toast('Datos actualizados'); if (isAdmin()) loadUsers(); }); }
+        return;
+      }
+      if (!t.closest('#umenu') && !t.closest('#btnUser')) closeMenu();
+    });
+    $('#btnUser').addEventListener('click', () => ($('#umenu').hidden ? openMenu() : closeMenu()));
+    $('#btnFilters').addEventListener('click', () => $('#fdlg').showModal());
+    $('#fClear').addEventListener('click', () => toggleFilter('*'));
+    $('#list').addEventListener('click', (e) => { const b = e.target.closest('.row'); if (b) select(b.dataset.id, true); });
+    $('#detail').addEventListener('click', (e) => {
+      const c = e.target.closest('[data-copy]'); if (c) { copyText(c.dataset.copy, c.dataset.what); return; }
+      const a = e.target.closest('[data-act]'); if (!a) return;
+      if (a.dataset.act === 'close') closeDetail();
+      if (a.dataset.act === 'reveal') { S.revealed.add(S.activeKey); renderDetail(); renderList(); }
+      if (a.dataset.act === 'ficha') { const s = S.byKey.get(S.activeKey); if (s) copyText(fichaText(s), 'Ficha'); }
+    });
+    $('#btnMask').addEventListener('click', () => { S.mask = !S.mask; S.revealed.clear(); lsSet('llavero-ocultar-claves', S.mask); renderTop(); renderList(); renderDetail(); toast(S.mask ? 'Claves ocultas en pantalla' : 'Claves visibles'); });
+    document.querySelectorAll('#tabs a').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); try { history.replaceState(null, '', a.dataset.view === 'sitios' ? location.pathname : '#' + a.dataset.view); } catch (_) {} setView(a.dataset.view); }));
+    document.addEventListener('keydown', (e) => {
+      const modal = $('#dlg').open || $('#fdlg').open || $('#cdlg').open;
+      if (e.key === 'Escape' && !$('#umenu').hidden) { closeMenu(); $('#btnUser').focus(); return; }
+      if ($('#appView').hidden || S.view !== 'sitios') return;
+      if (e.key === '/' && document.activeElement !== qi && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !modal) { e.preventDefault(); qi.focus(); qi.select(); }
+      if (e.key === 'Escape' && $('#detail').classList.contains('open') && !modal) closeDetail();
+    });
+    window.addEventListener('popstate', () => { if ($('#detail').classList.contains('open')) closeDetail(true); });
+    twoMQ.addEventListener('change', () => { if (twoMQ.matches) { $('#detail').classList.remove('open'); document.documentElement.style.overflow = ''; } renderDetail(); });
+    $('#btnImport').addEventListener('click', openImport);
+    $('#btnExport').addEventListener('click', exportExcel);
+    $('#file').addEventListener('change', (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) handleFile(f); });
+    $('#utabs').addEventListener('click', (e) => { const b = e.target.closest('[data-ut]'); if (b) { S.utab = b.dataset.ut; renderUsers(); } });
+    $('#utable').addEventListener('click', onUserClick);
+    $('#utable').addEventListener('change', onUserChange);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && S.profile && !$('#appView').hidden && Date.now() - S.lastLoad > 5 * 60 * 1000) { reloadSites(); if (isAdmin()) loadUsers(); }
+    });
+  }
+
+  /* ================= Usuarios (administración) ================= */
+  async function loadUsers() {
+    try {
+      const snap = await S.fs.collection('perfiles').get();
+      S.users = snap.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (toDate(b.creado_en) || 0) - (toDate(a.creado_en) || 0));
+    } catch (e) { if (S.view === 'usuarios') $('#utable').innerHTML = `<div class="empty-t"><strong>No se pudo cargar la lista</strong>${esc(friendly(e))}</div>`; return; }
+    renderTop();
+    if (S.view === 'usuarios') renderUsers();
+  }
+
+  function renderUsers() {
+    const groups = { pendiente: [], activos: [], bloqueado: [] };
+    S.users.forEach((u) => (u.rol === 'pendiente' ? groups.pendiente : u.rol === 'bloqueado' ? groups.bloqueado : groups.activos).push(u));
+    if (!groups[S.utab]) S.utab = 'pendiente';
+    if (S.utab === 'pendiente' && !groups.pendiente.length && groups.activos.length && !S._utabTouched) S.utab = 'activos';
+    $('#utabs').innerHTML = [['pendiente', 'Pendientes'], ['activos', 'Activos'], ['bloqueado', 'Bloqueados']].map(([k, l]) =>
+      `<button type="button" role="tab" data-ut="${k}" aria-selected="${S.utab === k}">${l}<span class="n">${groups[k].length}</span></button>`).join('');
+    const list = groups[S.utab];
+    const me = uid();
+    if (!list.length) {
+      $('#utable').innerHTML = `<div class="empty-t"><strong>${{ pendiente: 'No hay cuentas por aprobar', activos: 'No hay usuarios activos', bloqueado: 'No hay usuarios bloqueados' }[S.utab]}</strong>${S.utab === 'pendiente' ? 'Cuando alguien se registre, aparecerá aquí para que lo apruebes.' : ''}</div>`;
+      return;
+    }
+    const zbtns = (u, sel, disabled) => `<div class="zt">${S.zonales.map((z) => `<button type="button" data-uz="${esc(z.id)}" data-u="${esc(u.id)}" aria-pressed="${sel.has(z.id)}"${disabled ? ' disabled' : ''} title="${esc(z.nombre)}"><b>${esc(z.id)}</b>${esc(z.nombre)}</button>`).join('')}</div>`;
+    const head = `<div class="urow head"><span>Persona</span><span>Rol</span><span>Zonales</span><span style="text-align:right">Acciones</span></div>`;
+    $('#utable').innerHTML = head + list.map((u) => {
+      const isMe = u.id === me;
+      const r = ROLES[u.rol];
+      const who = `<div class="who"><strong>${esc(u.nombre || 'Sin nombre')}${isMe ? '<span class="you">Tú</span>' : ''}</strong><span>${esc(u.email)}</span><span>Registrado el ${esc(fmtDate(u.creado_en, true))}</span></div>`;
+      let rol, zon, acts;
+      if (u.rol === 'pendiente') {
+        const sel = S.pendSel.get(u.id) || new Set();
+        rol = `<div><span class="lbl-m">Rol</span><span class="badge ${r[1]}">${r[0]}</span></div>`;
+        zon = `<div><span class="lbl-m">Zonales que podrá ver</span>${zbtns(u, sel, false)}</div>`;
+        acts = `<div class="uacts"><button type="button" class="btn sm danger" data-ua="reject" data-u="${esc(u.id)}">Rechazar</button><button type="button" class="btn sm primary" data-ua="approve" data-u="${esc(u.id)}">${icons.check}Aprobar</button></div>`;
+      } else if (u.rol === 'bloqueado') {
+        rol = `<div><span class="lbl-m">Rol</span><span class="badge ${r[1]}">${r[0]}</span></div>`;
+        zon = `<div><span class="lbl-m">Zonales</span><span class="muted">${esc((u.zonales || []).join(', ') || 'Ninguna')}</span></div>`;
+        acts = `<div class="uacts"><button type="button" class="btn sm" data-ua="unblock" data-u="${esc(u.id)}">Reactivar</button></div>`;
+      } else {
+        rol = `<div><span class="lbl-m">Rol</span><label class="rolesel"><span class="sr-only">Rol de ${esc(u.nombre)}</span><select data-urol="${esc(u.id)}"${isMe ? ' disabled' : ''}><option value="tecnico"${u.rol === 'tecnico' ? ' selected' : ''}>Técnico</option><option value="admin"${u.rol === 'admin' ? ' selected' : ''}>Administrador</option></select>${icons.chev}</label></div>`;
+        zon = u.rol === 'admin' ? `<div><span class="lbl-m">Zonales</span><span class="zt"><span class="all">Todas (administrador)</span></span></div>` : `<div><span class="lbl-m">Zonales</span>${zbtns(u, new Set(u.zonales || []), false)}</div>`;
+        acts = `<div class="uacts">${isMe ? '' : `<button type="button" class="btn sm danger" data-ua="block" data-u="${esc(u.id)}">Bloquear</button>`}</div>`;
+      }
+      return `<div class="urow">${who}${rol}${zon}${acts}</div>`;
+    }).join('');
+  }
+
+  async function updateUser(id, patch, okMsg) {
+    const cur = S.users.find((u) => u.id === id);
+    if (!cur) return false;
+    const zon = (patch.zonales || cur.zonales || []).filter((z) => ZIDS.includes(z));
+    const full = { rol: patch.rol || cur.rol, zonales: ZIDS.filter((z) => zon.includes(z)), revisado_por: uid(), revisado_en: ts() };
+    try {
+      const ref = S.fs.collection('perfiles').doc(id);
+      await ref.update(full);
+      const snap = await ref.get();
+      const i = S.users.findIndex((u) => u.id === id); if (i >= 0) S.users[i] = { id, ...snap.data() };
+      if (okMsg) toast(okMsg);
+    } catch (e) { toast(friendly(e)); await loadUsers(); return false; }
+    renderTop(); renderUsers();
+    return true;
+  }
+
+  async function onUserClick(e) {
+    const zb = e.target.closest('[data-uz]');
+    const u = zb ? S.users.find((x) => x.id === zb.dataset.u) : null;
+    if (zb && u) {
+      const z = zb.dataset.uz;
+      if (u.rol === 'pendiente') {
+        const sel = S.pendSel.get(u.id) || new Set(); sel.has(z) ? sel.delete(z) : sel.add(z); S.pendSel.set(u.id, sel); renderUsers();
+      } else {
+        const cur = new Set(u.zonales || []); cur.has(z) ? cur.delete(z) : cur.add(z);
+        if (!cur.size) { toast('Un técnico debe tener al menos una zonal'); return; }
+        updateUser(u.id, { zonales: [...cur] }, 'Zonales actualizadas');
+      }
+      return;
+    }
+    const b = e.target.closest('[data-ua]'); if (!b) return;
+    const usr = S.users.find((x) => x.id === b.dataset.u); if (!usr) return;
+    const name = usr.nombre || usr.email;
+    if (b.dataset.ua === 'approve') {
+      const sel = S.pendSel.get(usr.id);
+      if (!sel || !sel.size) { toast('Elige al menos una zonal antes de aprobar'); return; }
+      if (await updateUser(usr.id, { rol: 'tecnico', zonales: [...sel] }, `${name} aprobado`)) S.pendSel.delete(usr.id);
+    } else if (b.dataset.ua === 'reject') {
+      if (await confirmBox('Rechazar cuenta', `${name} (${usr.email}) no podrá ver ningún sitio. Puedes reactivarlo después desde “Bloqueados”.`, 'Rechazar', true)) updateUser(usr.id, { rol: 'bloqueado' }, 'Cuenta rechazada');
+    } else if (b.dataset.ua === 'block') {
+      if (await confirmBox('Bloquear usuario', `${name} perderá el acceso de inmediato. Puedes reactivarlo después.`, 'Bloquear', true)) updateUser(usr.id, { rol: 'bloqueado' }, 'Usuario bloqueado');
+    } else if (b.dataset.ua === 'unblock') {
+      if (await updateUser(usr.id, { rol: 'pendiente' }, `${name} pasó a pendientes`)) { S.utab = 'pendiente'; S._utabTouched = true; renderUsers(); }
+    }
+  }
+
+  async function onUserChange(e) {
+    const sel = e.target.closest('[data-urol]'); if (!sel) return;
+    const u = S.users.find((x) => x.id === sel.dataset.urol); if (!u) return;
+    const nuevo = sel.value;
+    if (nuevo === 'admin') {
+      const ok = await confirmBox('Nombrar administrador', `${u.nombre || u.email} podrá ver todas las zonales, aprobar y bloquear usuarios, y cargar planillas.`, 'Nombrar administrador', false);
+      if (!ok) { sel.value = u.rol; return; }
+      updateUser(u.id, { rol: 'admin' }, 'Ahora es administrador');
+    } else {
+      const patch = { rol: 'tecnico' };
+      if (!(u.zonales || []).length) patch.zonales = S.zonales.map((z) => z.id);
+      updateUser(u.id, patch, 'Ahora es técnico');
+    }
+  }
+
+  /* ================= Historial de cargas ================= */
+  async function loadCargas() {
+    $('#ctable').innerHTML = '<div class="empty-t">Cargando…</div>';
+    try { S.cargas = (await S.fs.collection('cargas').orderBy('creado_en', 'desc').limit(200).get()).docs.map((d) => ({ id: d.id, ...d.data() })); }
+    catch (e) { $('#ctable').innerHTML = `<div class="empty-t"><strong>No se pudo cargar el historial</strong>${esc(friendly(e))}</div>`; return; }
+    if (!S.cargas.length) { $('#ctable').innerHTML = '<div class="empty-t"><strong>Aún no hay cargas</strong>Cuando un administrador suba una planilla, quedará registrada aquí.</div>'; return; }
+    $('#ctable').innerHTML = `<table class="ctable"><thead><tr><th>Fecha</th><th>Zonal</th><th>Archivo</th><th class="n">Nuevos</th><th class="n">Actualizados</th><th class="n">Quitados</th><th>Cargado por</th></tr></thead><tbody>${S.cargas.map((c) =>
+      `<tr><td>${esc((toDate(c.creado_en) || new Date()).toLocaleString('es-CL', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }))}</td><td class="mono">${esc(zLabel(c.zonal))}</td><td>${esc(c.archivo)}</td><td class="n">${c.nuevos}</td><td class="n">${c.actualizados}</td><td class="n">${c.eliminados}</td><td>${esc(c.usuario_nombre || '')}</td></tr>`).join('')}</tbody></table>`;
+  }
+
+  /* ================= Cargar planilla ================= */
+  const dlg = () => $('#dlg');
+  let plan = null, parsedFile = null, mapping = {};
+  function dlgView(title, bodyHtml, footHtml) {
+    $('#dlgBody').innerHTML = `<div class="dlg-h"><h2 id="dlgTitle">${title}</h2><button type="button" class="iconbtn" data-dlg="close" aria-label="Cerrar">${icons.x}</button></div>
+      <div class="dlg-b">${bodyHtml}</div>${footHtml ? `<div class="dlg-f">${footHtml}</div>` : ''}`;
+  }
+  function openImport() {
+    plan = null; parsedFile = null;
+    dlgView('Cargar planilla',
+      `<p>Elige la planilla con los sitios. Cada hoja se asigna a una zonal según su nombre (por ejemplo, una hoja llamada OSORNO va a Z16 Osorno); podrás revisarlo antes de guardar.</p>
+      <label class="drop" id="drop" for="file">${icons.upload}<strong>Elegir planilla</strong><small>.xlsx, .xls o .csv. También puedes arrastrarla aquí.</small></label>
+      <p class="hint">Columnas que se reconocen: POP, Nombre, Llavero, N° Cliente, CIA Eléctrica, Clave de acceso, Notas de acceso y Zona. También se leen las notas de celda. Una celda vacía no borra el dato que ya existe.</p>`,
+      '<button type="button" class="btn" data-dlg="close">Cancelar</button>');
+    if (!dlg().open) dlg().showModal();
+    const drop = $('#drop');
+    ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+    ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
+    drop.addEventListener('drop', (e) => { const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (f) handleFile(f); });
+  }
+  function supportsDeflateRaw() { try { new DecompressionStream('deflate-raw'); return true; } catch (_) { return false; } }
+  function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+  async function sheetjs() {
+    if (window.XLSX) return window.XLSX;
+    try { await loadScript('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'); }
+    catch (_) { await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'); }
+    if (!window.XLSX) throw new Error('No se pudo cargar el lector de planillas antiguas.');
+    return window.XLSX;
+  }
+  async function viaSheetJS(u8) {
+    const X = await sheetjs();
+    const wb = X.read(u8, { type: 'array', sheetRows: 20000 });
+    return wb.SheetNames.map((name) => {
+      const ws = wb.Sheets[name];
+      const rows = [], comments = {};
+      if (!ws || !ws['!ref']) return { name, rows, comments };
+      const rg = X.utils.decode_range(ws['!ref']);
+      for (let r = rg.s.r; r <= Math.min(rg.e.r, rg.s.r + 20000); r++) {
+        const cells = []; let has = false;
+        for (let c = rg.s.c; c <= Math.min(rg.e.c, 60); c++) {
+          const ref = X.utils.encode_cell({ r, c });
+          const cell = ws[ref]; if (!cell) continue;
+          const v = cell.t === 'n' ? cell.v : (cell.w != null ? cell.w : cell.v);
+          if (v != null && String(v).trim() !== '') { cells[c] = String(v); has = true; }
+          if (cell.c && cell.c.length) comments[ref] = XL.cleanComment(cell.c.map((x) => x.t || '').join('\n'));
+        }
+        if (has) rows.push({ r: r + 1, cells });
+      }
+      return { name, rows, comments };
+    });
+  }
+  const decodeText = (u8) => { try { return new TextDecoder('utf-8', { fatal: true }).decode(u8); } catch (_) { return new TextDecoder('windows-1252').decode(u8); } };
+
+  function guessZonal(name) {
+    const n = nrm(name).replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+    const m = /\bz ?(\d{2})\b/.exec(n);
+    if (m && S.zname.has('Z' + m[1])) return 'Z' + m[1];
+    for (const z of S.zonales) if (n.includes(nrm(z.nombre))) return z.id;
+    if (/\bpto montt\b|\bmontt\b/.test(n)) return S.zname.has('Z17') ? 'Z17' : null;
+    if (/\bchiloe\b/.test(n)) return S.zname.has('Z18') ? 'Z18' : null;
+    return null;
+  }
+
+  async function handleFile(file) {
+    if (!dlg().open) dlg().showModal();
+    dlgView('Leyendo planilla', `<div style="display:flex;gap:12px;align-items:center"><div class="spin" aria-hidden="true"></div><p id="readMsg">Abriendo “${esc(file.name)}”…</p></div>`);
+    try {
+      const ext = (file.name.split('.').pop() || '').toLowerCase();
+      const u8 = new Uint8Array(await file.arrayBuffer());
+      let sheets;
+      if ((ext === 'xlsx' || ext === 'xlsm') && supportsDeflateRaw()) sheets = await XL.parseXlsx(u8, (n) => { const m = $('#readMsg'); if (m) m.textContent = `Revisando fila ${n.toLocaleString('es-CL')}…`; });
+      else if (ext === 'csv' || ext === 'txt') sheets = [{ name: file.name.replace(/\.[^.]+$/, ''), rows: XW.parseCsv(decodeText(u8)), comments: {} }];
+      else sheets = await viaSheetJS(u8);
+      const parsed = SITES.fromSheets(sheets, file.name);
+      if (!parsed.sites.length) throw new Error(parsed.warnings[0] || 'No se encontraron sitios. Revisa que la primera fila tenga una columna POP.');
+      parsedFile = { parsed, fileName: file.name };
+      mapping = {};
+      const keys = [...new Set(parsed.sites.map((s) => s.zona || ''))];
+      keys.forEach((k) => { mapping[k] = guessZonal(k) || (S.zonal !== 'all' ? S.zonal : ''); });
+      showPlan();
+    } catch (err) {
+      dlgView('No se pudo leer la planilla', `<p class="err">${esc(err && err.message ? err.message : String(err))}</p>`,
+        '<button type="button" class="btn" data-dlg="close">Cerrar</button><label class="btn primary" for="file">Elegir otro archivo</label>');
+    }
+  }
+
+  const same = (a, b) => JSON.stringify(a ?? '') === JSON.stringify(b ?? '');
+  function makePlan() {
+    const { parsed, fileName } = parsedFile;
+    const now = new Date().toISOString();
+    const me = uid();
+    const items = [];
+    let unchanged = 0;
+    const seen = new Set();
+    const perZ = {};
+    const bump = (z, k) => { perZ[z] = perZ[z] || { nuevos: 0, actualizados: 0, eliminados: 0 }; perZ[z][k]++; };
+    for (const inc of parsed.sites) {
+      const z = mapping[inc.zona || ''];
+      if (!z || z === '__skip') continue;
+      perZ[z] = perZ[z] || { nuevos: 0, actualizados: 0, eliminados: 0 };
+      const cur = S.byKey.get(z + '/' + inc._id) || S.sites.find((s) => s.zonal === z && s.codes.some((c) => inc.codes.includes(c)));
+      const p = new Set(inc._present);
+      if (!cur) {
+        const row = { zonal: z, id: inc._id, pop: inc.pop, codes: inc.codes, nombre: inc.nombre, llavero: inc.llavero, cliente: inc.cliente, cia: inc.cia,
+          claves: inc.claves, notas: inc.notas, extras: inc.extras, archivo: fileName, actualizado: now, actualizado_por: me };
+        row.tags = SITES.tagsFor(row.notas + '\n' + row.claves.map((c) => c.label + ' ' + c.code).join('\n'));
+        if (seen.has(z + '/' + inc._id)) continue;
+        seen.add(z + '/' + inc._id);
+        items.push({ type: 'new', row, label: inc.pop, zonal: z }); bump(z, 'nuevos');
+        continue;
+      }
+      seen.add(cur._key);
+      const patch = {};
+      for (const f of ['nombre', 'llavero', 'cliente', 'cia']) if (p.has(f) && !same(inc[f], cur[f])) patch[f] = inc[f];
+      if (p.has('notas') && !same(inc.notas, cur.notas)) patch.notas = inc.notas;
+      let claves = cur.claves;
+      if (p.has('clave')) claves = inc.claves;
+      else if (inc.claves.length) { const m = new Map(cur.claves.map((c) => [c.code, c])); inc.claves.forEach((c) => m.set(c.code, c)); claves = [...m.values()]; }
+      if (!same(claves, cur.claves)) patch.claves = claves;
+      const ex = {}; for (const [k, v] of Object.entries(inc.extras)) if (!same(v, cur.extras[k])) ex[k] = v;
+      if (Object.keys(ex).length) patch.extras = { ...cur.extras, ...ex };
+      const notas = 'notas' in patch ? patch.notas : cur.notas;
+      const tags = SITES.tagsFor((notas || '') + '\n' + claves.map((c) => c.label + ' ' + c.code).join('\n'));
+      if (!same(tags, cur.tags)) patch.tags = tags;
+      if (!Object.keys(patch).length) { unchanged++; continue; }
+      const changed = Object.keys(patch).filter((k) => k !== 'tags');
+      const row = { ...plainSite(cur), ...patch, archivo: fileName, actualizado: now, actualizado_por: me };
+      items.push({ type: 'update', row, changed: changed.length ? changed : ['tags'], label: cur.pop, zonal: z }); bump(z, 'actualizados');
+    }
+    const zs = Object.keys(perZ);
+    const missing = S.sites.filter((s) => zs.includes(s.zonal) && !seen.has(s._key));
+    return { fileName, items, unchanged, missing, perZ, total: parsed.sites.length };
+  }
+
+  function showPlan() {
+    const { parsed, fileName } = parsedFile;
+    const keys = Object.keys(mapping);
+    const unmapped = keys.filter((k) => !mapping[k]);
+    const loadable = keys.filter((k) => mapping[k] && mapping[k] !== '__skip');
+    plan = makePlan();
+    const P = plan;
+    const nNew = P.items.filter((i) => i.type === 'new').length;
+    const nUpd = P.items.length - nNew;
+    const labels = { pop: 'POP', nombre: 'Nombre', llavero: 'Llavero', cliente: 'N° Cliente', cia: 'CIA Eléctrica', clave: 'Clave de acceso', notas: 'Notas / comentarios', zona: 'Zona' };
+    const cols = parsed.columns.map((c) => c.startsWith('extra:') ? c.slice(6) : labels[c] || c);
+    const count = (k) => parsed.sites.filter((s) => (s.zona || '') === k).length;
+    const mapHtml = `<div class="map">${keys.map((k) => `<div class="map-row"><div class="src"><b>${esc(k || 'Sin nombre de hoja')}</b> <span>${plural(count(k), 'sitio', 'sitios')}</span></div>
+      <label><span class="sr-only">Zonal de destino para ${esc(k)}</span><select data-map="${esc(k)}" class="${mapping[k] ? '' : 'need'}"><option value="">Elige la zonal…</option>${S.zonales.map((z) => `<option value="${esc(z.id)}"${mapping[k] === z.id ? ' selected' : ''}>${esc(z.id + ' ' + z.nombre)}</option>`).join('')}<option value="__skip"${mapping[k] === '__skip' ? ' selected' : ''}>No cargar esta hoja</option></select></label></div>`).join('')}</div>`;
+    const rows = P.items.slice(0, 60).map((i) => `<tr><td>${esc(i.zonal)} ${esc(i.label)}</td><td>${i.type === 'new' ? 'Sitio nuevo' : esc(i.changed.map((k) => FIELD_NAMES[k] || k).join(', '))}</td></tr>`).join('');
+    dlgView('Revisa los cambios',
+      `<p>“${esc(fileName)}” trae ${plural(P.total, 'sitio', 'sitios')}. Revisa a qué zonal va cada hoja:</p>
+      ${mapHtml}
+      <div class="cols" aria-label="Columnas reconocidas">${cols.map((c) => `<span>${esc(c)}</span>`).join('')}</div>
+      <div class="stats"><div><b>${nNew}</b><span>Nuevos</span></div><div><b>${nUpd}</b><span>Con cambios</span></div><div><b>${P.unchanged}</b><span>Sin cambios</span></div></div>
+      ${P.items.length ? `<div class="changes"><table><thead><tr><th>Sitio</th><th>Qué cambia</th></tr></thead><tbody>${rows}</tbody></table></div>${P.items.length > 60 ? `<p class="hint">Y ${P.items.length - 60} más.</p>` : ''}` : (unmapped.length ? '' : '<p>La base ya tiene todo lo que trae esta planilla.</p>')}
+      ${parsed.warnings.length ? `<ul class="warns">${parsed.warnings.map((w) => `<li>${esc(w)}</li>`).join('')}</ul>` : ''}
+      ${P.missing.length ? `<label class="check"><input type="checkbox" id="rmMissing"><span>Quitar ${plural(P.missing.length, 'sitio que no viene', 'sitios que no vienen')} en esta planilla (solo en ${esc(Object.keys(P.perZ).join(', '))})</span></label>` : ''}`,
+      '<button type="button" class="btn" data-dlg="close">Cancelar</button><button type="button" class="btn primary" id="doSave">Guardar cambios</button>');
+    $('#dlgBody').querySelectorAll('[data-map]').forEach((el) => el.addEventListener('change', () => { mapping[el.dataset.map] = el.value; showPlan(); }));
+    const btn = $('#doSave');
+    const upd = () => {
+      const rm = $('#rmMissing') && $('#rmMissing').checked ? P.missing.length : 0; const n = P.items.length + rm;
+      const need = Object.values(mapping).some((v) => !v);
+      btn.textContent = need ? 'Elige la zonal de cada hoja' : !loadable.length ? 'No hay hojas para cargar' : n ? `Guardar ${plural(n, 'cambio', 'cambios')}` : 'Nada que guardar';
+      btn.disabled = need || !n;
+    };
+    upd();
+    const cb = $('#rmMissing'); if (cb) cb.addEventListener('change', upd);
+    btn.addEventListener('click', () => applyPlan(!!(cb && cb.checked)));
+  }
+  async function applyPlan(removeMissing) {
+    const P = plan;
+    dlgView('Guardando cambios', `<div style="display:flex;gap:12px;align-items:center"><div class="spin" aria-hidden="true"></div><p class="hint">Guardando en la base de datos…</p></div>`);
+    const zs = Object.keys(P.perZ).filter((z) => ZIDS.includes(z));
+    const batch = S.fs.batch();
+    let nDel = 0;
+    try {
+      for (const z of zs) {
+        const map = new Map(S.sites.filter((s) => s.zonal === z).map((s) => [s.id, plainSite(s)]));
+        P.items.filter((i) => i.zonal === z).forEach((i) => { const r = plainSite(i.row); map.set(r.id, r); });
+        if (removeMissing) P.missing.filter((s) => s.zonal === z).forEach((s) => { if (map.delete(s.id)) { nDel++; P.perZ[z].eliminados++; } });
+        const sitios = JSON.parse(JSON.stringify([...map.values()].sort((a, b) => collator.compare(a.pop, b.pop))));
+        const bytes = new Blob([JSON.stringify(sitios)]).size;
+        if (bytes > 950000) throw new Error(`La zonal ${z} supera el tamaño máximo de un documento de Firestore (${Math.round(bytes / 1024)} KB de 1 MB). Divide sus notas o extras en menos texto.`);
+        batch.set(S.fs.collection('zonales').doc(z), { nombre: S.zname.get(z) || z, sitios, total: sitios.length, actualizado: ts(), actualizado_por: uid(), archivo: P.fileName });
+        const c = P.perZ[z];
+        batch.set(S.fs.collection('cargas').doc(), { zonal: z, archivo: P.fileName, nuevos: c.nuevos, actualizados: c.actualizados, eliminados: c.eliminados, usuario: uid(), usuario_nombre: (S.profile && S.profile.nombre) || '', creado_en: ts() });
+      }
+      await batch.commit();
+    } catch (e) {
+      dlgView('No se guardaron los cambios', `<p class="err">${esc(friendly(e))}</p><p>No se modificó nada. Revisa el mensaje y vuelve a intentarlo.</p>`, '<button type="button" class="btn primary" data-dlg="close">Cerrar</button>');
+      return;
+    }
+    await reloadSites();
+    const nNew = P.items.filter((i) => i.type === 'new').length, nUpd = P.items.length - nNew;
+    const summary = [nNew && plural(nNew, 'nuevo', 'nuevos'), nUpd && plural(nUpd, 'actualizado', 'actualizados'), nDel && plural(nDel, 'quitado', 'quitados')].filter(Boolean).join(', ');
+    dlg().close(); toast(`Planilla cargada: ${summary || 'sin cambios'}`);
+  }
+
+  /* ================= Descargar Excel ================= */
+  function exportExcel() {
+    const base = scopeSites();
+    const extraKeys = [...new Set(base.flatMap((s) => Object.keys(s.extras || {})))];
+    const header = ['POP', 'Nombre', 'Llavero', 'N° Cliente', 'CIA Eléctrica', 'Clave de acceso', 'Notas de acceso', ...extraKeys];
+    const widths = [12, 36, 9, 16, 15, 30, 48, ...extraKeys.map(() => 18)];
+    const byZ = new Map();
+    [...base].sort((a, b) => collator.compare(a.zonal, b.zonal) || collator.compare(a.pop, b.pop)).forEach((s) => {
+      if (!byZ.has(s.zonal)) byZ.set(s.zonal, []);
+      byZ.get(s.zonal).push([s.codes.join('\n'), s.nombre || '', /^\d+$/.test(s.llavero || '') ? Number(s.llavero) : (s.llavero || ''),
+        s.cliente || '', s.cia || '', s.claves.map((c) => /^\d+$/.test(c.code) ? `${c.label}: ${c.code}` : c.code).join('\n'), s.notas || '',
+        ...extraKeys.map((k) => (s.extras || {})[k] || '')]);
+    });
+    const blob = XW.workbook([...byZ.entries()].map(([z, rows]) => ({ name: (S.zname.get(z) || z).toUpperCase(), header, widths, rows })));
+    const tag = S.zonal === 'all' ? 'Zonales' : S.zonal + '_' + (S.zname.get(S.zonal) || '').replace(/\s+/g, '_');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `Sitios_${tag}_${new Date().toLocaleDateString('sv-SE')}.xlsx`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    toast('Planilla descargada');
+  }
+
+  /* ================= Inicio ================= */
+  async function verifiedCheck() {
+    try {
+      await S.auth.currentUser.reload();
+      S.user = S.auth.currentUser;
+      if (S.user.emailVerified) { await S.user.getIdToken(true); enter(); }
+      else toast('Tu correo aún no aparece confirmado. Abre el enlace del correo y vuelve a intentarlo.');
+    } catch (e) { toast(friendly(e)); }
+  }
+
+  function boot() {
+    bind();
+    const c = CFG.firebase || {};
+    if (!c.apiKey || !c.projectId || /PEGA|TU_/i.test(JSON.stringify(c))) { showSetup('Esta página todavía no está conectada a su base de datos.'); return; }
+    if (!window.firebase || !window.firebase.initializeApp || !window.firebase.firestore) { showSetup('No se pudo cargar Firebase. Revisa tu conexión a internet y recarga la página.'); return; }
+    firebase.initializeApp(c);
+    S.auth = firebase.auth();
+    S.auth.languageCode = 'es';
+    S.fs = firebase.firestore();
+    S.zonales = ZONALES_BASE;
+    S.zname = new Map(ZONALES_BASE.map((z) => [z.id, z.nombre]));
+    S.auth.onAuthStateChanged((u) => { onUser(u); });
+  }
+  boot();
+})();
+
+</script>
+</body>
+</html>
