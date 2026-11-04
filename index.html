@@ -1308,7 +1308,7 @@ const XW = (() => {
     if (c === 'auth/invalid-email') return 'Revisa el correo: no parece una dirección válida.';
     if (c === 'auth/too-many-requests') return 'Demasiados intentos seguidos. Espera unos minutos y vuelve a intentarlo.';
     if (c === 'auth/user-disabled') return 'Esta cuenta fue desactivada en Firebase.';
-    if (c === 'auth/operation-not-allowed') return 'El ingreso con correo y contraseña no está activado en Firebase (Authentication > Método de acceso).';
+    if (c === 'auth/operation-not-allowed' || c === 'auth/configuration-not-found') return 'Falta activar el ingreso con correo en Firebase: Authentication > Comenzar > Método de acceso > Correo electrónico/contraseña > Habilitar.';
     if (c === 'auth/unauthorized-domain' || c === 'auth/unauthorized-continue-uri') return 'Esta dirección no está autorizada en Firebase. Agrégala en Authentication > Configuración > Dominios autorizados.';
     if (c === 'auth/network-request-failed' || c === 'unavailable' || /network|offline|failed to fetch/i.test(m)) return 'No hay conexión con el servidor. Revisa tu internet e inténtalo de nuevo.';
     if (c === 'permission-denied' || /insufficient permissions/i.test(m)) return 'No tienes permiso para hacer esto.';
