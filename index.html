@@ -518,6 +518,231 @@ img { max-width: 100%; }
 .setup code { font-family: var(--f-mono); font-size: 13px; background: var(--hover); padding: 1px 6px; border-radius: 4px; }
 .kf-s { white-space: normal; }
 
+/* ===== Instructivos: biblioteca, lector, generador de comandos y repuestos GGEE ===== */
+@media (min-width: 880px) {
+  .frame.doc-frame { grid-template-columns: minmax(280px, 320px) minmax(0, 1fr); }
+}
+@media (min-width: 1200px) {
+  .frame.doc-frame { grid-template-columns: 320px minmax(0, 1fr); }
+}
+
+/* Lista de instructivos */
+#ilist { display: grid; padding: 6px 0 20px; }
+.ig { display: grid; }
+.ig + .ig { margin-top: 8px; }
+.ig-h { display: flex; align-items: center; gap: 8px; margin: 0; padding: 12px 16px 6px; font-size: 12px; font-weight: 600; letter-spacing: .02em; color: var(--muted); }
+.ig-h svg.i { width: 15px; height: 15px; }
+.ig-h .n { margin-left: auto; font-weight: 500; font-variant-numeric: tabular-nums; }
+.ilist { list-style: none; margin: 0; padding: 0 8px; display: grid; gap: 2px; }
+.irow { width: 100%; display: grid; gap: 4px; padding: 10px 12px; border: 0; border-radius: var(--r); background: transparent; text-align: left; transition: background .12s; }
+.irow:hover { background: var(--hover); }
+.irow[aria-current="true"] { background: var(--accent-soft); }
+.ir-t { font-size: 14.5px; font-weight: 600; line-height: 1.35; color: var(--ink); }
+.irow[aria-current="true"] .ir-t { color: var(--accent); }
+.ir-s { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 12.5px; line-height: 1.4; color: var(--muted); }
+.ir-tool { display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 6px; border-radius: 4px; background: var(--info-soft); color: var(--info); font-size: 11.5px; font-weight: 600; white-space: nowrap; }
+.ir-tool svg.i { width: 12px; height: 12px; }
+.inote { margin: 8px 16px; display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: var(--r); background: var(--panel-2); border: 1px solid var(--line); font-size: 13.5px; color: var(--ink-2); }
+.inote svg.i { width: 16px; height: 16px; margin-top: 2px; }
+.inote.warn { background: var(--warn-soft); border-color: transparent; color: var(--warn); }
+.inote.crit { background: var(--crit-soft); border-color: transparent; color: var(--crit); }
+#ilist .skel { height: 58px; border-radius: var(--r); margin: 2px 8px; }
+@media (max-width: 879.98px) {
+  #ilist { padding-top: 0; }
+  .ig-h { padding: 16px 2px 8px; }
+  .ilist { padding: 0; gap: 0; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); overflow: hidden; }
+  .ilist li + li { border-top: 1px solid var(--line); }
+  .irow { border-radius: 0; padding: 14px 16px; }
+  .inote { margin: 12px 0 0; }
+  #ilist .skel { margin: 8px 0; }
+  #ireader.open { background: var(--panel); }
+}
+
+/* Lector */
+.doc { container-type: inline-size; }
+.doc-grid { display: grid; grid-template-columns: minmax(0, 1fr); }
+.doc-in { min-width: 0; max-width: 820px; padding: 28px 36px 56px; display: grid; gap: 22px; align-content: start; }
+.toc-side { display: none; }
+@container (min-width: 1060px) {
+  .doc-grid { grid-template-columns: minmax(0, 800px) 230px; column-gap: 36px; }
+  .toc-side { display: block; position: sticky; top: 0; align-self: start; padding: 32px 20px 32px 0; max-height: 100vh; overflow-y: auto; }
+  .doc .toc-inline { display: none; }
+}
+@media (max-width: 879.98px) {
+  .doc { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .doc-in { padding: 20px 0 24px; gap: 18px; }
+}
+.toc-side h3 { margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: .02em; color: var(--muted); }
+.toc-side ol, .toc-inline ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.toc-side button, .toc-inline button { width: 100%; text-align: left; border: 0; background: none; font-size: 13px; line-height: 1.35; color: var(--ink-2); }
+.toc-side button { padding: 6px 10px; border-left: 2px solid var(--line); }
+.toc-side button:hover, .toc-inline button:hover { color: var(--ink); background: var(--hover); }
+.toc-side button[aria-current="true"] { color: var(--accent); border-left-color: var(--accent); font-weight: 500; }
+.toc-inline { border: 1px solid var(--line); border-radius: var(--r); background: var(--panel-2); }
+.toc-inline summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; font-size: 14px; font-weight: 600; }
+.toc-inline summary::-webkit-details-marker { display: none; }
+.toc-inline summary svg.i { width: 16px; height: 16px; color: var(--muted); }
+.toc-inline summary span { margin-left: auto; font-size: 13px; font-weight: 400; color: var(--muted); }
+.toc-inline ol { padding: 0 8px 10px; }
+.toc-inline button { min-height: 38px; padding: 6px 10px; border-radius: 6px; font-size: 14px; }
+
+.doc-h { display: grid; gap: 10px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.doc-kicker { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--accent); }
+.doc-kicker svg.i { width: 16px; height: 16px; }
+.doc-t { margin: 0; font: 600 28px/1.18 var(--f-sans); letter-spacing: -.01em; text-wrap: balance; }
+@media (max-width: 879.98px) { .doc-t { font-size: 23px; } }
+.doc-sum { margin: 0; font-size: 16px; line-height: 1.55; color: var(--ink-2); max-width: 68ch; }
+.doc-meta { margin: 4px 0 0; display: grid; gap: 4px; font-size: 13.5px; }
+.doc-meta div { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 12px; }
+.doc-meta dt { color: var(--muted); }
+.doc-meta dd { margin: 0; color: var(--ink-2); overflow-wrap: anywhere; }
+.doc-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+
+/* Contenido en Markdown */
+.md { display: grid; gap: 14px; font-size: 15.5px; line-height: 1.65; color: var(--ink); min-width: 0; }
+.md > * { margin: 0; min-width: 0; }
+.md h2 { margin-top: 10px; font-size: 22px; font-weight: 600; line-height: 1.25; scroll-margin-top: 12px; }
+.md h3 { margin-top: 18px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 19px; font-weight: 600; line-height: 1.3; scroll-margin-top: 12px; text-wrap: balance; }
+.md > h3:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.md h4 { margin-top: 6px; font-size: 16px; font-weight: 600; scroll-margin-top: 12px; }
+.md p, .md li { max-width: 72ch; }
+.md ul, .md ol { padding-left: 22px; display: grid; gap: 6px; }
+.md li { min-width: 0; overflow-wrap: break-word; }
+.md li::marker { color: var(--muted); }
+.md ol > li::marker { font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
+.md li ul { margin: 6px 0 0; padding-left: 20px; gap: 4px; }
+.md strong { font-weight: 600; }
+.md a { color: var(--accent); text-underline-offset: 2px; overflow-wrap: anywhere; }
+.md code { font: 500 .86em var(--f-mono); padding: 1px 5px; border-radius: 4px; background: var(--hover); border: 1px solid var(--line); overflow-wrap: break-word; }
+.md hr { border: 0; border-top: 1px solid var(--line); }
+
+.md-code { margin: 0; border: 1px solid var(--bar-line); border-radius: var(--r); overflow: hidden; background: var(--bar); min-width: 0; }
+.md-code figcaption { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 42px; padding: 4px 6px 4px 14px; background: var(--bar-2); color: var(--bar-muted); font-size: 12.5px; font-weight: 600; border-bottom: 1px solid var(--bar-line); }
+.md-code figcaption > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.fc-acts { display: inline-flex; gap: 6px; flex: none; }
+.md-copy { min-height: 32px; padding: 0 12px; border-radius: 6px; border: 1px solid var(--bar-line); background: transparent; color: var(--bar-ink); font-size: 12.5px; font-weight: 600; flex: none; }
+.md-copy:hover { background: var(--bar); border-color: var(--bar-muted); }
+.md-code pre { margin: 0; padding: 14px 16px; overflow-x: auto; color: var(--bar-ink); font: 500 13.5px/1.7 var(--f-mono); tab-size: 4; }
+.md-code pre code { font: inherit; background: none; border: 0; padding: 0; white-space: pre; overflow-wrap: normal; }
+
+.md-note { display: grid; gap: 4px; padding: 12px 16px; border-radius: var(--r); border-left: 3px solid var(--info); background: var(--info-soft); color: var(--ink); }
+.md-note > * { margin: 0; max-width: none; }
+.md-note-l { font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--info); }
+.md-note.warn { border-left-color: var(--warn); background: var(--warn-soft); }
+.md-note.warn .md-note-l { color: var(--warn); }
+.md-note.ok { border-left-color: var(--ok); background: var(--ok-soft); }
+.md-note.ok .md-note-l { color: var(--ok); }
+.md-note.crit { border-left-color: var(--crit); background: var(--crit-soft); }
+.md-note.crit .md-note-l { color: var(--crit); }
+
+.md-table { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--panel); }
+.md-table table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.5; }
+.md-table th { text-align: left; padding: 9px 14px; background: var(--panel-2); font-size: 12.5px; font-weight: 600; color: var(--muted); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.md-table td { padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.md-table tr:last-child td { border-bottom: 0; }
+.md-table td code { overflow-wrap: normal; white-space: nowrap; }
+.md-table td code:has(wbr) { white-space: normal; }
+
+.md-img { margin: 0; display: grid; gap: 6px; justify-items: start; }
+.md-img img { display: block; max-width: 100%; max-height: 380px; width: auto; height: auto; border-radius: var(--r); border: 1px solid var(--line); background: var(--panel-2); cursor: zoom-in; }
+.md-img figcaption { font-size: 13px; line-height: 1.45; color: var(--muted); max-width: 60ch; }
+.md-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 16px; align-items: start; }
+.md-gallery .md-img { justify-items: stretch; }
+.md-gallery .md-img img { width: 100%; height: 220px; object-fit: contain; }
+
+.lbox { width: min(1100px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 12px; cursor: zoom-out; }
+.lbox img { display: block; max-width: 100%; max-height: calc(100dvh - 110px); margin: 0 auto; border-radius: 6px; }
+.lbox p { margin: 8px 4px 0; font-size: 13px; color: var(--muted); text-align: center; }
+
+/* Portada de instructivos */
+.iwelcome { padding: 40px 36px 48px; max-width: 920px; display: grid; gap: 26px; }
+@media (max-width: 879.98px) { .iwelcome { padding: 24px 16px; } }
+.iw-h h2 { margin: 0 0 6px; font-size: 22px; font-weight: 600; }
+.iw-h p { margin: 0; color: var(--ink-2); max-width: 64ch; }
+.iwelcome .ig-h { padding: 0 0 8px; }
+.icards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.icard { display: grid; gap: 6px; align-content: start; justify-items: start; text-align: left; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-l); background: var(--panel); transition: border-color .15s, box-shadow .15s; }
+.icard:hover { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.ic-t { font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--ink); }
+.ic-s { font-size: 13.5px; line-height: 1.5; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Generador de comandos */
+.gen { display: grid; gap: 16px; padding: 18px; border: 1px solid var(--line); border-radius: var(--r-l); background: var(--panel-2); font-size: 15px; line-height: 1.5; }
+.gen-top { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: flex-end; }
+.gen-f { display: grid; gap: 6px; min-width: 0; }
+.gen-l { font-size: 12.5px; font-weight: 600; color: var(--muted); }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: var(--r); background: var(--panel); border: 1px solid var(--line-2); }
+.seg button { min-height: 38px; padding: 0 12px; border: 0; border-radius: 6px; background: transparent; font-size: 14px; font-weight: 500; color: var(--ink-2); white-space: nowrap; }
+.seg button:hover { color: var(--ink); background: var(--hover); }
+.seg button[aria-checked="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.selw { position: relative; display: inline-flex; align-items: center; }
+.selw select { appearance: none; min-height: 44px; padding: 0 34px 0 12px; border-radius: var(--r); border: 1px solid var(--line-2); background: var(--panel); font-size: 15px; }
+.selw svg.i { position: absolute; right: 10px; width: 14px; height: 14px; pointer-events: none; color: var(--muted); }
+.gen-ports { border: 1px solid var(--line); border-radius: var(--r); background: var(--panel); overflow: hidden; }
+.gen-ports table { width: 100%; border-collapse: collapse; }
+.gen-ports th { text-align: left; padding: 8px 10px; font-size: 12px; font-weight: 600; color: var(--muted); background: var(--panel-2); border-bottom: 1px solid var(--line); }
+.gen-ports th abbr { text-decoration: none; }
+.gen-ports td { padding: 3px 10px; border-bottom: 1px solid var(--line); }
+.gen-ports tr:last-child td { border-bottom: 0; }
+.gen-ports td:first-child { width: 64px; font: 600 14px var(--f-mono); }
+.gen-ports th:nth-child(2), .gen-ports th:nth-child(4), .gen-ports td:nth-child(2), .gen-ports td:nth-child(4) { width: 56px; text-align: center; }
+.gen-ports input[type="checkbox"] { width: 20px; height: 20px; margin: 0; vertical-align: middle; accent-color: var(--accent); }
+.gen-ports input[type="text"] { width: 100%; min-height: 40px; padding: 0 10px; border: 1px solid transparent; border-radius: 6px; background: transparent; font-size: 16px; }
+.gen-ports input[type="text"]:hover { border-color: var(--line-2); }
+.gen-ports input[type="text"]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); background: var(--panel); }
+.gen-ports tr.off td { color: var(--muted); }
+.gen-ports tr.off input[type="text"] { text-decoration: line-through; opacity: .6; }
+.gen-opts { display: grid; gap: 10px; }
+.gen-opts code { font: 500 .86em var(--f-mono); padding: 1px 5px; border-radius: 4px; background: var(--hover); border: 1px solid var(--line); }
+.gen-foot { display: flex; justify-content: flex-end; margin-top: -6px; }
+@media (max-width: 560px) {
+  .gen { padding: 14px; margin-inline: -4px; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+  .gen-top, .gen-f { width: 100%; }
+  .selw, .selw select { width: 100%; }
+  .gen-ports th, .gen-ports td { padding-inline: 6px; }
+  .gen-ports td:first-child { width: 40px; }
+  .gen-ports th:nth-child(2), .gen-ports th:nth-child(4), .gen-ports td:nth-child(2), .gen-ports td:nth-child(4) { width: 44px; }
+}
+
+/* Repuestos de grupos electrógenos */
+.gsearch { display: grid; gap: 8px; }
+.gsearch .count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.glist { border: 1px solid var(--line); border-radius: var(--r-l); overflow: hidden; background: var(--panel); }
+.r3 .f.hit { color: var(--ink); background: var(--accent-soft); padding: 0 6px; border-radius: 4px; }
+.iempty { display: grid; justify-items: center; gap: 6px; text-align: center; padding: 36px 20px; border: 1.5px dashed var(--line-2); border-radius: var(--r-l); color: var(--muted); font-size: 14px; }
+.iempty svg.i { width: 28px; height: 28px; color: var(--accent); }
+.iempty strong { color: var(--ink); font-size: 15px; }
+.iempty span { max-width: 52ch; }
+.gdet { display: grid; gap: 24px; }
+.back-in { justify-self: start; color: var(--accent); }
+.back-in:hover { background: var(--accent-soft); }
+.gg-h { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px 24px; }
+.gg-nem { margin-left: 12px; font: 500 15px var(--f-mono); color: var(--muted); vertical-align: middle; }
+.fields dd.mono-dd { font-family: var(--f-mono); font-size: 14px; }
+.sec h2 .sec-link { margin-left: auto; font-weight: 500; }
+.sub-h { margin: 14px 0 8px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.parts { list-style: none; margin: 0; padding: 0; display: grid; border: 1px solid var(--line); border-radius: var(--r-l); overflow: hidden; background: var(--panel); }
+.part { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 12px 16px; }
+.part + .part { border-top: 1px solid var(--line); }
+@container (min-width: 600px) { .part { grid-template-columns: 190px minmax(0, 1fr); gap: 16px; } }
+.part-n { font-size: 13.5px; font-weight: 600; color: var(--ink-2); padding-top: 5px; }
+.part-b { display: grid; gap: 6px; min-width: 0; }
+.part-main { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 32px; }
+.part-main .muted { font-size: 13.5px; color: var(--muted); }
+.part-code { font: 600 16px/1.3 var(--f-mono); color: var(--ink); overflow-wrap: anywhere; }
+.pk { display: inline-flex; align-items: center; height: 20px; padding: 0 6px; border-radius: 4px; font-size: 11.5px; font-weight: 600; white-space: nowrap; flex: none; background: var(--info-soft); color: var(--info); }
+.pk.t { background: var(--ok-soft); color: var(--ok); }
+.pk.original { background: var(--accent-soft); color: var(--accent); }
+.pk.compatible { background: var(--warn-soft); color: var(--warn); }
+.part-alt { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13.5px; color: var(--ink-2); }
+.part-alt li { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.part-alt .pk + span { font-family: var(--f-mono); font-size: 13px; overflow-wrap: anywhere; }
+.glines { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px; }
+.mdplan { max-height: 340px; }
+.changes.mdplan td:first-child { white-space: normal; overflow-wrap: anywhere; font: 500 13px var(--f-sans); }
+.ctable td.wrap { max-width: 340px; overflow-wrap: anywhere; }
+
 </style>
 <script src="config.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -562,8 +787,9 @@ img { max-width: 100%; }
       </div>
       <nav class="tabs" id="tabs" aria-label="Secciones" hidden>
         <a href="#sitios" data-view="sitios">Sitios</a>
-        <a href="#usuarios" data-view="usuarios">Usuarios<span class="tbadge" id="pendBadge" hidden></span></a>
-        <a href="#cargas" data-view="cargas">Cargas</a>
+        <a href="#instructivos" data-view="instructivos">Instructivos</a>
+        <a href="#usuarios" data-view="usuarios" data-admin="1" hidden>Usuarios<span class="tbadge" id="pendBadge" hidden></span></a>
+        <a href="#cargas" data-view="cargas" data-admin="1" hidden>Cargas</a>
       </nav>
       <div class="spacer"></div>
       <label class="zsel" id="zselWrap"><span class="sr-only">Zonal</span><select id="zonalSel"></select>
@@ -618,6 +844,25 @@ img { max-width: 100%; }
     </div>
   </div>
 
+  <!-- Instructivos -->
+  <div class="workspace gutter" id="viewInstr" hidden>
+    <div class="frame doc-frame">
+      <section class="pane-list inav" aria-label="Instructivos">
+        <div class="list-head">
+          <div class="search">
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <label for="iq" class="sr-only">Buscar instructivo</label>
+            <input id="iq" type="search" autocomplete="off" spellcheck="false" placeholder="Buscar instructivo, equipo o comando" aria-controls="ilist">
+            <button class="iconbtn" id="iqClear" type="button" aria-label="Borrar búsqueda" hidden><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+          </div>
+          <div class="tools"><span class="count" id="icount" aria-live="polite"></span></div>
+        </div>
+        <div class="scroll"><div id="ilist"></div></div>
+      </section>
+      <section class="pane pane-detail" id="ireader" aria-label="Instructivo"></section>
+    </div>
+  </div>
+
   <!-- Usuarios -->
   <div class="page gutter" id="viewUsuarios" hidden>
     <div class="page-in">
@@ -632,7 +877,7 @@ img { max-width: 100%; }
   <!-- Cargas -->
   <div class="page gutter" id="viewCargas" hidden>
     <div class="page-in">
-      <div class="page-h"><div><h2>Historial de cargas</h2><p>Planillas subidas por los administradores, con los sitios agregados, actualizados y quitados en cada zonal.</p></div></div>
+      <div class="page-h"><div><h2>Historial de cargas</h2><p>Planillas de sitios, planillas de repuestos GGEE e instructivos subidos por los administradores, con lo que se agregó, actualizó y quitó en cada carga.</p></div></div>
       <div class="tbl tscroll" id="ctable"></div>
     </div>
   </div>
@@ -645,6 +890,7 @@ img { max-width: 100%; }
   <div class="dlg-f"><button type="button" class="btn" id="fClear">Limpiar</button><button type="button" class="btn primary" data-fdlg="close">Ver sitios</button></div>
 </dialog>
 <dialog id="cdlg" aria-labelledby="cdlgTitle"><div id="cdlgBody"></div></dialog>
+<dialog id="lbox" class="lbox" aria-label="Imagen ampliada"><img alt=""><p></p></dialog>
 <input type="file" id="file" accept=".xlsx,.xlsm,.xls,.csv,.ods" hidden>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -1183,6 +1429,277 @@ const XW = (() => {
 
 </script>
 <script>
+/* ===== Instructivos: lectura de archivos .md y conversión segura a HTML ===== */
+const MD = (() => {
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const safeUrl = (u) => (/^https?:\/\/[^\s"'<>]+$/i.test(u) ? u : '');
+  const safeImg = (u) => (/^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(u) || /^https:\/\/[^\s"'<>]+$/i.test(u) ? u : '');
+
+  // Encabezado entre líneas --- con pares "clave: valor"
+  function parse(text) {
+    text = String(text || '').replace(/^﻿/, '').replace(/\r\n?/g, '\n');
+    const meta = {};
+    let body = text;
+    const m = /^---\n([\s\S]*?)\n---\n?/.exec(text);
+    if (m) {
+      m[1].split('\n').forEach((l) => { const i = l.indexOf(':'); if (i > 0) meta[l.slice(0, i).trim().toLowerCase()] = l.slice(i + 1).trim(); });
+      body = text.slice(m[0].length);
+    }
+    // Comentarios <!-- ... --> no se muestran
+    body = body.replace(/<!--[\s\S]*?-->/g, '');
+    // Definiciones de referencia: [nombre]: url
+    const refs = {};
+    body = body.replace(/^\[([^\]\n]+)\]:[ \t]*(\S+)[ \t]*$/gm, (_, k, u) => { refs[k.trim().toLowerCase()] = u; return ''; });
+    return { meta, body: body.replace(/\n{3,}$/g, '\n'), refs };
+  }
+
+  function inline(s, refs) {
+    let out = '';
+    const re = /(`+)([\s\S]*?)\1|\*\*([^*]+)\*\*|\*([^*\s][^*]*)\*|\[([^\]]+)\]\(([^)\s]+)\)|(https?:\/\/[^\s<>()|"']*[^\s<>()|"'.,;:])/g;
+    let last = 0, m;
+    const link = (u, t) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(t)}</a>`;
+    while ((m = re.exec(s))) {
+      out += esc(s.slice(last, m.index));
+      if (m[1]) out += `<code>${esc(m[2]).replace(/,/g, ',<wbr>')}</code>`;
+      else if (m[3]) out += `<strong>${inline(m[3], refs)}</strong>`;
+      else if (m[4]) out += `<em>${inline(m[4], refs)}</em>`;
+      else if (m[5]) { const u = safeUrl(m[6]); out += u ? link(u, m[5]) : esc(m[5]); }
+      else if (m[7]) { const u = safeUrl(m[7]); out += u ? link(u, m[7].replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')) : esc(m[7]); }
+      last = re.lastIndex;
+    }
+    return out + esc(s.slice(last));
+  }
+
+  const CALLOUT = { importante: ['warn', 'Importante'], aviso: ['warn', 'Aviso'], nota: ['info', 'Nota'], consejo: ['ok', 'Consejo'], peligro: ['crit', 'Precaución'] };
+
+  // Devuelve HTML. hooks.directive(nombre) permite insertar herramientas (:::nombre)
+  function render(src, refs = {}, hooks = {}) {
+    const lines = String(src || '').split('\n');
+    const html = [];
+    let i = 0, codeN = 0;
+    const isBlockStart = (l) => /^(#{1,4}\s|```|:::|>|\s*[-*]\s|\s*\d+[.)]\s|\|.*\|\s*$|---\s*$|!\[)/.test(l);
+    while (i < lines.length) {
+      const l = lines[i];
+      if (!l.trim()) { i++; continue; }
+      let m;
+      if ((m = /^(#{1,4})\s+(.*)$/.exec(l))) {
+        const lvl = Math.min(4, m[1].length + 1);
+        const id = 'h-' + m[2].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+        html.push(`<h${lvl} id="${id}">${inline(m[2], refs)}</h${lvl}>`); i++; continue;
+      }
+      if ((m = /^```\s*([\w-]*)\s*(?:title="([^"]*)")?\s*$/.exec(l))) {
+        const lang = m[1] || '', title = m[2] || '';
+        const buf = []; i++;
+        while (i < lines.length && !/^```\s*$/.test(lines[i])) buf.push(lines[i++]);
+        i++;
+        const code = buf.join('\n');
+        codeN++;
+        html.push(`<figure class="md-code" data-lang="${esc(lang)}"><figcaption><span>${esc(title || (lang === 'moshell' ? 'MoShell' : lang ? lang.toUpperCase() : 'Código'))}</span><button type="button" class="md-copy" data-copy-code>Copiar</button></figcaption><pre><code>${esc(code)}</code></pre></figure>`);
+        continue;
+      }
+      if ((m = /^:::\s*([\w-]+)\s*$/.exec(l))) { html.push(hooks.directive ? hooks.directive(m[1]) || '' : ''); i++; continue; }
+      if (/^---\s*$/.test(l)) { html.push('<hr>'); i++; continue; }
+      if (/^>/.test(l)) {
+        const buf = [];
+        while (i < lines.length && /^>/.test(lines[i])) buf.push(lines[i++].replace(/^>\s?/, ''));
+        let kind = 'info', label = '';
+        const c = /^\[!(\w+)\]\s*(.*)$/.exec(buf[0] || '');
+        if (c && CALLOUT[c[1].toLowerCase()]) { [kind, label] = CALLOUT[c[1].toLowerCase()]; buf[0] = c[2]; }
+        html.push(`<aside class="md-note ${kind}">${label ? `<strong class="md-note-l">${label}</strong>` : ''}${render(buf.join('\n'), refs, hooks)}</aside>`);
+        continue;
+      }
+      if ((m = /^!\[([^\]]*)\](?:\(([^)\s]+)\)|\[([^\]]+)\])\s*$/.exec(l))) {
+        const figs = [];
+        while (i < lines.length && (m = /^!\[([^\]]*)\](?:\(([^)\s]+)\)|\[([^\]]+)\])\s*$/.exec(lines[i]))) {
+          const u = safeImg(m[2] || refs[(m[3] || '').toLowerCase()] || '');
+          if (u) figs.push(`<figure class="md-img"><img src="${esc(u)}" alt="${esc(m[1])}" loading="lazy">${m[1] ? `<figcaption>${inline(m[1], refs)}</figcaption>` : ''}</figure>`);
+          i++;
+        }
+        html.push(figs.length > 1 ? `<div class="md-gallery">${figs.join('')}</div>` : figs.join(''));
+        continue;
+      }
+      if (/^\|.*\|\s*$/.test(l)) {
+        const rows = [];
+        while (i < lines.length && /^\|.*\|\s*$/.test(lines[i])) rows.push(lines[i++]);
+        const cells = (r) => r.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
+        const hasHead = rows[1] && /^\|?\s*:?-{2,}/.test(rows[1]);
+        const head = hasHead ? cells(rows[0]) : null;
+        const body = rows.slice(hasHead ? 2 : 0).map(cells);
+        html.push(`<div class="md-table"><table>${head ? `<thead><tr>${head.map((c) => `<th>${inline(c, refs)}</th>`).join('')}</tr></thead>` : ''}<tbody>${body.map((r) => `<tr>${r.map((c) => `<td>${inline(c, refs)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`);
+        continue;
+      }
+      if (/^([-*]|\d+[.)])\s+/.test(l)) {
+        const om = /^(\d+)[.)]\s/.exec(l);
+        const items = [];
+        while (i < lines.length && (/^([-*]|\d+[.)])\s+/.test(lines[i]) || (/^\s{2,}\S/.test(lines[i]) && items.length))) {
+          const t = lines[i];
+          if (/^([-*]|\d+[.)])\s+/.test(t)) items.push({ text: [t.replace(/^([-*]|\d+[.)])\s+/, '')], sub: [] });
+          else if (/^\s+([-*]|\d+[.)])\s+/.test(t)) items[items.length - 1].sub.push(t.trim().replace(/^([-*]|\d+[.)])\s+/, ''));
+          else items[items.length - 1].text.push(t.trim());
+          i++;
+        }
+        const li = (it) => `<li>${it.text.map((x) => inline(x, refs)).join(' ')}${it.sub.length ? `<ul>${it.sub.map((x) => `<li>${inline(x, refs)}</li>`).join('')}</ul>` : ''}</li>`;
+        html.push(om ? `<ol${om[1] !== '1' ? ` start="${+om[1]}"` : ''}>${items.map(li).join('')}</ol>` : `<ul>${items.map(li).join('')}</ul>`);
+        continue;
+      }
+      const buf = [];
+      while (i < lines.length && lines[i].trim() && !(buf.length && isBlockStart(lines[i]))) buf.push(lines[i++]);
+      html.push(`<p>${buf.map((x) => inline(x, refs)).join('<br>')}</p>`);
+    }
+    return html.join('\n');
+  }
+
+  // Índice de títulos (##) para la navegación del instructivo
+  function toc(src) {
+    return String(src || '').split('\n').map((l) => /^##\s+(.*)$/.exec(l)).filter(Boolean).map((m) => ({
+      text: m[1].replace(/[*`]/g, ''),
+      id: 'h-' + m[1].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)
+    }));
+  }
+
+  return { parse, render, toc, esc };
+})();
+
+// node: module.exports = { MD };
+
+</script>
+<script>
+/* ===== Grupos electrógenos (GGEE): lectura de la planilla de filtros y correas ===== */
+const GGEE = (() => {
+  const norm = (s) => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+    .replace(/[°º#.:_\n\r\t\/-]/g, ' ').replace(/[()]/g, ' ').replace(/\s+/g, ' ').trim();
+  const clean = (v) => String(v ?? '').replace(/\r\n?/g, '\n').replace(/ /g, ' ').replace(/\t/g, ' ')
+    .replace(/[ ]{2,}/g, ' ').replace(/ *\n */g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+
+  // Columnas reconocidas (el orden importa: gana la primera que calza)
+  const COLS = [
+    ['pop', /^pop$/], ['nemonico', /^nemonico/], ['nombre', /^nombre/], ['comuna', /^comu/], ['zona', /^zona$/],
+    ['categoria', /^categoria/], ['propietario', /propietario/], ['red_minima', /red minima/], ['tipo', /^tipo$/],
+    ['partida', /^partida/], ['mantenedor', /^mantenedor/], ['empresa_electrica', /empresa electrica/], ['cliente', /numero cliente|^n cliente|^cliente/],
+    ['consumo', /^consumo/], ['ip', /\bip\b/], ['sensor_combustible', /sensor de combustible/],
+    ['motor_marca', /^motor+ marca/], ['motor_modelo', /^motor+ modelo/], ['motor_serie', /^motor+ n(um|ro|°)? ?serie/],
+    ['controlador', /contr?olador/], ['radiador', /^motor+ radiador/], ['consulta_remota', /consulta remota/],
+    ['anio', /^ano instal/], ['estanque', /estanque/], ['baterias', /banco bateria/], ['arco', /arco|anillo/], ['pe', /^pe$/],
+    ['generador', /^generador/], ['separador_agua', /separador de agua/], ['filtro_combustible', /^filtro combustible$/],
+    ['filtro_aceite', /^filtro de aceite$/], ['filtro_aire', /^filtro de aire$/], ['correa_alternador', /^correa/],
+    ['manguera_sup', /^manguera sup/], ['manguera_inf', /^manguera inferior/], ['manguera_codo', /^manguera codo/],
+    ['manguera_general', /^manguera uso general/], ['aceite_cantidad', /cantidad aceite/], ['aceite', /^aceite$/], ['obs', /^obs/]
+  ];
+
+  // Repuestos que se muestran en la tabla, en este orden
+  const PARTS = [
+    ['filtro_combustible', 'Filtro de combustible'], ['separador_agua', 'Filtro separador de agua'], ['filtro_aceite', 'Filtro de aceite'],
+    ['filtro_aire', 'Filtro de aire'], ['correa_alternador', 'Correa del alternador'], ['radiador', 'Radiador'],
+    ['manguera_sup', 'Manguera superior del radiador'], ['manguera_inf', 'Manguera inferior del radiador'],
+    ['manguera_codo', 'Manguera codo'], ['manguera_general', 'Manguera de uso general']
+  ];
+
+  const LABELS = {
+    pop: 'POP', nemonico: 'Nemónico', nombre: 'Nombre', comuna: 'Comuna', zona: 'Zona', categoria: 'Categoría',
+    propietario: 'Propietario del GGEE', red_minima: 'Red mínima', tipo: 'Tipo', partida: 'Partida', mantenedor: 'Mantenedor',
+    empresa_electrica: 'Empresa eléctrica', cliente: 'N° de cliente', consumo: 'Consumo', ip: 'IP de gestión del controlador',
+    sensor_combustible: 'Sensor de combustible operativo', motor_marca: 'Marca del motor', motor_modelo: 'Modelo del motor',
+    motor_serie: 'N° de serie del motor', controlador: 'Controlador', consulta_remota: 'Consulta remota', anio: 'Año de instalación',
+    estanque: 'Capacidad del estanque', baterias: 'Banco de baterías', arco: 'Arco / anillo', pe: 'PE', generador: 'Generador',
+    aceite: 'Aceite', aceite_cantidad: 'Cantidad de aceite', obs: 'Observaciones'
+  };
+
+  function classify(h) {
+    const n = norm(h);
+    if (!n) return null;
+    for (const [k, re] of COLS) if (re.test(n)) return k;
+    return null;
+  }
+
+  // ¿Esta hoja es una planilla de GGEE? Debe tener POP y al menos dos columnas de repuestos
+  function headerOf(sh) {
+    for (let i = 0; i < Math.min(sh.rows.length, 15); i++) {
+      const m = {}, used = new Set();
+      sh.rows[i].cells.forEach((v, ci) => {
+        if (v == null || !clean(v)) return;
+        const f = classify(v);
+        if (f && !used.has(f)) { m[ci] = f; used.add(f); }
+        else m[ci] = { extra: clean(v).replace(/\n/g, ' ') };
+      });
+      const parts = PARTS.filter(([k]) => used.has(k)).length;
+      if (used.has('pop') && parts >= 2) return { idx: i, map: m };
+    }
+    return null;
+  }
+  const isGgeeBook = (sheets) => sheets.some((sh) => headerOf(sh));
+
+  const titleCase = (z) => clean(z).toLowerCase().replace(/(^|\s|-)(\p{L})/gu, (a, b, c) => b + c.toUpperCase());
+
+  // Devuelve { equipos, warnings, columns }
+  function fromSheets(sheets) {
+    const out = new Map(), warnings = [], columns = new Set();
+    for (const sh of sheets) {
+      const h = headerOf(sh);
+      if (!h) continue;
+      Object.values(h.map).forEach((f) => columns.add(typeof f === 'string' ? f : 'extra:' + f.extra));
+      const popCol = Number(Object.keys(h.map).find((k) => h.map[k] === 'pop'));
+      let skipped = 0;
+      for (const row of sh.rows.slice(h.idx + 1)) {
+        const pop = clean(row.cells[popCol]).replace(/\s+/g, '').toUpperCase();
+        if (!pop) { skipped++; continue; }
+        const e = { pop };
+        const otros = {};
+        for (const [ci, f] of Object.entries(h.map)) {
+          if (f === 'pop') continue;
+          let v = clean(row.cells[ci]);
+          if (!v) continue;
+          if (typeof f === 'object') { otros[f.extra] = v; continue; }
+          if (f === 'nemonico') v = v.replace(/\s+/g, '').toUpperCase();
+          if (f === 'zona' || f === 'comuna') v = titleCase(v);
+          e[f] = v;
+        }
+        if (Object.keys(otros).length) e.otros = otros;
+        let id = pop.replace(/[^A-Z0-9_-]/g, '_').slice(0, 60) || 'SIN_POP';
+        if (out.has(id)) { let n = 2; while (out.has(id + '_' + n)) n++; id = id + '_' + n; warnings.push(`El POP ${pop} aparece más de una vez en "${sh.name}"; se guardaron todas las filas.`); }
+        e.id = id;
+        out.set(id, e);
+      }
+      if (skipped) warnings.push(`${skipped} fila${skipped === 1 ? '' : 's'} de "${sh.name}" sin POP se omitieron.`);
+    }
+    return { equipos: [...out.values()], warnings, columns: [...columns] };
+  }
+
+  // Texto de una celda de repuesto → [{ tipo, texto }]
+  const KINDS = [
+    ['terreno', /^ter+e+r?e*no\b[\s:.-]*/i], ['original', /^original\b[\s:.-]*/i],
+    ['reemplazo', /^(re{1,2}m?pl?(azo)?|rem|ree)\b\.?[\s:-]*/i], ['compatible', /^compat\w*\b\.?[\s:-]*/i]
+  ];
+  const KIND_LABEL = { terreno: 'En terreno', original: 'Original', reemplazo: 'Reemplazo', compatible: 'Compatible', nota: 'Nota' };
+  function parsePart(text) {
+    const items = [];
+    let prev = null; // tipo de la línea anterior (se corta con una línea en blanco)
+    String(text || '').split('\n').map((l) => l.trim()).forEach((line) => {
+      if (!line) { prev = null; return; }
+      for (const [k, re] of KINDS) {
+        if (re.test(line)) { const t = line.replace(re, '').trim(); if (t) items.push({ tipo: k, texto: t }); prev = k; return; }
+      }
+      const last = items[items.length - 1];
+      if (last && last.tipo === 'nota' && prev === 'nota' && /,$/.test(last.texto)) { last.texto += ' ' + line; return; }
+      const k = prev && prev !== 'terreno' && prev !== 'nota' ? prev : 'nota';
+      items.push({ tipo: k, texto: line });
+      prev = k;
+    });
+    return items;
+  }
+
+  // Lo que se busca: POP, nombre, motor, generador y todos los códigos de repuestos
+  function hay(e) {
+    return norm([e.pop, e.nemonico, e.nombre, e.comuna, e.zona, e.motor_marca, e.motor_modelo, e.motor_serie, e.generador, e.controlador,
+      ...PARTS.map(([k]) => e[k]), e.aceite].filter(Boolean).join(' \n '));
+  }
+
+  return { fromSheets, isGgeeBook, parsePart, hay, norm, PARTS, LABELS, KIND_LABEL };
+})();
+
+// node: module.exports = { GGEE };
+
+</script>
+<script>
 /* ===== Llavero de Sitios · página web con Firebase ===== */
 (() => {
   const CFG = window.LLAVERO_CONFIG || {};
@@ -1209,7 +1726,10 @@ const XW = (() => {
     q: '', filters: new Set(), sort: 'pop', activeKey: null, results: [], zonal: 'all',
     mask: !!lsGet('llavero-ocultar-claves', false), revealed: new Set(), recent: [],
     view: 'sitios', users: [], utab: 'pendiente', pendSel: new Map(), cargas: [],
-    status: 'loading', offline: false, lastLoad: 0, busy: false
+    status: 'loading', offline: false, lastLoad: 0, busy: false,
+    // Repuestos de grupos electrógenos y biblioteca de instructivos
+    ggee: [], ggeeIdx: new Map(), ggeeMeta: {}, ggeeErr: null,
+    inst: null, instStatus: 'idle', instErr: null, instActive: null, iq: '', gq: '', gActive: null, instHtml: new Map()
   };
 
   const I = (d) => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
@@ -1234,7 +1754,15 @@ const XW = (() => {
     map: I('<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>'),
     out: I('<path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4"/><path d="M10 17l5-5-5-5M15 12H4"/>'),
     refresh: I('<path d="M20 11a8 8 0 0 0-14.9-3M4 13a8 8 0 0 0 14.9 3"/><path d="M5 3v5h5M19 21v-5h-5"/>'),
-    chev: I('<path d="m6 9 6 6 6-6"/>')
+    chev: I('<path d="m6 9 6 6 6-6"/>'),
+    engine: I('<rect x="4" y="8" width="13" height="10" rx="1.5"/><path d="M7 8V5h7v3M17 11h3v4h-3M1.5 11v4M4 13H1.5M9 11l-1.5 3h3L9 17"/>'),
+    book: I('<path d="M4 5a2 2 0 0 1 2-2h13v15H6a2 2 0 0 0-2 2z"/><path d="M4 20a2 2 0 0 0 2 2h13v-4"/><path d="M8 7h7M8 11h5"/>'),
+    bell: I('<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/>'),
+    cpu: I('<rect x="6" y="6" width="12" height="12" rx="1.5"/><rect x="9.5" y="9.5" width="5" height="5"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/>'),
+    terminal: I('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M12 15h5"/>'),
+    trash: I('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'),
+    search: I('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
+    list: I('<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>')
   };
 
   /* ================= Utilidades de datos ================= */
@@ -1280,15 +1808,38 @@ const XW = (() => {
   }
   const scopeSites = () => (S.zonal === 'all' ? S.sites : S.sites.filter((s) => s.zonal === S.zonal));
 
-  function setSites(rows, fromCache) {
+  function setSites(rows, fromCache, ggee, ggeeMeta) {
     S.sites = rows.map(prep);
     S.byKey = new Map(S.sites.map((s) => [s._key, s]));
     S.status = 'ready';
-    if (!fromCache) { S.lastLoad = Date.now(); S.offline = false; lsSet('llavero-cache-' + uid(), { sites: rows, zonales: S.zonales, profile: S.profile, at: Date.now() }); }
+    if (ggee) setGgee(ggee, ggeeMeta || {});
+    if (!fromCache) { S.lastLoad = Date.now(); S.offline = false; lsSet('llavero-cache-' + uid(), { sites: rows, ggee: ggee || [], ggeeMeta: ggeeMeta || {}, zonales: S.zonales, profile: S.profile, at: Date.now() }); }
     if (S.activeKey && !S.byKey.has(S.activeKey)) S.activeKey = null;
     rebuildGroups();
     renderSitesView();
+    refreshInstrData();
   }
+
+  // Equipos GGEE: índice por zonal y código (POP o nemónico) para cruzarlos con los sitios
+  function setGgee(rows, meta) {
+    S.ggee = rows.map((e) => ({ ...e, _key: e.zonal + '/' + e.id, _hay: GGEE.hay(e) }))
+      .sort((a, b) => collator.compare(a.zonal, b.zonal) || collator.compare(a.pop, b.pop));
+    S.ggeeMeta = meta;
+    S.ggeeIdx = new Map();
+    S.ggee.forEach((e) => [e.pop, e.nemonico].filter(Boolean).forEach((c) => {
+      const k = e.zonal + '/' + String(c).toUpperCase();
+      if (!S.ggeeIdx.has(k)) S.ggeeIdx.set(k, e);
+      if (!S.ggeeIdx.has('*/' + String(c).toUpperCase())) S.ggeeIdx.set('*/' + String(c).toUpperCase(), e);
+    }));
+    if (S.gActive && !S.ggee.some((e) => e._key === S.gActive)) S.gActive = null;
+  }
+  function ggeeFor(s) {
+    for (const c of s.codes) { const e = S.ggeeIdx.get(s.zonal + '/' + c.toUpperCase()); if (e) return e; }
+    for (const c of s.codes) { const e = S.ggeeIdx.get('*/' + c.toUpperCase()); if (e) return e; }
+    return null;
+  }
+  const siteForGgee = (e) => S.sites.find((s) => s.zonal === e.zonal && s.codes.some((c) => [e.pop, e.nemonico].includes(c.toUpperCase())))
+    || S.sites.find((s) => s.codes.some((c) => [e.pop, e.nemonico].includes(c.toUpperCase())));
   function rebuildGroups() {
     S.groups = facetGroups();
     const valid = new Set(S.groups.flatMap((g) => g.items.map((i) => i.id)));
@@ -1324,10 +1875,23 @@ const XW = (() => {
 
   async function fetchSites() {
     const vis = visibleZonales();
-    const docs = await Promise.all(vis.map((z) => S.fs.collection('zonales').doc(z).get()));
-    const rows = [];
+    // Los GGEE no deben impedir que carguen los sitios (por ejemplo, si aún no se publican las reglas nuevas)
+    const [docs, gdocs] = await Promise.all([
+      Promise.all(vis.map((z) => S.fs.collection('zonales').doc(z).get())),
+      Promise.all(vis.map((z) => S.fs.collection('ggee').doc(z).get().catch((e) => ({ __err: e }))))
+    ]);
+    const rows = [], ggee = [], ggeeMeta = {};
     docs.forEach((d, i) => { if (d.exists) (d.data().sitios || []).forEach((s) => rows.push({ ...s, zonal: vis[i] })); });
-    return rows;
+    S.ggeeErr = null;
+    gdocs.forEach((d, i) => {
+      if (d.__err) { S.ggeeErr = d.__err; return; }
+      if (!d.exists) return;
+      const g = d.data();
+      (g.equipos || []).forEach((e) => ggee.push({ ...e, zonal: vis[i] }));
+      const at = toDate(g.actualizado);
+      ggeeMeta[vis[i]] = { total: (g.equipos || []).length, archivo: g.archivo || '', actualizado: at ? at.toISOString() : '' };
+    });
+    return { rows, ggee, ggeeMeta };
   }
 
   /* ================= Pantallas ================= */
@@ -1489,7 +2053,8 @@ const XW = (() => {
     } catch (e) {
       const c = lsGet('llavero-cache-' + id, null);
       if (isNetErr(e) && c && c.profile && c.profile.rol !== 'bloqueado') {
-        S.profile = c.profile; S.offline = true; enterApp(); setSites(c.sites || [], true); renderNotice();
+        S.profile = c.profile; S.offline = true; enterApp(); setSites(c.sites || [], true, c.ggee || [], c.ggeeMeta || {}); renderNotice();
+        routeFromHash();
         return;
       }
       if (String(e && e.code) === 'permission-denied') { S.profile = null; showWait('sinperfil'); return; }
@@ -1505,7 +2070,7 @@ const XW = (() => {
     const saved = lsGet('llavero-zonal-' + id, null);
     S.zonal = saved && (saved === 'all' ? vis.length > 1 : vis.includes(saved)) ? saved : (vis.length === 1 ? vis[0] : 'all');
     enterApp();
-    if (c && Array.isArray(c.sites)) setSites(c.sites.filter((s) => vis.includes(s.zonal)), true);
+    if (c && Array.isArray(c.sites)) setSites(c.sites.filter((s) => vis.includes(s.zonal)), true, (c.ggee || []).filter((e) => vis.includes(e.zonal)), c.ggeeMeta || {});
     await reloadSites();
     if (isAdmin()) loadUsers();
     routeFromHash();
@@ -1513,8 +2078,8 @@ const XW = (() => {
 
   async function reloadSites() {
     try {
-      const rows = await fetchSites();
-      setSites(rows, false);
+      const { rows, ggee, ggeeMeta } = await fetchSites();
+      setSites(rows, false, ggee, ggeeMeta);
     } catch (e) {
       S.offline = isNetErr(e);
       if (!S.sites.length) S.status = 'error';
@@ -1525,10 +2090,12 @@ const XW = (() => {
 
   async function logout() {
     closeMenu();
-    lsDel('llavero-cache-' + uid());
+    lsDel('llavero-cache-' + uid()); lsDel('llavero-inst-' + uid());
     S.loggingOut = true;
     S.profile = null; S.sites = []; S.byKey = new Map(); S.users = []; S.activeKey = null; S.filters.clear(); S.q = '';
-    $('#q').value = '';
+    setGgee([], {}); S.inst = null; S.instStatus = 'idle'; S.instActive = null; S.gActive = null; S.instHtml.clear(); S.iq = ''; S.gq = '';
+    $('#q').value = ''; $('#iq').value = '';
+    closeReader(true);
     try { history.replaceState(null, '', location.pathname); } catch (_) {}
     try { await S.auth.signOut(); } catch (_) { S.loggingOut = false; showAuth('login', ['info', 'Cerraste sesión.']); }
   }
@@ -1541,8 +2108,11 @@ const XW = (() => {
 
   function renderTop() {
     const p = S.profile || {};
-    $('#tabs').hidden = !isAdmin();
-    document.querySelectorAll('#tabs a').forEach((a) => a.setAttribute('aria-current', a.dataset.view === S.view ? 'page' : 'false'));
+    $('#tabs').hidden = false;
+    document.querySelectorAll('#tabs a').forEach((a) => {
+      a.setAttribute('aria-current', a.dataset.view === S.view ? 'page' : 'false');
+      if (a.dataset.admin) a.hidden = !isAdmin();
+    });
     const pend = S.users.filter((u) => u.rol === 'pendiente').length;
     const pb = $('#pendBadge'); pb.hidden = !pend; pb.textContent = pend;
     const vis = visibleZonales();
@@ -1559,6 +2129,7 @@ const XW = (() => {
     mb.innerHTML = (S.mask ? icons.eyeOff : icons.eye) + `<span class="lbl">${S.mask ? 'Claves ocultas' : 'Ocultar claves'}</span>`;
     mb.hidden = S.view !== 'sitios';
     $('#btnImport').hidden = !isAdmin() || S.offline;
+    $('#btnImport .lbl').textContent = S.view === 'instructivos' ? 'Cargar instructivos' : 'Cargar Excel';
     $('#btnExport').hidden = !isAdmin() || !S.sites.length || S.view !== 'sitios';
     const ini = (p.nombre || p.email || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
     const ub = $('#btnUser'); ub.textContent = ini; ub.setAttribute('aria-label', `Cuenta de ${p.nombre || p.email || ''}`);
@@ -1592,7 +2163,8 @@ const XW = (() => {
     add('tipo', 'Tipo de sitio', [
       { id: 'tipo:nodo', label: 'Nodo transmisión', test: tag('nodo') },
       { id: 'tipo:poste', label: 'Poste', test: tag('poste') },
-      { id: 'tipo:azotea', label: 'Azotea', test: tag('azotea') }
+      { id: 'tipo:azotea', label: 'Azotea', test: tag('azotea') },
+      { id: 'tipo:ggee', label: 'Con grupo electrógeno', test: (s) => !!ggeeFor(s) }
     ]);
     const cias = new Map();
     base.forEach((s) => { if (s.cia) cias.set(s.cia, (cias.get(s.cia) || 0) + 1); });
@@ -1791,6 +2363,7 @@ const XW = (() => {
           ${row('Compañía eléctrica', s.cia ? esc(s.cia) : 'Sin registro', s.cia ? '' : 'muted')}
         </dl>
       </section>
+      ${ggeeSiteHtml(s)}
       <section class="sec" aria-labelledby="sec-id"><h2 id="sec-id">${icons.id}Identificación</h2>
         <dl class="fields">
           ${row('Zonal', esc(zLabel(s.zonal)))}
@@ -1825,7 +2398,44 @@ const XW = (() => {
     if (s.claves.length) s.claves.forEach((c) => L.push(/^\d+$/.test(c.code) ? `${c.label}: ${c.code}` : `Acceso: ${c.code}`));
     else L.push('Clave: sin clave registrada');
     if (s.notas) L.push('Notas: ' + s.notas.replace(/\n+/g, ' / '));
+    const g = ggeeFor(s);
+    if (g) {
+      L.push(`GGEE: ${[g.generador, motorTxt(g)].filter(Boolean).join(' · ').replace(/\n+/g, ' ')}`);
+      GGEE.PARTS.forEach(([k, label]) => { const t = GGEE.parsePart(g[k]).find((x) => x.tipo === 'terreno'); if (t) L.push(`${label}: ${t.texto}`); });
+    }
     return L.join('\n');
+  }
+
+  /* ---------- Grupo electrógeno (ficha y herramienta de repuestos) ---------- */
+  const oneLine = (v) => String(v || '').replace(/\s*\n+\s*/g, ' · ');
+  const motorTxt = (e) => [e.motor_marca, e.motor_modelo].filter(Boolean).map(oneLine).join(' ');
+  function partsHtml(e) {
+    const rows = GGEE.PARTS.filter(([k]) => e[k]).map(([k, label]) => {
+      const items = GGEE.parsePart(e[k]);
+      const t = items.filter((x) => x.tipo === 'terreno');
+      const alt = items.filter((x) => x.tipo !== 'terreno');
+      const main = t.length ? t.map((x) => `<div class="part-main"><span class="pk t">En terreno</span><span class="part-code">${esc(x.texto)}</span><button type="button" class="cbtn" data-copy="${esc(x.texto)}" data-what="Código" aria-label="Copiar código de ${esc(label.toLowerCase())}">${icons.copy}</button></div>`).join('') : '<div class="part-main"><span class="muted">Sin código en terreno</span></div>';
+      return `<li class="part"><div class="part-n">${esc(label)}</div><div class="part-b">${main}${alt.length ? `<ul class="part-alt">${alt.map((x) => `<li>${x.tipo !== 'nota' ? `<span class="pk ${x.tipo}">${GGEE.KIND_LABEL[x.tipo]}</span>` : ''}<span>${esc(x.texto)}</span></li>`).join('')}</ul>` : ''}</div></li>`;
+    });
+    if (e.aceite || e.aceite_cantidad) rows.push(`<li class="part"><div class="part-n">Aceite</div><div class="part-b"><div class="part-main"><span class="part-code">${esc(oneLine(e.aceite) || 'Sin dato')}</span>${e.aceite_cantidad ? `<span class="muted">${esc(oneLine(e.aceite_cantidad))}</span>` : ''}</div></div></li>`);
+    return rows.length ? `<ul class="parts">${rows.join('')}</ul>` : '<p class="muted">La planilla no trae repuestos para este equipo.</p>';
+  }
+  function ggeeFieldsHtml(e, full) {
+    const row = (k, v, mono) => v ? `<div><dt>${k}</dt><dd${mono ? ' class="mono-dd"' : ''}>${esc(oneLine(v))}</dd></div>` : '';
+    const base = [row('Generador', e.generador), row('Motor', motorTxt(e)), row('N° de serie del motor', e.motor_serie, true), row('Controlador', e.controlador),
+      row('IP de gestión', e.ip, true), row('Consulta remota', e.consulta_remota), row('Partida', e.partida), row('Estanque', e.estanque)];
+    const more = full ? [row('Categoría', e.categoria), row('Tipo', e.tipo), row('Red mínima', e.red_minima), row('Propietario del GGEE', e.propietario), row('Mantenedor', e.mantenedor),
+      row('Comuna', e.comuna), row('Sensor de combustible operativo', e.sensor_combustible), row('Año de instalación', e.anio), row('Banco de baterías', e.baterias),
+      row('Arco / anillo', e.arco), row('PE', e.pe), row('Consumo', e.consumo), row('Observaciones', e.obs),
+      ...Object.entries(e.otros || {}).map(([k, v]) => row(esc(k), v))] : [row('Propietario', e.propietario), row('Mantenedor', e.mantenedor)];
+    return `<dl class="fields">${[...base, ...more].join('')}</dl>`;
+  }
+  function ggeeSiteHtml(s) {
+    const e = ggeeFor(s);
+    if (!e) return '';
+    return `<section class="sec" aria-labelledby="sec-gg"><h2 id="sec-gg">${icons.engine}Grupo electrógeno<button type="button" class="linkbtn sec-link" data-act="ggee" data-g="${esc(e._key)}">Ver en repuestos GGEE</button></h2>
+      ${ggeeFieldsHtml(e, false)}
+      <h3 class="sub-h">Repuestos</h3>${partsHtml(e)}</section>`;
   }
 
   /* ================= Interacción ================= */
@@ -1836,7 +2446,8 @@ const XW = (() => {
     clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2200);
   }
   function copyText(text, what) {
-    const done = () => toast(`${what || 'Texto'} copiado`);
+    const w = what || 'Texto', fem = /^(ficha|clave)/i.test(w), pl = /s$/i.test(w);
+    const done = () => toast(`${w} ${fem ? (pl ? 'copiadas' : 'copiada') : pl ? 'copiados' : 'copiado'}`);
     const fallback = () => {
       const ta = document.createElement('textarea');
       ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
@@ -1891,18 +2502,30 @@ const XW = (() => {
   }
 
   function setView(v) {
-    if (!isAdmin()) v = 'sitios';
+    if (!isAdmin() && v !== 'instructivos') v = 'sitios';
+    if (v !== 'instructivos') closeReader(true);
     S.view = v;
     $('#viewSitios').hidden = v !== 'sitios';
+    $('#viewInstr').hidden = v !== 'instructivos';
     $('#viewUsuarios').hidden = v !== 'usuarios';
     $('#viewCargas').hidden = v !== 'cargas';
     renderTop();
     if (v === 'usuarios') { renderUsers(); loadUsers(); }
     if (v === 'cargas') loadCargas();
+    if (v === 'instructivos') { renderInstr(); loadInstr(); }
   }
   function routeFromHash() {
     const h = decodeURIComponent(location.hash.slice(1));
     if (h === 'usuarios' || h === 'cargas') { setView(h); return; }
+    if (h === 'instructivos') { S.instActive = null; setView('instructivos'); return; }
+    let m;
+    if ((m = /^instructivo-(.+)$/.exec(h))) { S.instActive = m[1]; setView('instructivos'); if (!twoMQ.matches) openReader(); return; }
+    if (h === 'alarmas-generador') { S.instActive = 'gen'; setView('instructivos'); if (!twoMQ.matches) openReader(); return; }
+    if ((m = /^ggee(?:-(.+))?$/.exec(h))) {
+      S.instActive = 'ggee';
+      if (m[1]) { const e = S.ggee.find((x) => (x.zonal + '-' + x.id).toUpperCase() === m[1].toUpperCase()); S.gActive = e ? e._key : null; }
+      setView('instructivos'); if (!twoMQ.matches) openReader(); return;
+    }
     setView('sitios');
     if (!h) return;
     const H = h.toUpperCase();
@@ -1925,7 +2548,7 @@ const XW = (() => {
     const r = ROLES[p.rol] || ['', 'info'];
     const zs = isAdmin() ? 'Todas las zonales' : (p.zonales || []).map(zLabel).join(', ');
     $('#umenu').innerHTML = `<div class="umenu-h"><strong>${esc(p.nombre || 'Sin nombre')}</strong><span>${esc(p.email || '')}</span><span>${esc(zs)}</span><span class="badge ${r[1]}">${r[0]}</span></div>
-      ${isAdmin() && !S.offline ? `<button type="button" role="menuitem" class="m-only" data-act="import">${icons.upload}Cargar Excel</button>` : ''}
+      ${isAdmin() && !S.offline ? `<button type="button" role="menuitem" class="m-only" data-act="import">${icons.upload}Cargar Excel</button><button type="button" role="menuitem" class="m-only" data-act="import-inst">${icons.book}Cargar instructivos</button>` : ''}
       ${isAdmin() && S.sites.length ? `<button type="button" role="menuitem" class="m-only" data-act="export">${icons.file}Descargar Excel</button>` : ''}
       <button type="button" role="menuitem" data-act="reload">${icons.refresh}Actualizar datos</button>
       <button type="button" role="menuitem" data-act="logout">${icons.out}Cerrar sesión</button>`;
@@ -1970,9 +2593,10 @@ const XW = (() => {
         if (a.dataset.act === 'recheck') enter();
         if (a.dataset.act === 'verified') verifiedCheck();
         if (a.dataset.act === 'resend') { conEnlace((st) => S.user.sendEmailVerification(st)).then(() => toast('Correo reenviado'), (er) => toast(friendly(er))); }
-        if (a.dataset.act === 'import') { closeMenu(); openImport(); }
+        if (a.dataset.act === 'import') { closeMenu(); openImport('excel'); }
+        if (a.dataset.act === 'import-inst') { closeMenu(); openImport('inst'); }
         if (a.dataset.act === 'export') { closeMenu(); exportExcel(); }
-        if (a.dataset.act === 'reload') { closeMenu(); reloadSites().then(() => { toast('Datos actualizados'); if (isAdmin()) loadUsers(); }); }
+        if (a.dataset.act === 'reload') { closeMenu(); Promise.all([reloadSites(), S.inst ? loadInstr(true) : null]).then(() => { toast('Datos actualizados'); if (isAdmin()) loadUsers(); }); }
         return;
       }
       if (!t.closest('#umenu') && !t.closest('#btnUser')) closeMenu();
@@ -1987,27 +2611,442 @@ const XW = (() => {
       if (a.dataset.act === 'close') closeDetail();
       if (a.dataset.act === 'reveal') { S.revealed.add(S.activeKey); renderDetail(); renderList(); }
       if (a.dataset.act === 'ficha') { const s = S.byKey.get(S.activeKey); if (s) copyText(fichaText(s), 'Ficha'); }
+      if (a.dataset.act === 'ggee') {
+        const d = $('#detail');
+        if (d.classList.contains('open')) { d.classList.remove('open'); document.documentElement.style.overflow = ''; }
+        S.gActive = a.dataset.g; S.gq = '';
+        setView('instructivos'); openInst('ggee', true);
+      }
     });
     $('#btnMask').addEventListener('click', () => { S.mask = !S.mask; S.revealed.clear(); lsSet('llavero-ocultar-claves', S.mask); renderTop(); renderList(); renderDetail(); toast(S.mask ? 'Claves ocultas en pantalla' : 'Claves visibles'); });
-    document.querySelectorAll('#tabs a').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); try { history.replaceState(null, '', a.dataset.view === 'sitios' ? location.pathname : '#' + a.dataset.view); } catch (_) {} setView(a.dataset.view); }));
+    document.querySelectorAll('#tabs a').forEach((a) => a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const v = a.dataset.view;
+      try { history.replaceState(null, '', v === 'sitios' ? location.pathname : '#' + v); } catch (_) {}
+      setView(v);
+      if (v === 'instructivos') updateInstHash();
+    }));
     document.addEventListener('keydown', (e) => {
       const modal = $('#dlg').open || $('#fdlg').open || $('#cdlg').open;
       if (e.key === 'Escape' && !$('#umenu').hidden) { closeMenu(); $('#btnUser').focus(); return; }
-      if ($('#appView').hidden || S.view !== 'sitios') return;
-      if (e.key === '/' && document.activeElement !== qi && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !modal) { e.preventDefault(); qi.focus(); qi.select(); }
+      if ($('#appView').hidden) return;
+      const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+      if (S.view === 'instructivos') {
+        if (e.key === '/' && !typing && !modal) { e.preventDefault(); const iq = $('#gq') || $('#iq'); iq.focus(); iq.select(); }
+        if (e.key === 'Escape' && $('#ireader').classList.contains('open') && !modal) closeReader();
+        return;
+      }
+      if (S.view !== 'sitios') return;
+      if (e.key === '/' && document.activeElement !== qi && !typing && !modal) { e.preventDefault(); qi.focus(); qi.select(); }
       if (e.key === 'Escape' && $('#detail').classList.contains('open') && !modal) closeDetail();
     });
-    window.addEventListener('popstate', () => { if ($('#detail').classList.contains('open')) closeDetail(true); });
-    twoMQ.addEventListener('change', () => { if (twoMQ.matches) { $('#detail').classList.remove('open'); document.documentElement.style.overflow = ''; } renderDetail(); });
-    $('#btnImport').addEventListener('click', openImport);
+    window.addEventListener('popstate', () => { if ($('#detail').classList.contains('open')) closeDetail(true); if ($('#ireader').classList.contains('open')) closeReader(true); });
+    twoMQ.addEventListener('change', () => {
+      if (twoMQ.matches) { $('#detail').classList.remove('open'); $('#ireader').classList.remove('open'); document.documentElement.style.overflow = ''; }
+      renderDetail(); if (S.view === 'instructivos' && !S.instActive) renderReader();
+    });
+    $('#btnImport').addEventListener('click', () => openImport(S.view === 'instructivos' ? 'inst' : 'excel'));
     $('#btnExport').addEventListener('click', exportExcel);
-    $('#file').addEventListener('change', (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) handleFile(f); });
+    $('#file').addEventListener('change', (e) => { const fs = [...e.target.files]; e.target.value = ''; if (fs.length) handleFiles(fs); });
+    // Instructivos
+    const iq = $('#iq');
+    iq.addEventListener('input', () => { S.iq = iq.value; $('#iqClear').hidden = !iq.value; renderInstrNav(); });
+    iq.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && iq.value) { iq.value = ''; iq.dispatchEvent(new Event('input')); }
+      if (e.key === 'Enter') { const first = $('#ilist .irow'); if (first) { e.preventDefault(); openInst(first.dataset.inst); } }
+    });
+    $('#iqClear').addEventListener('click', () => { iq.value = ''; iq.dispatchEvent(new Event('input')); iq.focus(); });
+    $('#ilist').addEventListener('click', (e) => { const b = e.target.closest('[data-inst]'); if (b) openInst(b.dataset.inst); });
+    const rd = $('#ireader');
+    rd.addEventListener('click', onReaderClick);
+    rd.addEventListener('input', onReaderInput);
+    rd.addEventListener('change', onReaderChange);
+    rd.addEventListener('scroll', () => { if (!spyRaf) spyRaf = requestAnimationFrame(() => { spyRaf = 0; spyToc(); }); }, { passive: true });
+    $('#lbox').addEventListener('click', () => $('#lbox').close());
     $('#utabs').addEventListener('click', (e) => { const b = e.target.closest('[data-ut]'); if (b) { S.utab = b.dataset.ut; renderUsers(); } });
     $('#utable').addEventListener('click', onUserClick);
     $('#utable').addEventListener('change', onUserChange);
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible' && S.profile && !$('#appView').hidden && Date.now() - S.lastLoad > 5 * 60 * 1000) { reloadSites(); if (isAdmin()) loadUsers(); }
     });
+  }
+
+  /* ================= Instructivos ================= */
+  const SECT = {
+    alarmas: ['Alarmas', 'bell', 'Puertos de alarmas externas, migraciones y validación en ENM.'],
+    equipos: ['Equipos', 'cpu', 'Instalación, integración y mantenimiento de equipos.']
+  };
+  const sectLabel = (s) => { const k = nrm(s).trim(); return SECT[k] ? SECT[k][0] : (String(s || '').trim() || 'Otros'); };
+  const sectIcon = (s) => icons[(SECT[nrm(s).trim()] || [0, 'book'])[1]];
+  const TOOLS = {
+    gen: { id: 'gen', tool: true, titulo: 'Generador de comandos de alarmas externas', seccion: 'Alarmas', orden: 900,
+      equipos: 'Baseband, RAN Processor, DUW/DUS (SUP), SAU',
+      resumen: 'Arma el script de MoShell para crear, nombrar y activar los 8 puertos de alarmas externas de la unidad que elijas.' },
+    ggee: { id: 'ggee', tool: true, titulo: 'Repuestos de grupos electrógenos', seccion: 'Equipos', orden: 900, equipos: 'Grupos electrógenos (GGEE)',
+      resumen: 'Filtros, correas, mangueras y aceite de cada grupo electrógeno: el código instalado en terreno y sus reemplazos.' }
+  };
+  Object.values(TOOLS).forEach((t) => { t._hay = nrm([t.titulo, t.seccion, t.equipos, t.resumen, t.id === 'gen' ? 'moshell script comandos alarmport slogan' : 'filtro correa manguera aceite motor generador'].join(' ')); });
+
+  function prepInst(d) {
+    const p = MD.parse(d.contenido || '');
+    const at = toDate(d.actualizado);
+    return { ...d, orden: Number(d.orden) || 99, actualizado: at && !isNaN(at) ? at.toISOString() : '', _p: p,
+      _hay: nrm([d.titulo, d.seccion, d.equipos, d.resumen, p.body.replace(/!\[[^\]]*\]\[[^\]]*\]/g, '')].join(' \n ')) };
+  }
+  function setInst(items, fromCache) {
+    S.inst = items.map(prepInst);
+    S.instStatus = 'ready'; S.instErr = null; S.instHtml.clear();
+    if (!fromCache) lsSet('llavero-inst-' + uid(), { items: S.inst.map(({ _p, _hay, ...x }) => x), at: Date.now() });
+    if (S.instActive && !TOOLS[S.instActive] && !S.inst.some((d) => d.id === S.instActive)) S.instActive = null;
+    renderInstr();
+  }
+  async function loadInstr(force) {
+    if (!S.fs || !S.profile || S.instStatus === 'loading' || (S.inst && !force)) return;
+    if (!S.inst) { const c = lsGet('llavero-inst-' + uid(), null); if (c && Array.isArray(c.items)) S.inst = c.items.map(prepInst); }
+    S.instStatus = 'loading'; renderInstrNav();
+    try {
+      const snap = await S.fs.collection('instructivos').get();
+      setInst(snap.docs.map((d) => ({ id: d.id, ...d.data() })), false);
+    } catch (e) {
+      S.instErr = e; S.instStatus = S.inst ? 'ready' : 'error';
+      renderInstr();
+    }
+  }
+  function refreshInstrData() { if (S.view !== 'instructivos') return; renderInstrNav(); if (S.instActive === 'ggee') renderReader(); }
+
+  function instItems() {
+    const list = (S.inst || []).slice();
+    list.push(TOOLS.gen);
+    if (S.ggee.length || isAdmin()) list.push(TOOLS.ggee);
+    return list;
+  }
+  function instGroups(q) {
+    const toks = nrm(q).trim().split(/\s+/).filter(Boolean);
+    const items = instItems().filter((d) => toks.every((t) => d._hay.includes(t)));
+    const groups = new Map();
+    items.forEach((d) => { const k = sectLabel(d.seccion); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(d); });
+    const ord = (k) => { const i = ['Alarmas', 'Equipos'].indexOf(k); return i < 0 ? 9 : i; };
+    return [...groups.entries()].sort((a, b) => ord(a[0]) - ord(b[0]) || collator.compare(a[0], b[0]))
+      .map(([name, arr]) => ({ name, items: arr.sort((a, b) => a.orden - b.orden || collator.compare(a.titulo, b.titulo)) }));
+  }
+
+  function renderInstr() { if (S.view !== 'instructivos') return; renderInstrNav(); renderReader(); }
+  const toolTag = `<span class="ir-tool">${icons.terminal}Herramienta</span>`;
+  function renderInstrNav() {
+    const gs = instGroups(S.iq);
+    const n = gs.reduce((a, g) => a + g.items.length, 0);
+    const docs = (S.inst || []).length;
+    const nTools = instItems().filter((d) => d.tool).length;
+    $('#icount').textContent = S.iq ? `${plural(n, 'resultado', 'resultados')}` : S.inst ? `${plural(docs, 'instructivo', 'instructivos')} y ${plural(nTools, 'herramienta', 'herramientas')}` : '';
+    let html = '';
+    if (S.instStatus === 'error' || (S.instErr && S.inst)) {
+      const denied = String(S.instErr && S.instErr.code) === 'permission-denied';
+      html += `<div class="inote ${S.inst ? 'warn' : 'crit'}">${icons.info}<span>${S.inst ? 'No se pudo actualizar: estás viendo la copia guardada. ' : 'No se pudieron cargar los instructivos. '}${esc(friendly(S.instErr))}${denied && isAdmin() ? ' Publica en Firebase la versión nueva de firestore.rules.' : ''}</span></div>`;
+    }
+    html += gs.map((g) => `<section class="ig" aria-label="${esc(g.name)}"><h3 class="ig-h">${sectIcon(g.name)}<span>${esc(g.name)}</span><span class="n">${g.items.length}</span></h3><ul class="ilist">${g.items.map((d) =>
+      `<li><button type="button" class="irow" data-inst="${esc(d.id)}" aria-current="${S.instActive === d.id}"><span class="ir-t">${esc(d.titulo)}</span><span class="ir-s">${d.tool ? toolTag : ''}<span>${esc(d.equipos || '')}</span></span></button></li>`).join('')}</ul></section>`).join('');
+    if (S.instStatus === 'loading' && !S.inst) html += '<div class="ig"><div class="skel"></div><div class="skel"></div></div>';
+    if (S.iq && !n) html += `<div class="state"><strong>Sin resultados para “${esc(S.iq)}”</strong><span>Prueba con el nombre de un equipo o un comando, por ejemplo lhget.</span></div>`;
+    if (S.inst && !docs && !S.iq && S.instStatus === 'ready') html += `<div class="inote">${icons.book}<span>${isAdmin() ? 'Aún no hay instructivos cargados. Usa “Cargar instructivos” y elige los archivos .md.' : 'Aún no hay instructivos cargados. Mientras tanto, puedes usar las herramientas.'}</span></div>`;
+    $('#ilist').innerHTML = html;
+  }
+
+  function docHead(d, actions) {
+    const meta = [];
+    if (d.equipos) meta.push(`<div><dt>Equipos</dt><dd>${esc(d.equipos)}</dd></div>`);
+    if (d.fuente) meta.push(`<div><dt>Fuente</dt><dd>${esc(d.fuente)}</dd></div>`);
+    if (d.actualizado) meta.push(`<div><dt>Actualizado</dt><dd>${esc(fmtDate(d.actualizado))}</dd></div>`);
+    return `<header class="doc-h">
+      <div class="doc-kicker">${sectIcon(d.seccion)}<span>${esc(sectLabel(d.seccion))}</span>${d.tool ? toolTag : ''}</div>
+      <h2 class="doc-t">${esc(d.titulo)}</h2>
+      ${d.resumen ? `<p class="doc-sum">${esc(d.resumen)}</p>` : ''}
+      ${meta.length ? `<dl class="doc-meta">${meta.join('')}</dl>` : ''}
+      ${actions ? `<div class="doc-acts">${actions}</div>` : ''}
+    </header>`;
+  }
+  const readerBar = '<div class="d-bar gutter"><button type="button" class="back" data-iact="close">' + icons.back + 'Instructivos</button></div>';
+
+  function instWelcome() {
+    const gs = instGroups('');
+    return `<div class="iwelcome"><div class="iw-h"><h2>Instructivos</h2><p>Procedimientos de instalación y configuración de equipos y alarmas, con los comandos listos para copiar. Elige uno de la lista o búscalo por equipo o comando.</p></div>
+      ${gs.map((g) => `<section><h3 class="ig-h">${sectIcon(g.name)}<span>${esc(g.name)}</span></h3><div class="icards">${g.items.map((d) =>
+        `<button type="button" class="icard" data-inst="${esc(d.id)}"><span class="ic-t">${esc(d.titulo)}</span>${d.resumen ? `<span class="ic-s">${esc(d.resumen)}</span>` : ''}${d.tool ? toolTag : ''}</button>`).join('')}</div></section>`).join('')}
+      ${S.instStatus === 'loading' && !S.inst ? '<div style="display:flex;gap:10px;align-items:center;color:var(--muted)"><div class="spin" aria-hidden="true"></div>Cargando instructivos…</div>' : ''}</div>`;
+  }
+
+  function renderReader() {
+    const el = $('#ireader');
+    const id = S.instActive;
+    if (!id) { el.innerHTML = twoMQ.matches ? instWelcome() : ''; return; }
+    if (id === 'gen') {
+      const doc = (S.inst || []).find((d) => /generador-alarmas/.test(d.contenido || ''));
+      el.innerHTML = `${readerBar}<article class="doc"><div class="doc-grid"><div class="doc-in">${docHead(TOOLS.gen)}
+        <div class="md"><p>Elige la unidad, revisa los slogans y marca los puertos de contacto <strong>normalmente cerrado (NC)</strong>. El script se arma solo, en el orden del procedimiento: respaldo, creación, severidad, slogans, contactos NC, activación, revisión y respaldo final.</p>
+        ${genHtml()}
+        <aside class="md-note info"><strong class="md-note-l">Nota</strong><p>Cada línea <code>y</code> responde la confirmación que pide MoShell después de un <code>set</code>. Revisa la tabla que muestra <code>lhget</code> antes del respaldo final.</p></aside>
+        ${doc ? `<p><button type="button" class="linkbtn" data-inst="${esc(doc.id)}">Ver el instructivo completo: ${esc(doc.titulo)}</button></p>` : ''}</div>
+      </div></div></article>`;
+      return;
+    }
+    if (id === 'ggee') { el.innerHTML = readerBar + ggeeToolHtml(); renderGgeeList(); return; }
+    const d = (S.inst || []).find((x) => x.id === id);
+    if (!d) {
+      el.innerHTML = readerBar + (S.instStatus === 'loading' || S.instStatus === 'idle' ? '<div class="iwelcome"><div class="spin" aria-hidden="true"></div></div>' : '<div class="iwelcome"><h2>No se encontró el instructivo</h2><p>Puede que lo hayan eliminado. Elige otro de la lista.</p></div>');
+      return;
+    }
+    let body = S.instHtml.get(d.id);
+    if (!body) { body = MD.render(d._p.body, d._p.refs, { directive: (n) => (n === 'generador-alarmas' ? '<div data-gen-slot></div>' : '') }); S.instHtml.set(d.id, body); }
+    const toc = MD.toc(d._p.body);
+    const tl = toc.map((t) => `<li><button type="button" data-toc="${esc(t.id)}">${esc(t.text)}</button></li>`).join('');
+    const acts = `<button type="button" class="btn sm" data-iact="dl">${icons.file}Descargar .md</button>` + (isAdmin() && !S.offline ? `<button type="button" class="btn sm danger" data-iact="del">${icons.trash}Eliminar</button>` : '');
+    el.innerHTML = `${readerBar}<article class="doc"><div class="doc-grid"><div class="doc-in">${docHead(d, acts)}
+      ${toc.length > 2 ? `<details class="toc-inline"><summary>${icons.list}En este instructivo<span>${plural(toc.length, 'sección', 'secciones')}</span></summary><ol>${tl}</ol></details>` : ''}
+      <div class="md">${body}</div>
+      ${d.archivo ? `<footer class="rec-foot"><span>${icons.file}Archivo: ${esc(d.archivo)}</span></footer>` : ''}
+      </div>${toc.length > 2 ? `<nav class="toc-side" aria-label="En este instructivo"><h3>En este instructivo</h3><ol>${tl}</ol></nav>` : ''}</div></article>`;
+    el.querySelectorAll('[data-gen-slot]').forEach((s) => { s.outerHTML = genHtml(); });
+    spyToc();
+  }
+  // Marca en el índice lateral la sección que se está leyendo
+  let spyRaf = 0;
+  function spyToc() {
+    const el = $('#ireader');
+    const links = el.querySelectorAll('.toc-side [data-toc]');
+    if (!links.length) return;
+    const hs = [...el.querySelectorAll('.md h3[id]')];
+    const top = el.getBoundingClientRect().top;
+    let cur = hs[0];
+    for (const h of hs) { if (h.getBoundingClientRect().top - top < 140) cur = h; else break; }
+    links.forEach((a) => a.setAttribute('aria-current', String(!!cur && a.dataset.toc === cur.id)));
+  }
+
+  function instHash() {
+    const id = S.instActive;
+    if (!id) return '#instructivos';
+    if (id === 'gen') return '#alarmas-generador';
+    if (id === 'ggee') { const e = S.gActive && S.ggee.find((x) => x._key === S.gActive); return '#ggee' + (e ? '-' + e.zonal + '-' + e.id : ''); }
+    return '#instructivo-' + id;
+  }
+  function updateInstHash() { try { history.replaceState(history.state, '', instHash()); } catch (_) {} }
+  function openInst(id, keepG) {
+    if (!keepG && id !== S.instActive) S.gActive = null;
+    S.instActive = id;
+    updateInstHash();
+    renderInstrNav(); renderReader();
+    $('#ireader').scrollTop = 0;
+    if (!twoMQ.matches) openReader();
+  }
+  function openReader() {
+    const d = $('#ireader');
+    if (d.classList.contains('open')) return;
+    d.classList.add('open'); d.scrollTop = 0; document.documentElement.style.overflow = 'hidden';
+    try { history.pushState({ lector: 1 }, '', location.hash || '#'); } catch (_) {}
+    const b = d.querySelector('.back'); if (b) b.focus({ preventScroll: true });
+  }
+  function closeReader(fromPop) {
+    const d = $('#ireader');
+    if (!d || !d.classList.contains('open')) return;
+    d.classList.remove('open'); document.documentElement.style.overflow = '';
+    if (!fromPop) { try { history.back(); } catch (_) {} }
+    const row = document.querySelector(`.irow[data-inst="${CSS.escape(S.instActive || '')}"]`); if (row) row.focus({ preventScroll: false });
+  }
+
+  function downloadText(text, name, type) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], { type: type || 'text/plain;charset=utf-8' }));
+    a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  }
+
+  async function deleteInst(d) {
+    if (!(await confirmBox('Eliminar instructivo', `“${d.titulo}” dejará de estar disponible para todos. Si tienes el archivo .md, puedes volver a cargarlo después.`, 'Eliminar', true))) return;
+    try {
+      const b = S.fs.batch();
+      b.delete(S.fs.collection('instructivos').doc(d.id));
+      b.set(S.fs.collection('cargas').doc(), { tipo: 'instructivo', zonal: '-', archivo: d.archivo || d.titulo, nuevos: 0, actualizados: 0, eliminados: 1, usuario: uid(), usuario_nombre: (S.profile && S.profile.nombre) || '', creado_en: ts() });
+      await b.commit();
+    } catch (e) { toast(friendly(e)); return; }
+    S.instActive = null; updateInstHash(); closeReader(true);
+    await loadInstr(true);
+    toast('Instructivo eliminado');
+  }
+
+  /* ---------- Generador de comandos de alarmas externas ---------- */
+  const UNITS = {
+    bb: ['Baseband', 'Equipment=1,FieldReplaceableUnit=1', 'FieldReplaceableUnit=1'],
+    ran: ['RAN Processor', 'Equipment=1,FieldReplaceableUnit=BB-1', 'FieldReplaceableUnit=BB-1'],
+    sup: ['DUW / DUS (SUP)', 'Equipment=1,HwUnit=SUP-1', 'HwUnit=SUP-1'],
+    sau: ['SAU', 'Equipment=1,FieldReplaceableUnit=SAU-1', 'FieldReplaceableUnit=SAU-1']
+  };
+  const SLOGANS = ['Corte de Energia AC', 'Falla rectificador', 'Temperatura', 'Puerta Abierta', 'Falla de GG', 'GG en vacío', 'GG con carga', 'Bajo nivel de combustible'];
+  const SEVS = [['2', 'Crítica'], ['3', 'Mayor'], ['4', 'Menor']];
+  const G = {};
+  function genReset() { Object.assign(G, { unit: 'bb', sev: '2', cv: true, act: true, ports: SLOGANS.map((s, i) => ({ n: i + 1, on: true, slogan: s, nc: false })) }); }
+  genReset();
+  function genScript() {
+    const [, mo, short] = UNITS[G.unit];
+    const P = G.ports.filter((p) => p.on);
+    const L = [];
+    if (G.cv) L.push('cvms previo_alarmas_externas');
+    P.forEach((p) => L.push(`cr  ${mo},AlarmPort=${p.n}`));
+    if (P.length) L.push(`set ${mo},AlarmPort= perceivedSeverity ${G.sev}`, 'y');
+    P.forEach((p) => { const s = p.slogan.trim(); if (s) L.push(`set ${mo},AlarmPort=${p.n} alarmslogan ${s}`, 'y'); });
+    P.filter((p) => p.nc).forEach((p) => L.push(`lset ${mo},AlarmPort=${p.n} normallyOpen false`));
+    if (G.act && P.length) L.push(`lset ${mo},AlarmPort= administrativeState 1`, 'y');
+    L.push(`lhget  ${short},alarmport| administrativeState|alarmSlogan|normallyOpen|operationalState|perceivedSeverity`);
+    if (G.cv) L.push('cvms post_alarmas_externas');
+    return L.join('\n');
+  }
+  function genSummary() {
+    const on = G.ports.filter((p) => p.on), nc = on.filter((p) => p.nc).length;
+    return `${UNITS[G.unit][0]} · ${plural(on.length, 'puerto', 'puertos')}${nc ? ` · ${nc} NC` : ''} · severidad ${G.sev}`;
+  }
+  function genHtml() {
+    return `<section class="gen" data-gen aria-label="Generador de comandos de alarmas externas">
+      <div class="gen-top">
+        <div class="gen-f"><span class="gen-l" id="genUL">Unidad</span><div class="seg" role="radiogroup" aria-labelledby="genUL">${Object.entries(UNITS).map(([k, u]) =>
+          `<button type="button" role="radio" aria-checked="${G.unit === k}" data-gu="${k}">${esc(u[0])}</button>`).join('')}</div></div>
+        <div class="gen-f"><label class="gen-l" for="genSev">Severidad</label><span class="selw"><select id="genSev" data-gsev>${SEVS.map(([v, l]) => `<option value="${v}"${G.sev === v ? ' selected' : ''}>${v} · ${l}</option>`).join('')}</select>${icons.chev}</span></div>
+      </div>
+      <div class="gen-ports"><table><thead><tr><th scope="col">Puerto</th><th scope="col">Crear</th><th scope="col">Slogan</th><th scope="col"><abbr title="Contacto normalmente cerrado">NC</abbr></th></tr></thead><tbody>${G.ports.map((p) =>
+        `<tr${p.on ? '' : ' class="off"'}><td class="mono">${p.n}</td><td><input type="checkbox" data-gon="${p.n}"${p.on ? ' checked' : ''} aria-label="Crear puerto ${p.n}"></td><td><input type="text" data-gsl="${p.n}" value="${esc(p.slogan)}" maxlength="60" autocomplete="off" spellcheck="false" aria-label="Slogan del puerto ${p.n}"${p.on ? '' : ' disabled'}></td><td><input type="checkbox" data-gnc="${p.n}"${p.nc ? ' checked' : ''} aria-label="Puerto ${p.n} normalmente cerrado"${p.on ? '' : ' disabled'}></td></tr>`).join('')}</tbody></table></div>
+      <div class="gen-opts"><label class="check"><input type="checkbox" data-gopt="cv"${G.cv ? ' checked' : ''}><span>Respaldo antes y después (<code>cvms</code>)</span></label>
+        <label class="check"><input type="checkbox" data-gopt="act"${G.act ? ' checked' : ''}><span>Dejar las alarmas operativas (<code>administrativeState 1</code>)</span></label></div>
+      <figure class="md-code gen-out" data-lang="moshell"><figcaption><span data-gsum>${esc(genSummary())}</span><span class="fc-acts"><button type="button" class="md-copy" data-gen-dl>Descargar .txt</button><button type="button" class="md-copy" data-copy-code>Copiar</button></span></figcaption><pre><code data-gcode>${esc(genScript())}</code></pre></figure>
+      <div class="gen-foot"><button type="button" class="linkbtn" data-gen-reset>Volver a los valores estándar</button></div>
+    </section>`;
+  }
+  function genRefresh(root, full, focusSel) {
+    root.querySelectorAll('[data-gen]').forEach((g) => {
+      if (full) g.outerHTML = genHtml();
+      else { g.querySelector('[data-gcode]').textContent = genScript(); g.querySelector('[data-gsum]').textContent = genSummary(); }
+    });
+    if (focusSel) { const f = root.querySelector(focusSel); if (f) f.focus({ preventScroll: true }); }
+  }
+
+  /* ---------- Herramienta: repuestos de grupos electrógenos ---------- */
+  function ggeeToolHtml() {
+    const d = TOOLS.ggee;
+    const vis = visibleZonales();
+    const metas = Object.entries(S.ggeeMeta).filter(([z]) => vis.includes(z));
+    const last = metas.map(([, m]) => m.actualizado).filter(Boolean).sort().pop();
+    const files = [...new Set(metas.map(([, m]) => m.archivo).filter(Boolean))];
+    const acts = isAdmin() && !S.offline ? `<button type="button" class="btn sm" data-iact="ggee-import">${icons.upload}Cargar planilla GGEE</button>` : '';
+    const head = docHead({ ...d, equipos: metas.length ? metas.map(([z, m]) => `${zLabel(z)}: ${plural(m.total, 'equipo', 'equipos')}`).join(' · ') : d.equipos, fuente: files.join(', '), actualizado: last }, acts);
+    let body;
+    if (!S.ggee.length) {
+      const denied = S.ggeeErr && String(S.ggeeErr.code) === 'permission-denied';
+      body = `<div class="iempty">${icons.engine}<strong>${S.ggeeErr ? 'No se pudieron cargar los grupos electrógenos' : 'Aún no hay grupos electrógenos cargados'}</strong><span>${S.ggeeErr ? esc(friendly(S.ggeeErr)) + (denied && isAdmin() ? ' Publica en Firebase la versión nueva de firestore.rules.' : '') :
+        isAdmin() ? 'Usa “Cargar planilla GGEE” y elige la planilla de filtros y correas (por ejemplo, GGEE_FILTROS_Y_CORREAS.xlsx). Cada zona se asigna a su zonal.' : 'Cuando un administrador cargue la planilla, aquí verás los repuestos de cada equipo.'}</span></div>`;
+    } else if (S.gActive && S.ggee.some((e) => e._key === S.gActive)) {
+      body = ggeeDetailHtml(S.ggee.find((e) => e._key === S.gActive));
+    } else {
+      body = `<div class="gsearch"><div class="search">${icons.search}<label for="gq" class="sr-only">Buscar grupo electrógeno</label><input id="gq" type="search" autocomplete="off" spellcheck="false" placeholder="Buscar POP, nombre, motor o código de repuesto" value="${esc(S.gq)}"></div><span class="count" id="gcount"></span></div>
+        <ul class="list glist" id="glist"></ul>`;
+    }
+    return `<article class="doc"><div class="doc-grid"><div class="doc-in">${head}${body}</div></div></article>`;
+  }
+  function ggeeResults() {
+    const qn = GGEE.norm(S.gq);
+    const toks = qn ? qn.split(' ') : [];
+    const vis = visibleZonales();
+    const res = S.ggee.filter((e) => vis.includes(e.zonal) && toks.every((t) => e._hay.includes(t)));
+    const exact = (e) => (toks.length === 1 && [e.pop, e.nemonico].some((c) => GGEE.norm(c) === toks[0]) ? 1 : 0);
+    return res.sort((a, b) => exact(b) - exact(a));
+  }
+  function renderGgeeList() {
+    const ul = $('#glist'); if (!ul) return;
+    const res = ggeeResults();
+    const toks = GGEE.norm(S.gq).split(' ').filter(Boolean);
+    const multi = visibleZonales().length > 1;
+    $('#gcount').textContent = S.gq ? `${res.length} de ${plural(S.ggee.length, 'equipo', 'equipos')}` : plural(S.ggee.length, 'equipo', 'equipos');
+    if (!res.length) { ul.innerHTML = `<li class="state"><strong>Sin resultados para “${esc(S.gq)}”</strong><span>Prueba con el POP (por ejemplo LA443), la marca del motor o un código de filtro.</span></li>`; return; }
+    ul.innerHTML = res.slice(0, 200).map((e) => {
+      let hit = '';
+      if (toks.length && !toks.every((t) => GGEE.norm([e.pop, e.nemonico, e.nombre, e.comuna, e.zona].join(' ')).includes(t))) {
+        for (const [k, label] of GGEE.PARTS) {
+          const it = GGEE.parsePart(e[k]).find((x) => toks.some((t) => GGEE.norm(x.texto).includes(t)));
+          if (it) { hit = `${label}: ${it.texto}${it.tipo !== 'terreno' && it.tipo !== 'nota' ? ` (${GGEE.KIND_LABEL[it.tipo].toLowerCase()})` : ''}`; break; }
+        }
+      }
+      const fc = GGEE.parsePart(e.filtro_combustible).find((x) => x.tipo === 'terreno');
+      return `<li><button type="button" class="row" data-g="${esc(e._key)}">
+        <span class="r1"><span class="r-pop">${multi ? `<span class="ztag" title="${esc(zLabel(e.zonal))}">${esc(e.zonal)}</span>` : ''}${esc(e.pop)}</span><span class="r-ll">${icons.engine}${esc(oneLine(e.motor_marca) || 'Motor sin dato')}</span></span>
+        <span class="r-name">${esc(e.nombre || 'Sin nombre')}${e.comuna && nrm(e.comuna) !== nrm(e.nombre) ? ' · ' + esc(e.comuna) : ''}</span>
+        <span class="r3">${hit ? `<span class="f hit">${esc(hit)}</span>` : fc ? `<span class="f">Filtro de combustible <b>${esc(fc.texto)}</b></span>` : ''}</span></button></li>`;
+    }).join('');
+  }
+  function ggeeDetailHtml(e) {
+    const site = siteForGgee(e);
+    const chips = [e.categoria && `Categoría ${e.categoria}`, e.tipo, e.red_minima && `Red mínima ${e.red_minima}`].filter(Boolean).map((c) => `<span class="badge">${esc(c)}</span>`).join('');
+    return `<div class="gdet">
+      <button type="button" class="back back-in" data-iact="g-back">${icons.back}Todos los equipos</button>
+      <div class="gg-h"><div class="d-id"><h3 class="d-pop">${esc(e.pop)}${e.nemonico && e.nemonico !== e.pop ? `<span class="gg-nem">${esc(e.nemonico)}</span>` : ''}</h3>
+        <p class="d-name">${esc(e.nombre || 'Sin nombre')}${e.comuna ? ' · ' + esc(e.comuna) : ''} · ${esc(zLabel(e.zonal))}</p>${chips ? `<div class="d-badges">${chips}</div>` : ''}</div>
+        <div class="d-actions">${site ? `<button type="button" class="btn" data-iact="site" data-site="${esc(site._key)}">${icons.tag}Ver ficha del sitio</button>` : ''}<button type="button" class="btn primary" data-iact="g-copy">${icons.copy}Copiar repuestos</button></div></div>
+      <section class="sec" aria-labelledby="gsec-r"><h2 id="gsec-r">${icons.engine}Repuestos</h2>${partsHtml(e)}</section>
+      <section class="sec" aria-labelledby="gsec-e"><h2 id="gsec-e">${icons.cpu}Equipo</h2>${ggeeFieldsHtml(e, true)}</section>
+    </div>`;
+  }
+  function ggeeText(e) {
+    const L = [`${e.pop} – ${e.nombre || ''} (${zLabel(e.zonal)})`];
+    if (e.generador) L.push('Generador: ' + oneLine(e.generador));
+    if (motorTxt(e)) L.push('Motor: ' + motorTxt(e) + (e.motor_serie ? ` (${oneLine(e.motor_serie)})` : ''));
+    GGEE.PARTS.forEach(([k, label]) => {
+      const it = GGEE.parsePart(e[k]); if (!it.length) return;
+      const t = it.filter((x) => x.tipo === 'terreno').map((x) => x.texto);
+      const alt = it.filter((x) => x.tipo !== 'terreno' && x.tipo !== 'nota').map((x) => `${GGEE.KIND_LABEL[x.tipo]}: ${x.texto}`);
+      L.push(`${label}: ${t.join(' / ') || 'sin código en terreno'}${alt.length ? ' | ' + alt.join(' | ') : ''}`);
+    });
+    if (e.aceite) L.push('Aceite: ' + oneLine(e.aceite) + (e.aceite_cantidad ? ` (${oneLine(e.aceite_cantidad)})` : ''));
+    return L.join('\n');
+  }
+
+  function onReaderClick(ev) {
+    const t = ev.target;
+    const cc = t.closest('[data-copy-code]');
+    if (cc) { const code = cc.closest('figure').querySelector('code'); copyText(code.textContent, 'Comandos'); return; }
+    const cp = t.closest('[data-copy]'); if (cp) { copyText(cp.dataset.copy, cp.dataset.what); return; }
+    const tc = t.closest('[data-toc]');
+    if (tc) { const h = document.getElementById(tc.dataset.toc); if (h) h.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }); const det = tc.closest('details'); if (det) det.open = false; return; }
+    const img = t.closest('.md-img img');
+    if (img) { const lb = $('#lbox'); lb.querySelector('img').src = img.src; lb.querySelector('img').alt = img.alt; lb.querySelector('p').textContent = img.alt; lb.showModal(); return; }
+    const gu = t.closest('[data-gu]'); if (gu) { G.unit = gu.dataset.gu; genRefresh($('#ireader'), true, `[data-gu="${gu.dataset.gu}"]`); return; }
+    if (t.closest('[data-gen-reset]')) { genReset(); genRefresh($('#ireader'), true); toast('Valores estándar restablecidos'); return; }
+    if (t.closest('[data-gen-dl]')) { downloadText(genScript().replace(/\n/g, '\r\n') + '\r\n', `alarmas_externas_${G.unit}.txt`); toast('Script descargado'); return; }
+    const inst = t.closest('[data-inst]'); if (inst) { openInst(inst.dataset.inst); return; }
+    const g = t.closest('[data-g]'); if (g) { S.gActive = g.dataset.g; updateInstHash(); renderReader(); $('#ireader').scrollTop = 0; return; }
+    const a = t.closest('[data-iact]'); if (!a) return;
+    const act = a.dataset.iact;
+    const d = (S.inst || []).find((x) => x.id === S.instActive);
+    if (act === 'close') closeReader();
+    if (act === 'dl' && d) { downloadText(d.contenido || '', d.archivo && /\.md$/i.test(d.archivo) ? d.archivo : d.id + '.md', 'text/markdown;charset=utf-8'); toast('Archivo descargado'); }
+    if (act === 'del' && d) deleteInst(d);
+    if (act === 'ggee-import') openImport('excel');
+    if (act === 'g-back') { S.gActive = null; updateInstHash(); renderReader(); const q = $('#gq'); if (q && twoMQ.matches) q.focus(); }
+    if (act === 'g-copy') { const e = S.ggee.find((x) => x._key === S.gActive); if (e) copyText(ggeeText(e), 'Repuestos'); }
+    if (act === 'site') {
+      const s = S.byKey.get(a.dataset.site); if (!s) return;
+      closeReader(true);
+      setView('sitios');
+      if (S.zonal !== 'all' && S.zonal !== s.zonal) { S.zonal = s.zonal; lsSet('llavero-zonal-' + uid(), S.zonal); rebuildGroups(); renderSitesView(); }
+      S.q = ''; $('#q').value = ''; S.filters.clear(); rebuildGroups(); refreshResults(false);
+      select(s._key, true);
+      const row = document.querySelector('.row[aria-current="true"]'); if (row) row.scrollIntoView({ block: 'center' });
+    }
+  }
+  function onReaderInput(ev) {
+    const t = ev.target;
+    if (t.id === 'gq') { S.gq = t.value; renderGgeeList(); return; }
+    if (t.dataset.gsl) { const p = G.ports[Number(t.dataset.gsl) - 1]; p.slogan = t.value.replace(/[\r\n]+/g, ' '); genRefresh($('#ireader'), false); }
+  }
+  function onReaderChange(ev) {
+    const t = ev.target;
+    if (t.dataset.gon) { G.ports[Number(t.dataset.gon) - 1].on = t.checked; genRefresh($('#ireader'), true, `[data-gon="${t.dataset.gon}"]`); return; }
+    if (t.dataset.gnc) { G.ports[Number(t.dataset.gnc) - 1].nc = t.checked; genRefresh($('#ireader'), false); return; }
+    if (t.dataset.gopt) { G[t.dataset.gopt] = t.checked; genRefresh($('#ireader'), false); return; }
+    if ('gsev' in t.dataset) { G.sev = t.value; genRefresh($('#ireader'), false); }
   }
 
   /* ================= Usuarios (administración) ================= */
@@ -2125,8 +3164,11 @@ const XW = (() => {
     try { S.cargas = (await S.fs.collection('cargas').orderBy('creado_en', 'desc').limit(200).get()).docs.map((d) => ({ id: d.id, ...d.data() })); }
     catch (e) { $('#ctable').innerHTML = `<div class="empty-t"><strong>No se pudo cargar el historial</strong>${esc(friendly(e))}</div>`; return; }
     if (!S.cargas.length) { $('#ctable').innerHTML = '<div class="empty-t"><strong>Aún no hay cargas</strong>Cuando un administrador suba una planilla, quedará registrada aquí.</div>'; return; }
-    $('#ctable').innerHTML = `<table class="ctable"><thead><tr><th>Fecha</th><th>Zonal</th><th>Archivo</th><th class="n">Nuevos</th><th class="n">Actualizados</th><th class="n">Quitados</th><th>Cargado por</th></tr></thead><tbody>${S.cargas.map((c) =>
-      `<tr><td>${esc((toDate(c.creado_en) || new Date()).toLocaleString('es-CL', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }))}</td><td class="mono">${esc(zLabel(c.zonal))}</td><td>${esc(c.archivo)}</td><td class="n">${c.nuevos}</td><td class="n">${c.actualizados}</td><td class="n">${c.eliminados}</td><td>${esc(c.usuario_nombre || '')}</td></tr>`).join('')}</tbody></table>`;
+    const TIPO = { ggee: ['Repuestos GGEE', 'warn'], instructivo: ['Instructivos', 'ok'], sitios: ['Sitios', 'info'] };
+    $('#ctable').innerHTML = `<table class="ctable"><thead><tr><th>Fecha</th><th>Tipo</th><th>Zonal</th><th>Archivo</th><th class="n">Nuevos</th><th class="n">Actualizados</th><th class="n">Quitados</th><th>Cargado por</th></tr></thead><tbody>${S.cargas.map((c) => {
+      const tp = TIPO[c.tipo] || TIPO.sitios;
+      return `<tr><td>${esc((toDate(c.creado_en) || new Date()).toLocaleString('es-CL', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }))}</td><td><span class="badge ${tp[1]}">${tp[0]}</span></td><td class="mono">${c.zonal && c.zonal !== '-' ? esc(zLabel(c.zonal)) : '—'}</td><td class="wrap">${esc(c.archivo)}</td><td class="n">${c.nuevos}</td><td class="n">${c.actualizados}</td><td class="n">${c.eliminados}</td><td>${esc(c.usuario_nombre || '')}</td></tr>`;
+    }).join('')}</tbody></table>`;
   }
 
   /* ================= Cargar planilla ================= */
@@ -2136,18 +3178,184 @@ const XW = (() => {
     $('#dlgBody').innerHTML = `<div class="dlg-h"><h2 id="dlgTitle">${title}</h2><button type="button" class="iconbtn" data-dlg="close" aria-label="Cerrar">${icons.x}</button></div>
       <div class="dlg-b">${bodyHtml}</div>${footHtml ? `<div class="dlg-f">${footHtml}</div>` : ''}`;
   }
-  function openImport() {
-    plan = null; parsedFile = null;
-    dlgView('Cargar planilla',
-      `<p>Elige la planilla con los sitios. Cada hoja se asigna a una zonal según su nombre (por ejemplo, una hoja llamada OSORNO va a Z16 Osorno); podrás revisarlo antes de guardar.</p>
-      <label class="drop" id="drop" for="file">${icons.upload}<strong>Elegir planilla</strong><small>.xlsx, .xls o .csv. También puedes arrastrarla aquí.</small></label>
-      <p class="hint">Columnas que se reconocen: POP, Nombre, Llavero, N° Cliente, CIA Eléctrica, Clave de acceso, Notas de acceso y Zona. También se leen las notas de celda. Una celda vacía no borra el dato que ya existe.</p>`,
-      '<button type="button" class="btn" data-dlg="close">Cancelar</button>');
+  function openImport(kind) {
+    kind = kind === 'inst' ? 'inst' : 'excel';
+    plan = null; parsedFile = null; S.importKind = kind;
+    const fi = $('#file');
+    fi.accept = kind === 'inst' ? '.md,.markdown,.txt' : '.xlsx,.xlsm,.xls,.csv,.ods';
+    fi.multiple = kind === 'inst';
+    if (kind === 'inst') {
+      dlgView('Cargar instructivos',
+        `<p>Elige uno o varios archivos <b>.md</b>. Cada archivo es un instructivo: su encabezado indica el título, la sección (Alarmas, Equipos u otra) y los equipos, y las imágenes van dentro del mismo archivo.</p>
+        <label class="drop" id="drop" for="file">${icons.upload}<strong>Elegir instructivos</strong><small>Archivos .md. También puedes arrastrarlos aquí.</small></label>
+        <p class="hint">Si un archivo tiene el mismo id que un instructivo que ya existe, lo reemplaza. Los instructivos se guardan en la base de datos, no en GitHub, así que solo los ve el personal aprobado.</p>`,
+        '<button type="button" class="btn" data-dlg="close">Cancelar</button>');
+    } else {
+      dlgView('Cargar planilla',
+        `<p>Elige la planilla con los sitios. Cada hoja se asigna a una zonal según su nombre (por ejemplo, una hoja llamada OSORNO va a Z16 Osorno); podrás revisarlo antes de guardar.</p>
+        <label class="drop" id="drop" for="file">${icons.upload}<strong>Elegir planilla</strong><small>.xlsx, .xls o .csv. También puedes arrastrarla aquí.</small></label>
+        <p class="hint">Columnas que se reconocen: POP, Nombre, Llavero, N° Cliente, CIA Eléctrica, Clave de acceso, Notas de acceso y Zona. También se leen las notas de celda. Una celda vacía no borra el dato que ya existe.</p>
+        <p class="hint">La planilla de repuestos de grupos electrógenos (GGEE, con columnas de filtros y correas) se reconoce sola y se carga en su propia sección.</p>`,
+        '<button type="button" class="btn" data-dlg="close">Cancelar</button>');
+    }
     if (!dlg().open) dlg().showModal();
     const drop = $('#drop');
     ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
     ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
-    drop.addEventListener('drop', (e) => { const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (f) handleFile(f); });
+    drop.addEventListener('drop', (e) => { const fs = [...((e.dataTransfer && e.dataTransfer.files) || [])]; if (fs.length) handleFiles(fs); });
+  }
+  function handleFiles(files) {
+    const isMd = (f) => /\.(md|markdown)$/i.test(f.name) || (S.importKind === 'inst' && /\.txt$/i.test(f.name));
+    if (files.every(isMd)) return handleMd(files);
+    if (files.some(isMd)) {
+      if (!dlg().open) dlg().showModal();
+      dlgView('Elige un solo tipo de archivo', '<p class="err">Carga los instructivos (.md) por separado de las planillas (.xlsx).</p>', '<button type="button" class="btn" data-dlg="close">Cerrar</button>');
+      return;
+    }
+    return handleFile(files[0]);
+  }
+
+  /* ---------- Cargar instructivos (.md) ---------- */
+  const slug = (s) => nrm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80).replace(/-+$/, '');
+  let mdPlan = null;
+  async function handleMd(files) {
+    if (!dlg().open) dlg().showModal();
+    dlgView('Leyendo instructivos', '<div style="display:flex;gap:12px;align-items:center"><div class="spin" aria-hidden="true"></div><p>Revisando los archivos…</p></div>');
+    if (!S.inst) await loadInstr();
+    const items = [];
+    for (const f of files) {
+      const text = decodeText(new Uint8Array(await f.arrayBuffer())).replace(/^﻿/, '');
+      const p = MD.parse(text);
+      const m = p.meta;
+      const h1 = (/^#\s+(.+)$/m.exec(p.body) || [])[1];
+      const titulo = String(m.titulo || m['título'] || m.title || h1 || f.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ')).trim().slice(0, 160);
+      const id = slug(m.id || titulo) || slug(f.name.replace(/\.[^.]+$/, '')) || 'instructivo';
+      const bytes = new Blob([text]).size;
+      const it = {
+        file: f.name.slice(0, 200), id, titulo, seccion: String(m.seccion || m['sección'] || m.section || 'Otros').trim().slice(0, 40) || 'Otros',
+        equipos: String(m.equipos || '').slice(0, 200), orden: parseInt(m.orden, 10) || 99, resumen: String(m.resumen || '').slice(0, 600),
+        fuente: String(m.fuente || '').slice(0, 300), contenido: text, bytes,
+        imgs: (p.body.match(/^!\[/gm) || []).length, secs: MD.toc(p.body).length
+      };
+      if (bytes > 950000) it.error = `Pesa ${Math.round(bytes / 1024)} KB y el máximo es 925 KB. Reduce el tamaño o la cantidad de imágenes.`;
+      else if (!p.body.trim()) it.error = 'El archivo está vacío.';
+      it.prev = (S.inst || []).find((x) => x.id === id) || null;
+      items.push(it);
+    }
+    const seen = new Set();
+    items.forEach((it) => { if (seen.has(it.id) && !it.error) it.error = 'Otro archivo de esta carga tiene el mismo id.'; seen.add(it.id); });
+    mdPlan = items;
+    showMdPlan();
+  }
+  function showMdPlan() {
+    const items = mdPlan;
+    const ok = items.filter((i) => !i.error);
+    const nNew = ok.filter((i) => !i.prev).length, nUpd = ok.length - nNew;
+    const rows = items.map((i) => `<tr><td>${esc(i.file)}</td><td><b>${esc(i.titulo)}</b><br><span class="hint">${esc(sectLabel(i.seccion))} · ${plural(i.secs, 'sección', 'secciones')} · ${plural(i.imgs, 'imagen', 'imágenes')} · ${Math.max(1, Math.round(i.bytes / 1024))} KB</span></td><td>${i.error ? `<span class="badge crit">No se carga</span><br><span class="hint">${esc(i.error)}</span>` : i.prev ? '<span class="badge warn">Reemplaza al actual</span>' : '<span class="badge ok">Nuevo</span>'}</td></tr>`).join('');
+    dlgView('Revisa los instructivos',
+      `<div class="stats"><div><b>${nNew}</b><span>Nuevos</span></div><div><b>${nUpd}</b><span>Reemplazan</span></div><div><b>${items.length - ok.length}</b><span>Con error</span></div></div>
+      <div class="changes mdplan"><table><thead><tr><th>Archivo</th><th>Instructivo</th><th>Estado</th></tr></thead><tbody>${rows}</tbody></table></div>`,
+      `<button type="button" class="btn" data-dlg="close">Cancelar</button><button type="button" class="btn primary" id="doSaveMd"${ok.length ? '' : ' disabled'}>${ok.length ? `Guardar ${plural(ok.length, 'instructivo', 'instructivos')}` : 'Nada que guardar'}</button>`);
+    $('#doSaveMd').addEventListener('click', applyMd);
+  }
+  async function applyMd() {
+    const ok = mdPlan.filter((i) => !i.error);
+    dlgView('Guardando instructivos', '<div style="display:flex;gap:12px;align-items:center"><div class="spin" aria-hidden="true"></div><p class="hint">Guardando en la base de datos…</p></div>');
+    const nNew = ok.filter((i) => !i.prev).length;
+    try {
+      // Lotes de hasta ~8 MB (el límite de Firestore por envío es 10 MB)
+      let b = S.fs.batch(), size = 0;
+      for (const i of ok) {
+        if (size && size + i.bytes > 8e6) { await b.commit(); b = S.fs.batch(); size = 0; }
+        b.set(S.fs.collection('instructivos').doc(i.id), { titulo: i.titulo, seccion: i.seccion, equipos: i.equipos, orden: i.orden, resumen: i.resumen, fuente: i.fuente, contenido: i.contenido, actualizado: ts(), actualizado_por: uid(), archivo: i.file });
+        size += i.bytes;
+      }
+      b.set(S.fs.collection('cargas').doc(), { tipo: 'instructivo', zonal: '-', archivo: ok.map((i) => i.file).join(', ').slice(0, 300), nuevos: nNew, actualizados: ok.length - nNew, eliminados: 0, usuario: uid(), usuario_nombre: (S.profile && S.profile.nombre) || '', creado_en: ts() });
+      await b.commit();
+    } catch (e) {
+      dlgView('No se guardaron los instructivos', `<p class="err">${esc(friendly(e))}</p>${String(e && e.code) === 'permission-denied' ? '<p>Revisa que estén publicadas en Firebase las reglas nuevas (firestore.rules).</p>' : ''}`, '<button type="button" class="btn primary" data-dlg="close">Cerrar</button>');
+      return;
+    }
+    dlg().close();
+    await loadInstr(true);
+    toast(ok.length === 1 ? 'Instructivo guardado' : `${ok.length} instructivos guardados`);
+    if (S.view !== 'instructivos') setView('instructivos');
+    if (ok.length === 1 || !S.instActive) openInst(ok[0].id);
+  }
+
+  /* ---------- Cargar planilla de grupos electrógenos ---------- */
+  let gplan = null;
+  const canon = (v) => (Array.isArray(v) ? '[' + v.map(canon).join(',') + ']' : v && typeof v === 'object' ? '{' + Object.keys(v).sort().map((k) => JSON.stringify(k) + ':' + canon(v[k])).join(',') + '}' : JSON.stringify(v));
+  const plainG = (e) => { const o = { ...e }; delete o._key; delete o._hay; delete o.zonal; return o; };
+  function handleGgee(r, fileName) {
+    if (!r.equipos.length) throw new Error('La planilla de grupos electrógenos no trae equipos con POP.');
+    const map = {};
+    [...new Set(r.equipos.map((e) => e.zona || ''))].forEach((k) => { map[k] = guessZonal(k) || (S.zonal !== 'all' ? S.zonal : ''); });
+    gplan = { r, fileName, map };
+    showGgeePlan();
+  }
+  function ggeeDiff() {
+    const { r, map } = gplan;
+    const perZ = {};
+    r.equipos.forEach((e) => { const z = map[e.zona || '']; if (!z || z === '__skip') return; (perZ[z] = perZ[z] || { list: [], nuevos: 0, actualizados: 0, sin: 0, eliminados: 0, cruzan: 0 }).list.push(e); });
+    Object.entries(perZ).forEach(([z, P]) => {
+      const cur = new Map(S.ggee.filter((x) => x.zonal === z).map((x) => [x.id, x]));
+      P.list.forEach((e) => {
+        const c = cur.get(e.id);
+        if (!c) P.nuevos++; else if (canon(plainG(c)) === canon(e)) P.sin++; else P.actualizados++;
+        cur.delete(e.id);
+        if (S.sites.some((s) => s.zonal === z && s.codes.some((cd) => cd === e.pop || cd === e.nemonico))) P.cruzan++;
+      });
+      P.eliminados = cur.size;
+    });
+    return perZ;
+  }
+  function showGgeePlan() {
+    const { r, fileName, map } = gplan;
+    const keys = Object.keys(map);
+    const perZ = ggeeDiff();
+    const zs = Object.keys(perZ).sort();
+    const sum = (k) => zs.reduce((a, z) => a + perZ[z][k], 0);
+    const count = (k) => r.equipos.filter((e) => (e.zona || '') === k).length;
+    const mapHtml = `<div class="map">${keys.map((k) => `<div class="map-row"><div class="src"><b>${esc(k || 'Sin zona')}</b> <span>${plural(count(k), 'equipo', 'equipos')}</span></div>
+      <label><span class="sr-only">Zonal de destino para ${esc(k)}</span><select data-gmap="${esc(k)}" class="${map[k] ? '' : 'need'}"><option value="">Elige la zonal…</option>${S.zonales.map((z) => `<option value="${esc(z.id)}"${map[k] === z.id ? ' selected' : ''}>${esc(z.id + ' ' + z.nombre)}</option>`).join('')}<option value="__skip"${map[k] === '__skip' ? ' selected' : ''}>No cargar esta zona</option></select></label></div>`).join('')}</div>`;
+    const lines = zs.map((z) => { const P = perZ[z]; return `<li><b>${esc(zLabel(z))}</b>: ${plural(P.list.length, 'equipo', 'equipos')}${S.sites.some((s) => s.zonal === z) ? `, ${P.cruzan} con ficha de sitio` : ''}${P.eliminados ? `. Se quitarán ${plural(P.eliminados, 'equipo que ya no viene', 'equipos que ya no vienen')}` : ''}.</li>`; }).join('');
+    dlgView('Repuestos de grupos electrógenos',
+      `<p>“${esc(fileName)}” trae ${plural(r.equipos.length, 'grupo electrógeno', 'grupos electrógenos')}. Revisa a qué zonal va cada zona:</p>
+      ${mapHtml}
+      <div class="stats"><div><b>${sum('nuevos')}</b><span>Nuevos</span></div><div><b>${sum('actualizados')}</b><span>Con cambios</span></div><div><b>${sum('sin')}</b><span>Sin cambios</span></div></div>
+      ${lines ? `<ul class="glines">${lines}</ul>` : ''}
+      <p class="hint">La lista de grupos electrógenos de cada zonal elegida se reemplaza por la de esta planilla. Los repuestos se ven en la ficha de cada sitio y en Instructivos › Repuestos de grupos electrógenos.</p>
+      ${r.warnings.length ? `<ul class="warns">${r.warnings.map((w) => `<li>${esc(w)}</li>`).join('')}</ul>` : ''}`,
+      '<button type="button" class="btn" data-dlg="close">Cancelar</button><button type="button" class="btn primary" id="doSaveG">Guardar</button>');
+    $('#dlgBody').querySelectorAll('[data-gmap]').forEach((el) => el.addEventListener('change', () => { map[el.dataset.gmap] = el.value; showGgeePlan(); }));
+    const btn = $('#doSaveG');
+    const need = Object.values(map).some((v) => !v);
+    const changes = sum('nuevos') + sum('actualizados') + sum('eliminados');
+    btn.textContent = need ? 'Elige la zonal de cada zona' : !zs.length ? 'No hay zonas para cargar' : changes ? 'Guardar repuestos' : 'Nada que guardar';
+    btn.disabled = need || !zs.length || !changes;
+    btn.addEventListener('click', () => applyGgee(perZ));
+  }
+  async function applyGgee(perZ) {
+    dlgView('Guardando repuestos', '<div style="display:flex;gap:12px;align-items:center"><div class="spin" aria-hidden="true"></div><p class="hint">Guardando en la base de datos…</p></div>');
+    const b = S.fs.batch();
+    try {
+      for (const [z, P] of Object.entries(perZ)) {
+        if (!ZIDS.includes(z)) continue;
+        const equipos = JSON.parse(JSON.stringify(P.list.slice().sort((a, c) => collator.compare(a.pop, c.pop))));
+        const bytes = new Blob([JSON.stringify(equipos)]).size;
+        if (bytes > 950000) throw new Error(`Los equipos de ${z} superan el tamaño máximo de un documento de Firestore (${Math.round(bytes / 1024)} KB de 1 MB).`);
+        b.set(S.fs.collection('ggee').doc(z), { nombre: S.zname.get(z) || z, equipos, total: equipos.length, actualizado: ts(), actualizado_por: uid(), archivo: gplan.fileName });
+        b.set(S.fs.collection('cargas').doc(), { tipo: 'ggee', zonal: z, archivo: gplan.fileName, nuevos: P.nuevos, actualizados: P.actualizados, eliminados: P.eliminados, usuario: uid(), usuario_nombre: (S.profile && S.profile.nombre) || '', creado_en: ts() });
+      }
+      await b.commit();
+    } catch (e) {
+      dlgView('No se guardaron los repuestos', `<p class="err">${esc(friendly(e))}</p>${String(e && e.code) === 'permission-denied' ? '<p>Revisa que estén publicadas en Firebase las reglas nuevas (firestore.rules).</p>' : '<p>No se modificó nada.</p>'}`, '<button type="button" class="btn primary" data-dlg="close">Cerrar</button>');
+      return;
+    }
+    await reloadSites();
+    const n = Object.values(perZ).reduce((a, P) => a + P.list.length, 0);
+    dlg().close(); toast(`Repuestos cargados: ${plural(n, 'grupo electrógeno', 'grupos electrógenos')}`);
   }
   function supportsDeflateRaw() { try { new DecompressionStream('deflate-raw'); return true; } catch (_) { return false; } }
   function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
@@ -2202,6 +3410,7 @@ const XW = (() => {
       if ((ext === 'xlsx' || ext === 'xlsm') && supportsDeflateRaw()) sheets = await XL.parseXlsx(u8, (n) => { const m = $('#readMsg'); if (m) m.textContent = `Revisando fila ${n.toLocaleString('es-CL')}…`; });
       else if (ext === 'csv' || ext === 'txt') sheets = [{ name: file.name.replace(/\.[^.]+$/, ''), rows: XW.parseCsv(decodeText(u8)), comments: {} }];
       else sheets = await viaSheetJS(u8);
+      if (GGEE.isGgeeBook(sheets)) { handleGgee(GGEE.fromSheets(sheets), file.name); return; }
       const parsed = SITES.fromSheets(sheets, file.name);
       if (!parsed.sites.length) throw new Error(parsed.warnings[0] || 'No se encontraron sitios. Revisa que la primera fila tenga una columna POP.');
       parsedFile = { parsed, fileName: file.name };
