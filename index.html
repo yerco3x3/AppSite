@@ -743,6 +743,57 @@ img { max-width: 100%; }
 .changes.mdplan td:first-child { white-space: normal; overflow-wrap: anywhere; font: 500 13px var(--f-sans); }
 .ctable td.wrap { max-width: 340px; overflow-wrap: anywhere; }
 
+/* ===== Contactos ===== */
+.ct-top-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.ct-tools { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+@media (min-width: 880px) { .ct-tools { grid-template-columns: minmax(0, 420px) minmax(0, 1fr) auto; align-items: center; } }
+.ct-tools .count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ct-z { display: flex; flex-wrap: wrap; gap: 6px; }
+.ct-z:empty { display: none; }
+.ct-z button { min-height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--panel); font-size: 13px; font-weight: 500; color: var(--ink-2); }
+.ct-z button:hover { border-color: var(--muted); color: var(--ink); }
+.ct-z button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.ctlist { display: grid; gap: 18px; }
+.cgroup { display: grid; gap: 4px; }
+.cgroup .ig-h { padding: 0 2px 4px; }
+.clist { list-style: none; margin: 0; padding: 0; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); overflow: hidden; }
+.ct { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px 20px; padding: 14px 16px; align-items: center; }
+.ct + .ct { border-top: 1px solid var(--line); }
+@media (min-width: 900px) { .ct { grid-template-columns: minmax(0, 1fr) auto; } }
+.ct-main { display: flex; gap: 12px; align-items: flex-start; min-width: 0; }
+.ct-av { width: 40px; height: 40px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-size: 14px; font-weight: 600; }
+.ct-who { display: grid; gap: 2px; min-width: 0; }
+.ct-who strong { font-size: 15px; font-weight: 600; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.ct-who strong .ztag { margin: 0; }
+.ct-who span { font-size: 13.5px; color: var(--ink-2); overflow-wrap: anywhere; }
+.ct-who .ct-notes { color: var(--muted); font-size: 13px; white-space: pre-line; }
+.ct-acts { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+@media (min-width: 900px) { .ct-acts { justify-content: flex-end; } }
+a.btn { text-decoration: none; }
+.ct-acts .btn { min-height: 38px; }
+.ct-acts .btn span { font-variant-numeric: tabular-nums; }
+.ct-acts .cbtn { width: 38px; height: 38px; }
+.ct-mail { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 899.98px) {
+  .ct-acts { padding-left: 52px; }
+  .ct-acts .ct-call { min-height: 44px; font-size: 15px; }
+}
+.ct-mail-s { display: none; }
+@media (max-width: 480px) {
+  .ct-acts { padding-left: 0; }
+  .ct-acts .btn { flex: 1 1 auto; }
+  .ct-mail { display: none; }
+  .ct-mail-s { display: inline; }
+}
+.ctlist .tbl .skel { height: 70px; }
+.ctform textarea { padding: 10px 14px; border-radius: var(--r); border: 1px solid var(--line-2); background: var(--panel); font: inherit; font-size: 16px; resize: vertical; outline: none; }
+.ctform textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.ct2 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+@media (min-width: 560px) { .ct2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.ctform .selw, .ctform .selw select { width: 100%; }
+.ctform .selw select { min-height: 46px; font-size: 16px; }
+.dlg-f .ct-del { margin-right: auto; }
+
 </style>
 <script src="config.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -788,6 +839,7 @@ img { max-width: 100%; }
       <nav class="tabs" id="tabs" aria-label="Secciones" hidden>
         <a href="#sitios" data-view="sitios">Sitios</a>
         <a href="#instructivos" data-view="instructivos">Instructivos</a>
+        <a href="#contactos" data-view="contactos">Contactos</a>
         <a href="#usuarios" data-view="usuarios" data-admin="1" hidden>Usuarios<span class="tbadge" id="pendBadge" hidden></span></a>
         <a href="#cargas" data-view="cargas" data-admin="1" hidden>Cargas</a>
       </nav>
@@ -860,6 +912,27 @@ img { max-width: 100%; }
         <div class="scroll"><div id="ilist"></div></div>
       </section>
       <section class="pane pane-detail" id="ireader" aria-label="Instructivo"></section>
+    </div>
+  </div>
+
+  <!-- Contactos -->
+  <div class="page gutter" id="viewContactos" hidden>
+    <div class="page-in">
+      <div class="page-h">
+        <div><h2>Contactos</h2><p>Teléfonos y correos del NOC, supervisores, empresas eléctricas y proveedores. Toca un número para llamar.</p></div>
+        <div class="ct-top-acts" id="ctActs"></div>
+      </div>
+      <div class="ct-tools">
+        <div class="search">
+          <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <label for="cq" class="sr-only">Buscar contacto</label>
+          <input id="cq" type="search" autocomplete="off" spellcheck="false" placeholder="Buscar nombre, empresa, cargo o número" aria-controls="ctList">
+          <button class="iconbtn" id="cqClear" type="button" aria-label="Borrar búsqueda" hidden><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        </div>
+        <div class="ct-z" id="ctZ" role="group" aria-label="Filtrar por zonal"></div>
+        <span class="count" id="ctCount" aria-live="polite"></span>
+      </div>
+      <div id="ctList" class="ctlist"></div>
     </div>
   </div>
 
@@ -1729,7 +1802,9 @@ const GGEE = (() => {
     status: 'loading', offline: false, lastLoad: 0, busy: false,
     // Repuestos de grupos electrógenos y biblioteca de instructivos
     ggee: [], ggeeIdx: new Map(), ggeeMeta: {}, ggeeErr: null,
-    inst: null, instStatus: 'idle', instErr: null, instActive: null, iq: '', gq: '', gActive: null, instHtml: new Map()
+    inst: null, instStatus: 'idle', instErr: null, instActive: null, iq: '', gq: '', gActive: null, instHtml: new Map(),
+    // Directorio de contactos
+    ct: null, ctStatus: 'idle', ctErr: null, cq: '', cz: 'all'
   };
 
   const I = (d) => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
@@ -1762,7 +1837,13 @@ const GGEE = (() => {
     terminal: I('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M12 15h5"/>'),
     trash: I('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'),
     search: I('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
-    list: I('<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>')
+    list: I('<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>'),
+    phone: I('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>'),
+    chat: I('<path d="M4 20l1.4-4.2A8 8 0 1 1 8.2 18.6z"/><path d="M9 10h6M9 13h4"/>'),
+    edit: I('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>'),
+    plus: I('<path d="M12 5v14M5 12h14"/>'),
+    gear: I('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9 7 7M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/>'),
+    tower: I('<circle cx="12" cy="8" r="1.6"/><path d="m12 10-4 11M12 10l4 11M9.2 17.5h5.6"/><path d="M8.2 4.6a5 5 0 0 0 0 6.8M15.8 4.6a5 5 0 0 1 0 6.8M5.6 2.5a8.5 8.5 0 0 0 0 11M18.4 2.5a8.5 8.5 0 0 1 0 11"/>')
   };
 
   /* ================= Utilidades de datos ================= */
@@ -2093,6 +2174,7 @@ const GGEE = (() => {
     lsDel('llavero-cache-' + uid()); lsDel('llavero-inst-' + uid());
     S.loggingOut = true;
     S.profile = null; S.sites = []; S.byKey = new Map(); S.users = []; S.activeKey = null; S.filters.clear(); S.q = '';
+    lsDel('llavero-contactos-' + uid()); S.ct = null; S.ctStatus = 'idle'; S.cq = ''; S.cz = 'all'; $('#cq').value = '';
     setGgee([], {}); S.inst = null; S.instStatus = 'idle'; S.instActive = null; S.gActive = null; S.instHtml.clear(); S.iq = ''; S.gq = '';
     $('#q').value = ''; $('#iq').value = '';
     closeReader(true);
@@ -2128,7 +2210,7 @@ const GGEE = (() => {
     mb.setAttribute('aria-label', S.mask ? 'Mostrar claves' : 'Ocultar claves');
     mb.innerHTML = (S.mask ? icons.eyeOff : icons.eye) + `<span class="lbl">${S.mask ? 'Claves ocultas' : 'Ocultar claves'}</span>`;
     mb.hidden = S.view !== 'sitios';
-    $('#btnImport').hidden = !isAdmin() || S.offline;
+    $('#btnImport').hidden = !isAdmin() || S.offline || S.view === 'contactos';
     $('#btnImport .lbl').textContent = S.view === 'instructivos' ? 'Cargar instructivos' : 'Cargar Excel';
     $('#btnExport').hidden = !isAdmin() || !S.sites.length || S.view !== 'sitios';
     const ini = (p.nombre || p.email || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
@@ -2502,21 +2584,23 @@ const GGEE = (() => {
   }
 
   function setView(v) {
-    if (!isAdmin() && v !== 'instructivos') v = 'sitios';
+    if (!isAdmin() && v !== 'instructivos' && v !== 'contactos') v = 'sitios';
     if (v !== 'instructivos') closeReader(true);
     S.view = v;
     $('#viewSitios').hidden = v !== 'sitios';
     $('#viewInstr').hidden = v !== 'instructivos';
+    $('#viewContactos').hidden = v !== 'contactos';
     $('#viewUsuarios').hidden = v !== 'usuarios';
     $('#viewCargas').hidden = v !== 'cargas';
     renderTop();
     if (v === 'usuarios') { renderUsers(); loadUsers(); }
     if (v === 'cargas') loadCargas();
     if (v === 'instructivos') { renderInstr(); loadInstr(); }
+    if (v === 'contactos') { renderContacts(); loadContacts(); }
   }
   function routeFromHash() {
     const h = decodeURIComponent(location.hash.slice(1));
-    if (h === 'usuarios' || h === 'cargas') { setView(h); return; }
+    if (h === 'usuarios' || h === 'cargas' || h === 'contactos') { setView(h); return; }
     if (h === 'instructivos') { S.instActive = null; setView('instructivos'); return; }
     let m;
     if ((m = /^instructivo-(.+)$/.exec(h))) { S.instActive = m[1]; setView('instructivos'); if (!twoMQ.matches) openReader(); return; }
@@ -2596,7 +2680,7 @@ const GGEE = (() => {
         if (a.dataset.act === 'import') { closeMenu(); openImport('excel'); }
         if (a.dataset.act === 'import-inst') { closeMenu(); openImport('inst'); }
         if (a.dataset.act === 'export') { closeMenu(); exportExcel(); }
-        if (a.dataset.act === 'reload') { closeMenu(); Promise.all([reloadSites(), S.inst ? loadInstr(true) : null]).then(() => { toast('Datos actualizados'); if (isAdmin()) loadUsers(); }); }
+        if (a.dataset.act === 'reload') { closeMenu(); Promise.all([reloadSites(), S.inst ? loadInstr(true) : null, S.ct ? loadContacts(true) : null]).then(() => { toast('Datos actualizados'); if (isAdmin()) loadUsers(); }); }
         return;
       }
       if (!t.closest('#umenu') && !t.closest('#btnUser')) closeMenu();
@@ -2631,6 +2715,7 @@ const GGEE = (() => {
       if (e.key === 'Escape' && !$('#umenu').hidden) { closeMenu(); $('#btnUser').focus(); return; }
       if ($('#appView').hidden) return;
       const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+      if (S.view === 'contactos') { if (e.key === '/' && !typing && !modal) { e.preventDefault(); $('#cq').focus(); } return; }
       if (S.view === 'instructivos') {
         if (e.key === '/' && !typing && !modal) { e.preventDefault(); const iq = $('#gq') || $('#iq'); iq.focus(); iq.select(); }
         if (e.key === 'Escape' && $('#ireader').classList.contains('open') && !modal) closeReader();
@@ -2663,6 +2748,12 @@ const GGEE = (() => {
     rd.addEventListener('change', onReaderChange);
     rd.addEventListener('scroll', () => { if (!spyRaf) spyRaf = requestAnimationFrame(() => { spyRaf = 0; spyToc(); }); }, { passive: true });
     $('#lbox').addEventListener('click', () => $('#lbox').close());
+    // Contactos
+    const cq = $('#cq');
+    cq.addEventListener('input', () => { S.cq = cq.value; $('#cqClear').hidden = !cq.value; renderContacts(); });
+    cq.addEventListener('keydown', (e) => { if (e.key === 'Escape' && cq.value) { cq.value = ''; cq.dispatchEvent(new Event('input')); } });
+    $('#cqClear').addEventListener('click', () => { cq.value = ''; cq.dispatchEvent(new Event('input')); cq.focus(); });
+    $('#viewContactos').addEventListener('click', onContactsClick);
     $('#utabs').addEventListener('click', (e) => { const b = e.target.closest('[data-ut]'); if (b) { S.utab = b.dataset.ut; renderUsers(); } });
     $('#utable').addEventListener('click', onUserClick);
     $('#utable').addEventListener('change', onUserChange);
@@ -2673,8 +2764,10 @@ const GGEE = (() => {
 
   /* ================= Instructivos ================= */
   const SECT = {
-    alarmas: ['Alarmas', 'bell', 'Puertos de alarmas externas, migraciones y validación en ENM.'],
-    equipos: ['Equipos', 'cpu', 'Instalación, integración y mantenimiento de equipos.']
+    alarmas: ['Alarmas', 'bell'],
+    comisionamiento: ['Comisionamiento', 'gear'],
+    equipos: ['Equipos', 'cpu'],
+    transmision: ['Transmisión', 'tower']
   };
   const sectLabel = (s) => { const k = nrm(s).trim(); return SECT[k] ? SECT[k][0] : (String(s || '').trim() || 'Otros'); };
   const sectIcon = (s) => icons[(SECT[nrm(s).trim()] || [0, 'book'])[1]];
@@ -2725,7 +2818,7 @@ const GGEE = (() => {
     const items = instItems().filter((d) => toks.every((t) => d._hay.includes(t)));
     const groups = new Map();
     items.forEach((d) => { const k = sectLabel(d.seccion); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(d); });
-    const ord = (k) => { const i = ['Alarmas', 'Equipos'].indexOf(k); return i < 0 ? 9 : i; };
+    const ord = (k) => { const i = ['Alarmas', 'Comisionamiento', 'Equipos', 'Transmisión'].indexOf(k); return i < 0 ? 9 : i; };
     return [...groups.entries()].sort((a, b) => ord(a[0]) - ord(b[0]) || collator.compare(a[0], b[0]))
       .map(([name, arr]) => ({ name, items: arr.sort((a, b) => a.orden - b.orden || collator.compare(a.titulo, b.titulo)) }));
   }
@@ -3049,6 +3142,285 @@ const GGEE = (() => {
     if ('gsev' in t.dataset) { G.sev = t.value; genRefresh($('#ireader'), false); }
   }
 
+  /* ================= Contactos ================= */
+  const CT_FIELDS = ['nombre', 'cargo', 'empresa', 'categoria', 'telefono', 'telefono2', 'correo', 'zonal', 'notas'];
+  const CT_LABELS = { nombre: 'Nombre', cargo: 'Cargo', empresa: 'Empresa o área', categoria: 'Categoría', telefono: 'Teléfono', telefono2: 'Otro teléfono', correo: 'Correo', zonal: 'Zonal', notas: 'Notas' };
+  const CT_CATS = ['NOC', 'Supervisión', 'Empresa eléctrica', 'Grupos electrógenos', 'Mantención', 'Emergencias', 'Otros'];
+  const CT_MAX = { nombre: 100, cargo: 100, empresa: 100, categoria: 40, telefono: 40, telefono2: 40, correo: 120, zonal: 3, notas: 500 };
+  const telDigits = (t) => String(t || '').replace(/\D/g, '');
+  function telHref(t) {
+    const raw = String(t || '').trim(), d = telDigits(raw);
+    if (d.length < 4) return '';
+    if (/^\+/.test(raw)) return 'tel:+' + d;
+    if (/^56\d{9}$/.test(d)) return 'tel:+' + d;
+    if (/^\d{9}$/.test(d)) return 'tel:+56' + d;
+    return 'tel:' + d;
+  }
+  function waHref(t) {
+    let d = telDigits(t);
+    if (/^9\d{8}$/.test(d)) d = '56' + d;
+    return /^569\d{8}$/.test(d) ? 'https://wa.me/' + d : '';
+  }
+  function telShow(t) {
+    let d = telDigits(t);
+    if (/^9\d{8}$/.test(d)) d = '56' + d;
+    if (/^569\d{8}$/.test(d)) return `+56 9 ${d.slice(3, 7)} ${d.slice(7)}`;
+    return String(t || '').trim();
+  }
+  const mailOk = (m) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m || '');
+  function cleanCt(o) {
+    const c = {};
+    CT_FIELDS.forEach((k) => { const raw = String(o[k] == null ? '' : o[k]).replace(/\r\n?/g, '\n').replace(/[ \t]+/g, ' ').trim(); c[k] = k === 'zonal' ? raw : raw.slice(0, CT_MAX[k]); });
+    if (!c.categoria) c.categoria = 'Otros';
+    const cat = CT_CATS.find((x) => nrm(x) === nrm(c.categoria)); if (cat) c.categoria = cat;
+    c.zonal = ZIDS.includes(c.zonal.toUpperCase()) ? c.zonal.toUpperCase() : (guessZonal(c.zonal) || '');
+    return c;
+  }
+  function prepCt(d) {
+    const at = toDate(d.actualizado);
+    const c = { ...cleanCt(d), id: d.id, actualizado: at && !isNaN(at) ? at.toISOString() : '' };
+    c._hay = nrm([c.nombre, c.cargo, c.empresa, c.categoria, c.telefono, telDigits(c.telefono), c.telefono2, telDigits(c.telefono2), c.correo, c.notas, c.zonal, S.zname.get(c.zonal)].join(' \n '));
+    return c;
+  }
+
+  // Lectura de planillas de contactos
+  const CT = (() => {
+    const COLS = [['nombre', /^(nombre|contacto|persona)/], ['cargo', /^(cargo|rol|puesto|funcion)/], ['empresa', /^(empresa|area|institucion|compania)/],
+      ['categoria', /^(categoria|tipo|grupo)/], ['correo', /(correo|e ?mail|^mail)/], ['telefono', /(telefono|celular|fono|movil|whatsapp|numero)/],
+      ['zonal', /^(zonal|zona)/], ['notas', /^(nota|observ|comentario|detalle)/]];
+    function headerOf(sh) {
+      for (let i = 0; i < Math.min(sh.rows.length, 10); i++) {
+        const m = {}, used = new Set();
+        sh.rows[i].cells.forEach((v, ci) => {
+          const n = nrm(v).replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+          if (!n) return;
+          for (const [k, re] of COLS) {
+            if (!re.test(n)) continue;
+            if (k === 'telefono' && used.has('telefono')) { if (!used.has('telefono2')) { m[ci] = 'telefono2'; used.add('telefono2'); } return; }
+            if (!used.has(k)) { m[ci] = k; used.add(k); }
+            return;
+          }
+        });
+        if (used.has('nombre') && (used.has('telefono') || used.has('correo'))) return { idx: i, map: m };
+      }
+      return null;
+    }
+    const isBook = (sheets) => sheets.some((sh) => headerOf(sh));
+    function fromSheets(sheets) {
+      const out = [], warnings = [];
+      for (const sh of sheets) {
+        const h = headerOf(sh); if (!h) continue;
+        let skipped = 0;
+        for (const row of sh.rows.slice(h.idx + 1)) {
+          const o = {}, present = [];
+          for (const [ci, k] of Object.entries(h.map)) { const v = row.cells[ci]; if (v != null && String(v).trim()) { o[k] = String(v); present.push(k); } }
+          if (!o.nombre) { if (present.length) skipped++; continue; }
+          if (!o.categoria && sheets.length > 1 && !/^hoja|^sheet|^contacto/i.test(sh.name)) o.categoria = sh.name;
+          const c = cleanCt(o);
+          c._present = present.concat(o.categoria && !present.includes('categoria') ? ['categoria'] : []);
+          out.push(c);
+        }
+        if (skipped) warnings.push(`${skipped} fila${skipped === 1 ? '' : 's'} de "${sh.name}" sin nombre se omitieron.`);
+      }
+      return { contactos: out, warnings };
+    }
+    return { isBook, fromSheets };
+  })();
+
+  async function loadContacts(force) {
+    if (!S.fs || !S.profile || S.ctStatus === 'loading' || (S.ct && !force)) return;
+    if (!S.ct) { const c = lsGet('llavero-contactos-' + uid(), null); if (c && Array.isArray(c.items)) S.ct = c.items.map(prepCt); }
+    S.ctStatus = 'loading'; renderContacts();
+    try {
+      const snap = await S.fs.collection('contactos').get();
+      S.ct = snap.docs.map((d) => prepCt({ id: d.id, ...d.data() }));
+      S.ctStatus = 'ready'; S.ctErr = null;
+      lsSet('llavero-contactos-' + uid(), { items: S.ct.map(({ _hay, ...x }) => x), at: Date.now() });
+    } catch (e) { S.ctErr = e; S.ctStatus = S.ct ? 'ready' : 'error'; }
+    renderContacts();
+  }
+
+  const catOrder = (c) => { const i = CT_CATS.indexOf(c); return i < 0 ? (c === 'Otros' ? 99 : 50) : (c === 'Otros' ? 99 : i); };
+  function ctResults() {
+    const toks = nrm(S.cq).trim().split(/\s+/).filter(Boolean);
+    return (S.ct || []).filter((c) => (S.cz === 'all' || (S.cz === 'gen' ? !c.zonal : c.zonal === S.cz)) && toks.every((t) => c._hay.includes(t) || (/^\d{3,}$/.test(t) && (telDigits(c.telefono) + ' ' + telDigits(c.telefono2)).includes(t))));
+  }
+  const initials = (n) => String(n || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+  function ctRowHtml(c) {
+    const phones = [c.telefono, c.telefono2].filter((p) => telHref(p));
+    const sub = [c.cargo, c.empresa].filter(Boolean).map(esc).join(' · ');
+    const acts = [];
+    phones.forEach((p, i) => {
+      acts.push(`<a class="btn sm ct-call${i ? '' : ' primary'}" href="${esc(telHref(p))}" aria-label="Llamar a ${esc(c.nombre)} al ${esc(telShow(p))}">${icons.phone}<span>${esc(telShow(p))}</span></a>`);
+    });
+    const wa = phones.map(waHref).find(Boolean);
+    if (wa) acts.push(`<a class="btn sm" href="${esc(wa)}" target="_blank" rel="noopener noreferrer" aria-label="Escribir por WhatsApp a ${esc(c.nombre)}">${icons.chat}<span>WhatsApp</span></a>`);
+    if (mailOk(c.correo)) acts.push(`<a class="btn sm" href="mailto:${esc(c.correo)}" aria-label="Escribir un correo a ${esc(c.nombre)}">${icons.mail}<span class="ct-mail">${esc(c.correo)}</span><span class="ct-mail-s">Correo</span></a>`);
+    acts.push(`<button type="button" class="cbtn" data-ct-copy="${esc(c.id)}" aria-label="Copiar datos de ${esc(c.nombre)}" title="Copiar datos">${icons.copy}</button>`);
+    if (isAdmin() && !S.offline) acts.push(`<button type="button" class="cbtn" data-ct-edit="${esc(c.id)}" aria-label="Editar ${esc(c.nombre)}" title="Editar">${icons.edit}</button>`);
+    return `<li class="ct"><div class="ct-main"><span class="ct-av" aria-hidden="true">${esc(initials(c.nombre))}</span><div class="ct-who">
+      <strong>${esc(c.nombre)}${c.zonal ? `<span class="ztag" title="${esc(zLabel(c.zonal))}">${esc(c.zonal)}</span>` : ''}</strong>
+      ${sub ? `<span>${sub}</span>` : ''}${!phones.length && !mailOk(c.correo) && (c.telefono || c.correo) ? `<span>${esc([c.telefono, c.correo].filter(Boolean).join(' · '))}</span>` : ''}
+      ${c.notas ? `<span class="ct-notes">${esc(c.notas)}</span>` : ''}</div></div>
+      <div class="ct-acts">${acts.join('')}</div></li>`;
+  }
+  function renderContacts() {
+    if (S.view !== 'contactos') return;
+    const admin = isAdmin() && !S.offline;
+    $('#ctActs').innerHTML = admin ? `<button type="button" class="btn primary" data-ct-new>${icons.plus}Agregar contacto</button><button type="button" class="btn" data-ct-import>${icons.upload}Importar planilla</button><button type="button" class="btn" data-ct-export>${icons.file}Descargar Excel</button>` : '';
+    const all = S.ct || [];
+    const zs = [...new Set(all.map((c) => c.zonal).filter(Boolean))].sort();
+    const hasGen = all.some((c) => !c.zonal);
+    if (S.cz !== 'all' && !(S.cz === 'gen' ? hasGen : zs.includes(S.cz))) S.cz = 'all';
+    $('#ctZ').innerHTML = zs.length ? [['all', 'Todas'], ...(hasGen ? [['gen', 'Generales']] : []), ...zs.map((z) => [z, zLabel(z)])].map(([v, l]) => `<button type="button" data-cz="${esc(v)}" aria-pressed="${S.cz === v}">${esc(l)}</button>`).join('') : '';
+    const res = ctResults();
+    $('#ctCount').textContent = all.length ? (S.cq || S.cz !== 'all' ? `${res.length} de ${plural(all.length, 'contacto', 'contactos')}` : plural(all.length, 'contacto', 'contactos')) : '';
+    const el = $('#ctList');
+    let note = '';
+    if (S.ctErr) {
+      const denied = String(S.ctErr.code) === 'permission-denied';
+      note = `<div class="inote ${S.ct ? 'warn' : 'crit'}">${icons.info}<span>${S.ct ? 'No se pudo actualizar: estás viendo la copia guardada. ' : 'No se pudieron cargar los contactos. '}${esc(friendly(S.ctErr))}${denied && isAdmin() ? ' Publica en Firebase la versión nueva de firestore.rules.' : ''}</span></div>`;
+    }
+    if (!S.ct) { el.innerHTML = note + (S.ctStatus === 'loading' ? '<div class="tbl"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>' : ''); return; }
+    if (!all.length) {
+      el.innerHTML = note + `<div class="iempty">${icons.phone}<strong>Aún no hay contactos</strong><span>${admin ? 'Agrega el primero con “Agregar contacto”, o importa una planilla con Nombre, Teléfono, Correo y Categoría.' : 'Cuando un administrador los cargue, aquí verás los teléfonos y correos del equipo.'}</span></div>`;
+      return;
+    }
+    if (!res.length) { el.innerHTML = note + `<div class="tbl"><div class="empty-t"><strong>Sin resultados${S.cq ? ` para “${esc(S.cq)}”` : ''}</strong>Prueba con un nombre, una empresa o parte del número.</div></div>`; return; }
+    const groups = new Map();
+    res.forEach((c) => { if (!groups.has(c.categoria)) groups.set(c.categoria, []); groups.get(c.categoria).push(c); });
+    el.innerHTML = note + [...groups.entries()].sort((a, b) => catOrder(a[0]) - catOrder(b[0]) || collator.compare(a[0], b[0])).map(([cat, arr]) =>
+      `<section class="cgroup" aria-label="${esc(cat)}"><h3 class="ig-h"><span>${esc(cat)}</span><span class="n">${arr.length}</span></h3><ul class="clist">${arr.sort((a, b) => collator.compare(a.nombre, b.nombre)).map(ctRowHtml).join('')}</ul></section>`).join('');
+  }
+  function ctText(c) {
+    return [c.nombre, [c.cargo, c.empresa].filter(Boolean).join(' · '), c.telefono && 'Tel: ' + telShow(c.telefono), c.telefono2 && 'Tel: ' + telShow(c.telefono2), c.correo && 'Correo: ' + c.correo, c.zonal && 'Zonal: ' + zLabel(c.zonal), c.notas].filter(Boolean).join('\n');
+  }
+
+  function openCtForm(c) {
+    const isNew = !c;
+    c = c || { categoria: '', zonal: '' };
+    const cats = [...new Set([...CT_CATS, ...(S.ct || []).map((x) => x.categoria)])];
+    const f = (k, type, extra) => `<div class="field-f"><label for="ct_${k}">${CT_LABELS[k]}${k === 'nombre' || k === 'categoria' ? ' *' : ''}</label><input id="ct_${k}" type="${type || 'text'}" value="${esc(c[k] || '')}" maxlength="${CT_MAX[k]}"${extra || ''}></div>`;
+    dlgView(isNew ? 'Agregar contacto' : 'Editar contacto',
+      `<form class="form ctform" id="ctForm" novalidate>
+        ${f('nombre', 'text', ' autocomplete="off" required')}
+        <div class="ct2">${f('cargo')}${f('empresa')}</div>
+        <div class="ct2"><div class="field-f"><label for="ct_categoria">Categoría *</label><input id="ct_categoria" list="ctCats" value="${esc(c.categoria || '')}" maxlength="40" placeholder="Por ejemplo, NOC" required><datalist id="ctCats">${cats.map((x) => `<option value="${esc(x)}">`).join('')}</datalist></div>
+          <div class="field-f"><label for="ct_zonal">Zonal</label><span class="selw"><select id="ct_zonal"><option value="">Todas las zonales</option>${S.zonales.map((z) => `<option value="${esc(z.id)}"${c.zonal === z.id ? ' selected' : ''}>${esc(z.id + ' ' + z.nombre)}</option>`).join('')}</select>${icons.chev}</span></div></div>
+        <div class="ct2">${f('telefono', 'tel', ' inputmode="tel" placeholder="+56 9 1234 5678"')}${f('telefono2', 'tel', ' inputmode="tel"')}</div>
+        ${f('correo', 'email', ' inputmode="email" autocomplete="off"')}
+        <div class="field-f"><label for="ct_notas">Notas</label><textarea id="ct_notas" rows="2" maxlength="500" placeholder="Horario, turno, cuándo llamar…">${esc(c.notas || '')}</textarea></div>
+        <p class="err" id="ctErr" hidden></p>
+      </form>`,
+      `${isNew ? '' : `<button type="button" class="btn danger ct-del" id="ctDel">${icons.trash}Eliminar</button>`}<button type="button" class="btn" data-dlg="close">Cancelar</button><button type="button" class="btn primary" id="ctSave">${isNew ? 'Agregar' : 'Guardar'}</button>`);
+    if (!dlg().open) dlg().showModal();
+    setTimeout(() => $('#ct_nombre').focus(), 30);
+    const save = async () => {
+      const v = (k) => ($('#ct_' + k) ? $('#ct_' + k).value : '');
+      const data = cleanCt(Object.fromEntries(CT_FIELDS.map((k) => [k, v(k)])));
+      data.zonal = v('zonal');
+      const err = $('#ctErr');
+      const fail = (m) => { err.textContent = m; err.hidden = false; };
+      if (!data.nombre) return fail('Escribe el nombre del contacto.');
+      if (!v('categoria').trim()) return fail('Elige o escribe una categoría.');
+      if (!data.telefono && !data.telefono2 && !data.correo) return fail('Agrega al menos un teléfono o un correo.');
+      if (data.correo && !mailOk(data.correo)) return fail('Revisa el correo: no parece una dirección válida.');
+      const btn = $('#ctSave'); btn.disabled = true; btn.textContent = 'Guardando…';
+      try {
+        const ref = isNew ? S.fs.collection('contactos').doc() : S.fs.collection('contactos').doc(c.id);
+        await ref.set({ ...data, actualizado: ts(), actualizado_por: uid() });
+      } catch (e) { btn.disabled = false; btn.textContent = isNew ? 'Agregar' : 'Guardar'; return fail(friendly(e) + (String(e && e.code) === 'permission-denied' ? ' Revisa que estén publicadas las reglas nuevas.' : '')); }
+      dlg().close(); toast(isNew ? 'Contacto agregado' : 'Contacto actualizado');
+      loadContacts(true);
+    };
+    $('#ctSave').addEventListener('click', save);
+    $('#ctForm').addEventListener('submit', (e) => { e.preventDefault(); save(); });
+    $('#ctForm').addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.tagName === 'INPUT') { e.preventDefault(); save(); } });
+    const del = $('#ctDel');
+    if (del) del.addEventListener('click', async () => {
+      dlg().close();
+      if (!(await confirmBox('Eliminar contacto', `${c.nombre} dejará de aparecer en el directorio para todos.`, 'Eliminar', true))) return;
+      try { await S.fs.collection('contactos').doc(c.id).delete(); } catch (e) { toast(friendly(e)); return; }
+      toast('Contacto eliminado'); loadContacts(true);
+    });
+  }
+
+  function exportContacts() {
+    const header = CT_FIELDS.map((k) => CT_LABELS[k]);
+    const widths = [28, 24, 24, 20, 18, 18, 30, 10, 40];
+    const list = (S.ct || []).slice().sort((a, b) => catOrder(a.categoria) - catOrder(b.categoria) || collator.compare(a.categoria, b.categoria) || collator.compare(a.nombre, b.nombre));
+    const rows = list.map((c) => CT_FIELDS.map((k) => c[k] || ''));
+    const blob = XW.workbook([{ name: 'CONTACTOS', header, widths, rows }]);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = list.length ? `Contactos_${new Date().toLocaleDateString('sv-SE')}.xlsx` : 'Plantilla_Contactos.xlsx';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    toast(list.length ? 'Contactos descargados' : 'Plantilla descargada');
+  }
+
+  // Importar planilla de contactos: actualiza por nombre y agrega los nuevos
+  let ctPlan = null;
+  async function handleContacts(sheets, fileName) {
+    const r = CT.fromSheets(sheets);
+    if (!r.contactos.length) throw new Error('No se encontraron contactos. La primera fila debe tener al menos las columnas Nombre y Teléfono (o Correo).');
+    if (!S.ct) await loadContacts();
+    const byName = new Map((S.ct || []).map((c) => [nrm(c.nombre), c]));
+    const seen = new Set(), items = [];
+    let same = 0;
+    for (const inc of r.contactos) {
+      const k = nrm(inc.nombre);
+      if (seen.has(k)) continue; seen.add(k);
+      const cur = byName.get(k);
+      if (!cur) { const { _present, ...d } = inc; items.push({ type: 'new', data: d }); continue; }
+      const patch = {};
+      inc._present.forEach((f) => { if (inc[f] !== cur[f]) patch[f] = inc[f]; });
+      if (!Object.keys(patch).length) { same++; continue; }
+      const data = {}; CT_FIELDS.forEach((f) => { data[f] = f in patch ? patch[f] : cur[f]; });
+      items.push({ type: 'upd', id: cur.id, data, changed: Object.keys(patch) });
+    }
+    ctPlan = { items, fileName, same, warnings: r.warnings, total: r.contactos.length };
+    const nNew = items.filter((i) => i.type === 'new').length;
+    const rows = items.slice(0, 60).map((i) => `<tr><td>${esc(i.data.nombre)}</td><td>${i.type === 'new' ? `Nuevo · ${esc(i.data.categoria)}` : esc(i.changed.map((f) => CT_LABELS[f]).join(', '))}</td></tr>`).join('');
+    dlgView('Revisa los contactos',
+      `<p>“${esc(fileName)}” trae ${plural(r.contactos.length, 'contacto', 'contactos')}.</p>
+      <div class="stats"><div><b>${nNew}</b><span>Nuevos</span></div><div><b>${items.length - nNew}</b><span>Con cambios</span></div><div><b>${same}</b><span>Sin cambios</span></div></div>
+      ${items.length ? `<div class="changes mdplan"><table><thead><tr><th>Contacto</th><th>Qué cambia</th></tr></thead><tbody>${rows}</tbody></table></div>${items.length > 60 ? `<p class="hint">Y ${items.length - 60} más.</p>` : ''}` : '<p>El directorio ya tiene todo lo que trae esta planilla.</p>'}
+      ${r.warnings.length ? `<ul class="warns">${r.warnings.map((w) => `<li>${esc(w)}</li>`).join('')}</ul>` : ''}`,
+      `<button type="button" class="btn" data-dlg="close">Cancelar</button><button type="button" class="btn primary" id="doSaveCt"${items.length ? '' : ' disabled'}>${items.length ? `Guardar ${plural(items.length, 'contacto', 'contactos')}` : 'Nada que guardar'}</button>`);
+    $('#doSaveCt').addEventListener('click', applyContacts);
+  }
+  async function applyContacts() {
+    const P = ctPlan;
+    dlgView('Guardando contactos', '<div style="display:flex;gap:12px;align-items:center"><div class="spin" aria-hidden="true"></div><p class="hint">Guardando en la base de datos…</p></div>');
+    const nNew = P.items.filter((i) => i.type === 'new').length;
+    try {
+      for (let s = 0; s < P.items.length; s += 400) {
+        const b = S.fs.batch();
+        P.items.slice(s, s + 400).forEach((i) => b.set(i.type === 'new' ? S.fs.collection('contactos').doc() : S.fs.collection('contactos').doc(i.id), { ...i.data, actualizado: ts(), actualizado_por: uid() }));
+        if (s + 400 >= P.items.length) b.set(S.fs.collection('cargas').doc(), { tipo: 'contactos', zonal: '-', archivo: P.fileName.slice(0, 300), nuevos: nNew, actualizados: P.items.length - nNew, eliminados: 0, usuario: uid(), usuario_nombre: (S.profile && S.profile.nombre) || '', creado_en: ts() });
+        await b.commit();
+      }
+    } catch (e) {
+      dlgView('No se guardaron los contactos', `<p class="err">${esc(friendly(e))}</p>${String(e && e.code) === 'permission-denied' ? '<p>Revisa que estén publicadas en Firebase las reglas nuevas (firestore.rules).</p>' : ''}`, '<button type="button" class="btn primary" data-dlg="close">Cerrar</button>');
+      return;
+    }
+    dlg().close();
+    toast(`Contactos guardados: ${[nNew && plural(nNew, 'nuevo', 'nuevos'), P.items.length - nNew && plural(P.items.length - nNew, 'actualizado', 'actualizados')].filter(Boolean).join(', ')}`);
+    if (S.view !== 'contactos') setView('contactos');
+    loadContacts(true);
+  }
+
+  function onContactsClick(e) {
+    const t = e.target;
+    const z = t.closest('[data-cz]'); if (z) { S.cz = z.dataset.cz; renderContacts(); return; }
+    if (t.closest('[data-ct-new]')) { openCtForm(null); return; }
+    if (t.closest('[data-ct-import]')) { openImport('contactos'); return; }
+    if (t.closest('[data-ct-export]')) { exportContacts(); return; }
+    const ed = t.closest('[data-ct-edit]'); if (ed) { const c = (S.ct || []).find((x) => x.id === ed.dataset.ctEdit); if (c) openCtForm(c); return; }
+    const cp = t.closest('[data-ct-copy]'); if (cp) { const c = (S.ct || []).find((x) => x.id === cp.dataset.ctCopy); if (c) copyText(ctText(c), 'Contacto'); }
+  }
+
   /* ================= Usuarios (administración) ================= */
   async function loadUsers() {
     try {
@@ -3164,7 +3536,7 @@ const GGEE = (() => {
     try { S.cargas = (await S.fs.collection('cargas').orderBy('creado_en', 'desc').limit(200).get()).docs.map((d) => ({ id: d.id, ...d.data() })); }
     catch (e) { $('#ctable').innerHTML = `<div class="empty-t"><strong>No se pudo cargar el historial</strong>${esc(friendly(e))}</div>`; return; }
     if (!S.cargas.length) { $('#ctable').innerHTML = '<div class="empty-t"><strong>Aún no hay cargas</strong>Cuando un administrador suba una planilla, quedará registrada aquí.</div>'; return; }
-    const TIPO = { ggee: ['Repuestos GGEE', 'warn'], instructivo: ['Instructivos', 'ok'], sitios: ['Sitios', 'info'] };
+    const TIPO = { ggee: ['Repuestos GGEE', 'warn'], instructivo: ['Instructivos', 'ok'], contactos: ['Contactos', 'info'], sitios: ['Sitios', 'info'] };
     $('#ctable').innerHTML = `<table class="ctable"><thead><tr><th>Fecha</th><th>Tipo</th><th>Zonal</th><th>Archivo</th><th class="n">Nuevos</th><th class="n">Actualizados</th><th class="n">Quitados</th><th>Cargado por</th></tr></thead><tbody>${S.cargas.map((c) => {
       const tp = TIPO[c.tipo] || TIPO.sitios;
       return `<tr><td>${esc((toDate(c.creado_en) || new Date()).toLocaleString('es-CL', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }))}</td><td><span class="badge ${tp[1]}">${tp[0]}</span></td><td class="mono">${c.zonal && c.zonal !== '-' ? esc(zLabel(c.zonal)) : '—'}</td><td class="wrap">${esc(c.archivo)}</td><td class="n">${c.nuevos}</td><td class="n">${c.actualizados}</td><td class="n">${c.eliminados}</td><td>${esc(c.usuario_nombre || '')}</td></tr>`;
@@ -3179,12 +3551,18 @@ const GGEE = (() => {
       <div class="dlg-b">${bodyHtml}</div>${footHtml ? `<div class="dlg-f">${footHtml}</div>` : ''}`;
   }
   function openImport(kind) {
-    kind = kind === 'inst' ? 'inst' : 'excel';
+    kind = kind === 'inst' || kind === 'contactos' ? kind : 'excel';
     plan = null; parsedFile = null; S.importKind = kind;
     const fi = $('#file');
     fi.accept = kind === 'inst' ? '.md,.markdown,.txt' : '.xlsx,.xlsm,.xls,.csv,.ods';
     fi.multiple = kind === 'inst';
-    if (kind === 'inst') {
+    if (kind === 'contactos') {
+      dlgView('Importar contactos',
+        `<p>Elige una planilla con una fila por contacto. Columnas que se reconocen: Nombre, Cargo, Empresa o área, Categoría, Teléfono, Otro teléfono, Correo, Zonal y Notas.</p>
+        <label class="drop" id="drop" for="file">${icons.upload}<strong>Elegir planilla</strong><small>.xlsx, .xls o .csv. También puedes arrastrarla aquí.</small></label>
+        <p class="hint">Un contacto con el mismo nombre que uno existente se actualiza; los demás se agregan. Una celda vacía no borra el dato que ya existe. Usa “Descargar Excel” en Contactos para obtener la plantilla.</p>`,
+        '<button type="button" class="btn" data-dlg="close">Cancelar</button>');
+    } else if (kind === 'inst') {
       dlgView('Cargar instructivos',
         `<p>Elige uno o varios archivos <b>.md</b>. Cada archivo es un instructivo: su encabezado indica el título, la sección (Alarmas, Equipos u otra) y los equipos, y las imágenes van dentro del mismo archivo.</p>
         <label class="drop" id="drop" for="file">${icons.upload}<strong>Elegir instructivos</strong><small>Archivos .md. También puedes arrastrarlos aquí.</small></label>
@@ -3410,8 +3788,10 @@ const GGEE = (() => {
       if ((ext === 'xlsx' || ext === 'xlsm') && supportsDeflateRaw()) sheets = await XL.parseXlsx(u8, (n) => { const m = $('#readMsg'); if (m) m.textContent = `Revisando fila ${n.toLocaleString('es-CL')}…`; });
       else if (ext === 'csv' || ext === 'txt') sheets = [{ name: file.name.replace(/\.[^.]+$/, ''), rows: XW.parseCsv(decodeText(u8)), comments: {} }];
       else sheets = await viaSheetJS(u8);
+      if (S.importKind === 'contactos') { handleContacts(sheets, file.name); return; }
       if (GGEE.isGgeeBook(sheets)) { handleGgee(GGEE.fromSheets(sheets), file.name); return; }
       const parsed = SITES.fromSheets(sheets, file.name);
+      if (!parsed.sites.length && CT.isBook(sheets)) { handleContacts(sheets, file.name); return; }
       if (!parsed.sites.length) throw new Error(parsed.warnings[0] || 'No se encontraron sitios. Revisa que la primera fila tenga una columna POP.');
       parsedFile = { parsed, fileName: file.name };
       mapping = {};
