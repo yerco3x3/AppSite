@@ -8,6 +8,12 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#0F1B26">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Llavero">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%230F1B26'/%3E%3Cpath d='M10.99 6.69A11 11 0 0 0 10.99 19.31M29.01 6.69A11 11 0 0 1 29.01 19.31' fill='none' stroke='%234EB2C3' stroke-width='3.2' stroke-linecap='round'/%3E%3Ccircle cx='20' cy='13' r='7' fill='%23C8A24A'/%3E%3Cpath d='M16.6 17.5h6.8l4.4 18.5H12.2z' fill='%23C8A24A'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -373,6 +379,10 @@ img { max-width: 100%; }
 .umenu-h strong { font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
 .umenu-h span { font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
 .umenu-h .badge { justify-self: start; margin-top: 6px; }
+.umenu-off { display: flex; gap: 10px; align-items: flex-start; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 13px; line-height: 1.45; color: var(--muted); }
+.umenu-off .i { flex: none; width: 18px; height: 18px; margin-top: 1px; color: var(--ok); }
+.umenu-off.off .i { color: var(--warn); }
+.umenu-off b { display: block; color: var(--ink); font-weight: 600; }
 .umenu button { width: 100%; display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px; border: 0; background: var(--panel); text-align: left; font-size: 14px; color: var(--ink); }
 .umenu button:hover { background: var(--hover); }
 .umenu button + button { border-top: 1px solid var(--line); }
@@ -386,6 +396,7 @@ img { max-width: 100%; }
   .topbar-in { flex-wrap: wrap; row-gap: 8px; }
   .brand h1 { display: none; }
   .spacer { display: none; }
+  .bar-actions { margin-left: auto; }
   .zsel { flex: 1 1 auto; min-width: 0; }
   .zsel select { width: 100%; max-width: none; min-height: 44px; }
   .avatar { width: 44px; height: 44px; }
@@ -721,6 +732,28 @@ img { max-width: 100%; }
 .gg-nem { margin-left: 12px; font: 500 15px var(--f-mono); color: var(--muted); vertical-align: middle; }
 .fields dd.mono-dd { font-family: var(--f-mono); font-size: 14px; }
 .sec h2 .sec-link { margin-left: auto; font-weight: 500; }
+.sec h2 .sec-link.ed { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; }
+.sec h2 .sec-link.ed svg.i { width: 15px; height: 15px; color: currentColor; }
+.kedit-who { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; }
+.krows { display: grid; gap: 10px; }
+.khead, .krow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 44px; gap: 8px; align-items: center; }
+.khead { font-size: 13px; font-weight: 500; color: var(--ink-2); }
+.krow input { width: 100%; min-width: 0; height: 46px; padding: 0 12px; border-radius: var(--r); border: 1px solid var(--line-2); background: var(--panel); color: var(--ink); font-size: 16px; outline: none; transition: border-color .15s, box-shadow .15s; }
+.krow input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.krow input.kc { font: 600 17px var(--f-mono); letter-spacing: .06em; }
+.krow input.bad { border-color: var(--crit); }
+.krow .iconbtn { width: 44px; height: 46px; }
+.khist { list-style: none; margin: 0; padding: 0; }
+.khist li { display: grid; gap: 4px; padding: 12px 0; }
+.khist li + li { border-top: 1px dashed var(--line); }
+.khist .kh-c { font: 500 15px/1.5 var(--f-mono); word-break: break-word; }
+.khist .kh-c b { font-weight: 600; }
+.khist .kh-m { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; font-size: 13px; color: var(--muted); }
+.khist .kh-now { color: var(--ok); font-weight: 600; }
+.dlg-f .k-left { margin-right: auto; }
+.kedits { margin-bottom: 24px; }
+.kedits h3 { margin: 0 0 10px; font-size: 15px; font-weight: 600; }
+.kedits .ctable button.linkbtn { padding: 0; text-align: left; }
 .sub-h { margin: 14px 0 8px; font-size: 13px; font-weight: 600; color: var(--muted); }
 .parts { list-style: none; margin: 0; padding: 0; display: grid; border: 1px solid var(--line); border-radius: var(--r-l); overflow: hidden; background: var(--panel); }
 .part { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 12px 16px; }
@@ -1061,7 +1094,7 @@ a.btn { text-decoration: none; }
     <div class="lp-in lp-narrow lp-stack">
       <h2 id="lp-faq" class="lp-h2">Preguntas frecuentes</h2>
       <div class="lp-faqs">
-        <details class="lp-faq"><summary>¿Funciona sin señal?<svg class="lp-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><p>Sí. La página muestra la última copia guardada en tu equipo. Con señal, toca “Actualizar datos” en el menú de tu cuenta.</p></details>
+        <details class="lp-faq"><summary>¿Funciona sin señal?<svg class="lp-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><p>Sí. Entra una vez con señal y quedan guardados en tu equipo los sitios, instructivos, repuestos y contactos de tus zonales. En el teléfono, agrégala a la pantalla de inicio: se abre como una app, aunque no haya señal. Con señal, toca “Actualizar datos” en el menú de tu cuenta para traer lo último.</p></details>
         <details class="lp-faq"><summary>¿Quién aprueba mi cuenta?<svg class="lp-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><p>Un administrador de tu zonal. Al aprobarte, también define qué zonales puedes ver.</p></details>
         <details class="lp-faq"><summary>No me llegó el correo de confirmación<svg class="lp-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><p>Revisa la carpeta de spam. Si no está, ingresa con tu correo y contraseña y toca “Reenviar correo”.</p></details>
         <details class="lp-faq"><summary>Olvidé mi contraseña<svg class="lp-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><p>En el formulario de ingreso, toca “¿Olvidaste tu contraseña?” y te enviaremos un enlace para crear una nueva.</p></details>
@@ -1214,6 +1247,7 @@ a.btn { text-decoration: none; }
   <div class="page gutter" id="viewCargas" hidden>
     <div class="page-in">
       <div class="page-h"><div><h2>Historial de cargas</h2><p>Planillas de sitios, planillas de repuestos GGEE e instructivos subidos por los administradores, con lo que se agregó, actualizó y quitó en cada carga.</p></div></div>
+      <div class="kedits" id="kedits" hidden></div>
       <div class="tbl tscroll" id="ctable"></div>
     </div>
   </div>
@@ -2056,6 +2090,44 @@ const GGEE = (() => {
   const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} };
   const lsDel = (k) => { try { localStorage.removeItem(k); } catch (_) {} };
 
+  // Copia de los datos en el equipo para usarlos sin señal. IndexedDB no tiene el límite de ~5 MB de
+  // localStorage (los instructivos con imágenes pesan varios MB). Si el navegador no lo permite, se usa localStorage.
+  const DB = (() => {
+    let opening = null;
+    const open = () => opening || (opening = new Promise((res, rej) => {
+      if (!window.indexedDB) { rej(new Error('Sin IndexedDB')); return; }
+      const r = indexedDB.open('llavero', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('kv');
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+      r.onblocked = () => rej(new Error('IndexedDB bloqueado'));
+    }));
+    const run = (mode, fn) => open().then((db) => new Promise((res, rej) => {
+      const t = db.transaction('kv', mode); const q = fn(t.objectStore('kv'));
+      t.oncomplete = () => res(q.result); t.onerror = t.onabort = () => rej(t.error);
+    }));
+    async function get(k) {
+      try { const v = await run('readonly', (st) => st.get(k)); if (v != null) return JSON.parse(v); } catch (_) {}
+      const old = lsGet('llavero-' + k, null);
+      if (old != null) set(k, old);
+      return old;
+    }
+    async function set(k, v) {
+      try { await run('readwrite', (st) => st.put(JSON.stringify(v), k)); lsDel('llavero-' + k); }
+      catch (_) { lsSet('llavero-' + k, v); }
+    }
+    async function del(k) { lsDel('llavero-' + k); try { await run('readwrite', (st) => st.delete(k)); } catch (_) {} }
+    return { get, set, del };
+  })();
+  const clearSaved = (id) => Promise.all(['cache-', 'inst-', 'contactos-'].map((k) => DB.del(k + id)));
+  function fmtWhen(t) {
+    const d = new Date(t), now = new Date(), ayer = new Date(now.getTime() - 864e5);
+    const hm = d.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+    if (d.toDateString() === now.toDateString()) return 'hoy a las ' + hm;
+    if (d.toDateString() === ayer.toDateString()) return 'ayer a las ' + hm;
+    return 'el ' + d.toLocaleDateString('es-CL', { day: 'numeric', month: 'short' }) + ' a las ' + hm;
+  }
+
   const S = {
     auth: null, fs: null, user: null, loggingOut: false, profile: null, zonales: [], zname: new Map(),
     sites: [], byKey: new Map(), groups: [],
@@ -2067,7 +2139,9 @@ const GGEE = (() => {
     ggee: [], ggeeIdx: new Map(), ggeeMeta: {}, ggeeErr: null,
     inst: null, instStatus: 'idle', instErr: null, instActive: null, iq: '', gq: '', gActive: null, instHtml: new Map(),
     // Directorio de contactos
-    ct: null, ctStatus: 'idle', ctErr: null, cq: '', cz: 'all'
+    ct: null, ctStatus: 'idle', ctErr: null, cq: '', cz: 'all',
+    // Sin señal: fecha de cada copia guardada, descargas en curso e instalación en el equipo
+    instAt: 0, instSynced: false, instP: null, ctSynced: false, ctP: null, syncing: null, installEvt: null
   };
 
   const I = (d) => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
@@ -2106,6 +2180,7 @@ const GGEE = (() => {
     edit: I('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>'),
     plus: I('<path d="M12 5v14M5 12h14"/>'),
     gear: I('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9 7 7M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/>'),
+    install: I('<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 7v7M9 11l3 3 3-3"/>'),
     tower: I('<circle cx="12" cy="8" r="1.6"/><path d="m12 10-4 11M12 10l4 11M9.2 17.5h5.6"/><path d="M8.2 4.6a5 5 0 0 0 0 6.8M15.8 4.6a5 5 0 0 1 0 6.8M5.6 2.5a8.5 8.5 0 0 0 0 11M18.4 2.5a8.5 8.5 0 0 1 0 11"/>')
   };
 
@@ -2143,7 +2218,12 @@ const GGEE = (() => {
       s.claves.map((c) => c.code + ' ' + c.label).join(' '), Object.values(s.extras).join(' ')].filter(Boolean).join(' \n '));
     return s;
   }
-  function plainSite(s) { const o = {}; SITE_COLS.forEach((k) => { if (s[k] !== undefined) o[k] = s[k]; }); return o; }
+  function plainSite(s) {
+    const o = {}; SITE_COLS.forEach((k) => { if (s[k] !== undefined) o[k] = s[k]; });
+    // Una clave editada en la app no se escribe en la planilla: vive aparte (colección claves)
+    if (s.clavesPlanilla) { o.claves = s.clavesPlanilla; o.tags = s.tagsPlanilla || o.tags; }
+    return o;
+  }
 
   function visibleZonales() {
     if (!S.profile) return [];
@@ -2153,11 +2233,12 @@ const GGEE = (() => {
   const scopeSites = () => (S.zonal === 'all' ? S.sites : S.sites.filter((s) => s.zonal === S.zonal));
 
   function setSites(rows, fromCache, ggee, ggeeMeta) {
+    S.raw = { rows, ggee: ggee || (S.raw && S.raw.ggee) || [], ggeeMeta: ggeeMeta || (S.raw && S.raw.ggeeMeta) || {} };
     S.sites = rows.map(prep);
     S.byKey = new Map(S.sites.map((s) => [s._key, s]));
     S.status = 'ready';
     if (ggee) setGgee(ggee, ggeeMeta || {});
-    if (!fromCache) { S.lastLoad = Date.now(); S.offline = false; lsSet('llavero-cache-' + uid(), { sites: rows, ggee: ggee || [], ggeeMeta: ggeeMeta || {}, zonales: S.zonales, profile: S.profile, at: Date.now() }); }
+    if (!fromCache) { S.lastLoad = Date.now(); S.offline = false; DB.set('cache-' + uid(), { sites: rows, ggee: ggee || [], ggeeMeta: ggeeMeta || {}, zonales: S.zonales, profile: S.profile, at: Date.now() }); }
     if (S.activeKey && !S.byKey.has(S.activeKey)) S.activeKey = null;
     rebuildGroups();
     renderSitesView();
@@ -2217,15 +2298,166 @@ const GGEE = (() => {
     catch (e) { if (/continue-uri|unauthorized-domain/.test(String(e && e.code))) return fn(undefined); throw e; }
   }
 
+  /* ---------- Claves editadas desde la app ----------
+     Se guardan en claves/{zonal}/sitios/{sitio}, aparte de la planilla. Se muestran encima de la clave
+     de la planilla, con autor, fecha y las versiones anteriores. Las editan técnicos de la zonal y administradores. */
+  const K_LABELS = ['Candado', 'Puerta', 'Portón', 'Reja', 'Caseta', 'Gabinete', 'Shelter', 'Tablero', 'PIN PASS'];
+  const kRef = (s) => S.fs.collection('claves').doc(s.zonal).collection('sitios').doc(encodeURIComponent(String(s.id)));
+  const canEditClaves = (s) => { const p = S.profile; return !!(p && s) && (p.rol === 'admin' || (p.rol === 'tecnico' && (p.zonales || []).includes(s.zonal))); };
+  const kTags = (r) => SITES.tagsFor((r.notas || '') + '\n' + (r.claves || []).map((c) => c.label + ' ' + c.code).join('\n'));
+  const withTimeout = (pr, ms) => Promise.race([pr, new Promise((_, rej) => setTimeout(() => rej(Object.assign(new Error('timeout'), { code: 'unavailable' })), ms))]);
+  // Aplica una clave editada sobre un sitio de la planilla (guarda la de la planilla aparte)
+  function withEdit(r, o) {
+    if (!r.claveEdit) { r.clavesPlanilla = Array.isArray(r.claves) ? r.claves : []; r.tagsPlanilla = Array.isArray(r.tags) ? r.tags : []; }
+    const at = toDate(o.at);
+    r.claves = Array.isArray(o.claves) ? o.claves : [];
+    r.claveEdit = { at: at && !isNaN(at) ? at.toISOString() : '', por: o.por || '', nombre: o.nombre || '', historial: Array.isArray(o.historial) ? o.historial : [] };
+    r.tags = kTags(r);
+  }
+  function withoutEdit(r) {
+    if (!r.claveEdit) return;
+    r.claves = r.clavesPlanilla || []; r.tags = r.tagsPlanilla || [];
+    delete r.clavesPlanilla; delete r.tagsPlanilla; delete r.claveEdit;
+  }
+  // Versión vigente antes del cambio, para el historial (máximo 10)
+  function kHistFor(s) {
+    const e = s.claveEdit;
+    const prev = e ? { claves: s.claves, at: e.at || '', nombre: e.nombre || '' }
+      : { claves: s.clavesPlanilla || s.claves || [], at: s.actualizado || '', nombre: 'Planilla' + (s.archivo ? ' ' + s.archivo : ''), planilla: true };
+    return [prev, ...((e && e.historial) || [])].slice(0, 10).map((h) => ({ claves: (h.claves || []).slice(0, 10), at: String(h.at || ''), nombre: String(h.nombre || '').slice(0, 120), ...(h.planilla ? { planilla: true } : {}) }));
+  }
+  function kRefreshLocal(s, fn) {
+    const r = S.raw && S.raw.rows.find((x) => x.zonal === s.zonal && x.id === s.id);
+    if (!r) return;
+    fn(r);
+    setSites(S.raw.rows, false, S.raw.ggee, S.raw.ggeeMeta);
+  }
+  async function saveClaves(s, nuevas) {
+    const nombre = String((S.profile && (S.profile.nombre || S.profile.email)) || 'Sin nombre').slice(0, 80);
+    const historial = kHistFor(s);
+    await withTimeout(kRef(s).set({ claves: nuevas, at: ts(), por: uid(), nombre, sitio: String(s.id), pop: String(s.pop || s.id), historial }), 20000);
+    kRefreshLocal(s, (r) => withEdit(r, { claves: nuevas, at: new Date().toISOString(), por: uid(), nombre, historial }));
+  }
+
+  function openClavesForm(s) {
+    if (!canEditClaves(s)) return;
+    if (!navigator.onLine || S.offline) { toast('Necesitas conexión para editar claves. Sin señal puedes verlas, pero no cambiarlas.'); return; }
+    const rowHtml = (c, i) => `<div class="krow"><input class="kl" list="kLabels" value="${esc(c.label || '')}" maxlength="40" placeholder="Candado" aria-label="Tipo de la clave ${i + 1}"><input class="kc" value="${esc(c.code || '')}" maxlength="60" autocomplete="off" spellcheck="false" placeholder="1234" aria-label="Clave ${i + 1}"><button type="button" class="iconbtn" data-k="rm" aria-label="Quitar la clave ${i + 1}" title="Quitar">${icons.trash}</button></div>`;
+    const start = s.claves.length ? s.claves : [{ label: '', code: '' }];
+    dlgView(`Editar claves · ${esc(s.pop)}`,
+      `<form class="form" id="kForm" novalidate>
+        <p class="hint">${esc(s._base || s.nombre || '')} · ${esc(zLabel(s.zonal))}</p>
+        <div class="krows-w"><div class="khead" aria-hidden="true"><span>Tipo</span><span>Clave</span><span></span></div>
+        <div class="krows" id="kRows">${start.map(rowHtml).join('')}</div></div>
+        <div><button type="button" class="btn sm" data-k="add">${icons.plus}Agregar otra clave</button></div>
+        <datalist id="kLabels">${K_LABELS.map((l) => `<option value="${esc(l)}">`).join('')}</datalist>
+        <p class="hint">Todos los que tienen la zonal ${esc(s.zonal)} verán la clave nueva al actualizar sus datos. Queda registrada con tu nombre y la clave anterior se guarda en el historial.</p>
+        <p class="err" id="kErr" hidden></p>
+      </form>`,
+      '<button type="button" class="btn" data-dlg="close">Cancelar</button><button type="button" class="btn primary" id="kSave">Guardar claves</button>');
+    if (!dlg().open) dlg().showModal();
+    const box = $('#kRows');
+    const focusLast = (sel) => { const l = box.querySelectorAll(sel); if (l.length) l[l.length - 1].focus(); };
+    setTimeout(() => focusLast('.kc'), 30);
+    $('#kForm').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-k]'); if (!b) return;
+      if (b.dataset.k === 'add') {
+        if (box.children.length >= 10) { toast('Máximo 10 claves por sitio'); return; }
+        box.insertAdjacentHTML('beforeend', rowHtml({}, box.children.length)); focusLast('.kl');
+      } else if (b.dataset.k === 'rm') {
+        const row = b.closest('.krow');
+        if (box.children.length > 1) row.remove(); else row.querySelectorAll('input').forEach((i) => { i.value = ''; });
+      }
+    });
+    const save = async () => {
+      const err = $('#kErr'); err.hidden = true;
+      const fail = (m, el) => { err.textContent = m; err.hidden = false; if (el) { el.classList.add('bad'); el.focus(); } };
+      box.querySelectorAll('input').forEach((i) => i.classList.remove('bad'));
+      const nuevas = [];
+      for (const [i, row] of [...box.querySelectorAll('.krow')].entries()) {
+        const label = row.querySelector('.kl').value.replace(/\s+/g, ' ').trim();
+        const code = row.querySelector('.kc').value.replace(/\s+/g, ' ').trim();
+        if (!label && !code) continue;
+        if (!code) return fail(`Falta la clave en la fila ${i + 1}.`, row.querySelector('.kc'));
+        nuevas.push({ code, label: label || (/^\d+$/.test(code) ? 'Clave' : 'Acceso') });
+      }
+      if (sameK(nuevas, s.claves)) { dlg().close(); toast('Sin cambios'); return; }
+      if (!nuevas.length) {
+        dlg().close();
+        if (!(await confirmBox('¿Dejar el sitio sin clave?', `${s.pop} quedará como "Sin clave registrada" para todo el equipo. La clave actual queda en el historial.`, 'Dejar sin clave', true))) { openClavesForm(s); return; }
+      }
+      const btn = $('#kSave'); if (btn) { btn.disabled = true; btn.textContent = 'Guardando…'; }
+      try { await saveClaves(s, nuevas); }
+      catch (e) {
+        if (!dlg().open) { toast(friendly(e)); return; }
+        if (btn) { btn.disabled = false; btn.textContent = 'Guardar claves'; }
+        return fail(friendly(e) + (String(e && e.code) === 'permission-denied' ? ' Un administrador debe publicar en Firebase las reglas nuevas (firestore.rules).' : ''));
+      }
+      if (dlg().open) dlg().close();
+      const k = s._key; S.revealed.add(k); renderList(); renderDetail();
+      toast(`Clave de ${s.pop} guardada`);
+    };
+    $('#kForm').addEventListener('input', (e) => { e.target.classList.remove('bad'); $('#kErr').hidden = true; });
+    $('#kSave').addEventListener('click', save);
+    $('#kForm').addEventListener('submit', (e) => { e.preventDefault(); save(); });
+    $('#kForm').addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.tagName === 'INPUT') { e.preventDefault(); save(); } });
+  }
+
+  function openClavesHist(s) {
+    const e = s.claveEdit; if (!e) return;
+    const hidden = isHidden(s);
+    const fmt = (arr) => (arr && arr.length ? arr.map((c) => (/^\d+$/.test(c.code) ? `${esc(c.label)}: <b>${esc(hidden ? dots(c.code) : c.code)}</b>` : esc(c.code))).join(' · ') : '<span class="muted">Sin clave</span>');
+    const online = navigator.onLine && !S.offline;
+    const can = canEditClaves(s) && online;
+    const items = [{ claves: s.claves, at: e.at, nombre: e.nombre, actual: true }, ...(e.historial || [])];
+    dlgView(`Historial de claves · ${esc(s.pop)}`,
+      `<ul class="khist">${items.map((h, i) => `<li><div class="kh-c">${fmt(h.claves)}</div><div class="kh-m">${h.actual ? '<span class="kh-now">Vigente</span>' : ''}<span>${esc(h.nombre || 'Sin nombre')}</span>${h.at ? `<span>${esc(fmtWhen(h.at))}</span>` : ''}${!h.actual && can && !sameK(h.claves, s.claves) ? `<button type="button" class="linkbtn" data-kh="${i}">Volver a esta</button>` : ''}</div></li>`).join('')}</ul>
+      ${hidden ? '<p class="hint">Las claves están ocultas en pantalla. Toca “Mostrar” en la ficha para verlas.</p>' : ''}
+      ${!online ? '<p class="hint">Sin conexión: puedes ver el historial, pero no cambiar la clave.</p>' : ''}`,
+      `${isAdmin() && online ? `<button type="button" class="btn k-left" id="kPlan">Usar la clave de la planilla</button>` : ''}<button type="button" class="btn primary" data-dlg="close">Cerrar</button>`);
+    if (!dlg().open) dlg().showModal();
+    $('#dlgBody').querySelectorAll('[data-kh]').forEach((b) => b.addEventListener('click', async () => {
+      const h = items[Number(b.dataset.kh)];
+      dlg().close();
+      if (!(await confirmBox('Volver a esta clave', `${s.pop} volverá a mostrar: ${clavesTxt(h.claves)}. Queda registrado con tu nombre.`, 'Volver a esta clave'))) return;
+      try { await saveClaves(s, h.claves || []); } catch (er) { toast(friendly(er)); return; }
+      renderDetail(); toast(`Clave de ${s.pop} restaurada`);
+    }));
+    const kp = $('#kPlan');
+    if (kp) kp.addEventListener('click', async () => {
+      dlg().close();
+      if (!(await confirmBox('Usar la clave de la planilla', `${s.pop} volverá a mostrar la clave de la planilla (${clavesTxt(s.clavesPlanilla)}) y se borrará el historial de cambios de este sitio.`, 'Usar la planilla', true))) return;
+      try { await withTimeout(kRef(s).delete(), 20000); } catch (er) { toast(friendly(er)); return; }
+      kRefreshLocal(s, withoutEdit);
+      toast(`${s.pop} vuelve a la clave de la planilla`);
+    });
+  }
+  const clavesTxt = (arr) => ((arr || []).length ? arr.map((c) => (/^\d+$/.test(c.code) ? `${c.label} ${c.code}` : c.code)).join(', ') : 'sin clave');
+
+  // Administradores: lista de claves editadas en la app, en el historial de cargas
+  function renderKEdits() {
+    const el = $('#kedits');
+    const list = S.sites.filter((x) => x.claveEdit).sort((a, b) => String(b.claveEdit.at).localeCompare(String(a.claveEdit.at)));
+    el.hidden = !list.length;
+    if (!list.length) { el.innerHTML = ''; return; }
+    el.innerHTML = `<h3>Claves editadas en la app (${list.length})</h3><div class="tbl tscroll"><table class="ctable"><thead><tr><th>Fecha</th><th>Sitio</th><th>Zonal</th><th>Editada por</th></tr></thead><tbody>${list.map((x) =>
+      `<tr><td>${esc(x.claveEdit.at ? fmtWhen(x.claveEdit.at) : '')}</td><td><button type="button" class="linkbtn" data-kopen="${esc(x._key)}">${esc(x.pop)} · ${esc(x._base || '')}</button></td><td class="mono">${esc(x.zonal)}</td><td>${esc(x.claveEdit.nombre || '')}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+
   async function fetchSites() {
     const vis = visibleZonales();
     // Los GGEE no deben impedir que carguen los sitios (por ejemplo, si aún no se publican las reglas nuevas)
-    const [docs, gdocs] = await Promise.all([
+    const [docs, gdocs, kdocs] = await Promise.all([
       Promise.all(vis.map((z) => S.fs.collection('zonales').doc(z).get())),
-      Promise.all(vis.map((z) => S.fs.collection('ggee').doc(z).get().catch((e) => ({ __err: e }))))
+      Promise.all(vis.map((z) => S.fs.collection('ggee').doc(z).get().catch((e) => ({ __err: e })))),
+      // Claves editadas en la app (si aún no se publican las reglas nuevas, se ignoran)
+      Promise.all(vis.map((z) => S.fs.collection('claves').doc(z).collection('sitios').get().catch((e) => ({ __err: e }))))
     ]);
     const rows = [], ggee = [], ggeeMeta = {};
     docs.forEach((d, i) => { if (d.exists) (d.data().sitios || []).forEach((s) => rows.push({ ...s, zonal: vis[i] })); });
+    const kov = new Map();
+    kdocs.forEach((q, i) => { if (q.__err || !q.docs) return; q.docs.forEach((d) => { const o = d.data(); if (o && o.sitio) kov.set(vis[i] + '/' + o.sitio, o); }); });
+    rows.forEach((r) => { const o = kov.get(r.zonal + '/' + r.id); if (o) withEdit(r, o); });
     S.ggeeErr = null;
     gdocs.forEach((d, i) => {
       if (d.__err) { S.ggeeErr = d.__err; return; }
@@ -2405,41 +2637,89 @@ const GGEE = (() => {
     return { id: u.uid, ...snap.data() };
   }
 
+  const usableProfile = (p) => !!p && (p.rol === 'admin' || (p.rol === 'tecnico' && (p.zonales || []).length > 0));
+  const inApp = () => !$('#appView').hidden;
+  function pickZonal(id) {
+    const vis = visibleZonales();
+    const saved = lsGet('llavero-zonal-' + id, null);
+    S.zonal = saved && (saved === 'all' ? vis.length > 1 : vis.includes(saved)) ? saved : (vis.length === 1 ? vis[0] : 'all');
+  }
+
   async function enter() {
     show('boot');
     const id = uid();
     S.recent = lsGet('llavero-recientes-' + id, []);
     if (!Array.isArray(S.recent)) S.recent = [];
-    let prof;
-    try {
-      try { await S.user.getIdToken(true); } catch (_) {}
-      const snap = await S.fs.collection('perfiles').doc(id).get();
-      prof = snap.exists ? { id, ...snap.data() } : null;
-      if (!prof) prof = await crearPerfil();
-    } catch (e) {
-      const c = lsGet('llavero-cache-' + id, null);
-      if (isNetErr(e) && c && c.profile && c.profile.rol !== 'bloqueado') {
-        S.profile = c.profile; S.offline = true; enterApp(); setSites(c.sites || [], true, c.ggee || [], c.ggeeMeta || {}); renderNotice();
-        routeFromHash();
-        return;
-      }
-      if (String(e && e.code) === 'permission-denied') { S.profile = null; showWait('sinperfil'); return; }
-      showAuth('login', ['err', friendly(e)]);
+    // Primero la copia guardada en el equipo: la app abre al instante, con o sin señal.
+    const c = await DB.get('cache-' + id);
+    if (id !== uid()) return;
+    if (c && usableProfile(c.profile) && Array.isArray(c.sites)) {
+      S.profile = c.profile; S.offline = !navigator.onLine;
+      pickZonal(id);
+      const vis = visibleZonales();
+      enterApp();
+      setSites(c.sites.filter((s) => vis.includes(s.zonal)), true, (c.ggee || []).filter((e) => vis.includes(e.zonal)), c.ggeeMeta || {});
+      S.lastLoad = c.at || 0; renderTop(); renderNotice();
+      routeFromHash();
+      syncOnline(id);
       return;
     }
-    S.profile = prof;
-    if (prof.rol === 'pendiente') return showWait('pendiente');
-    if (prof.rol === 'bloqueado') { lsDel('llavero-cache-' + id); return showWait('bloqueado'); }
-    if (prof.rol === 'tecnico' && !(prof.zonales || []).length) return showWait('sinzonal');
-    const c = lsGet('llavero-cache-' + id, null);
-    const vis = visibleZonales();
-    const saved = lsGet('llavero-zonal-' + id, null);
-    S.zonal = saved && (saved === 'all' ? vis.length > 1 : vis.includes(saved)) ? saved : (vis.length === 1 ? vis[0] : 'all');
-    enterApp();
-    if (c && Array.isArray(c.sites)) setSites(c.sites.filter((s) => vis.includes(s.zonal)), true, (c.ggee || []).filter((e) => vis.includes(e.zonal)), c.ggeeMeta || {});
+    await syncOnline(id);
+  }
+
+  // Revisa el perfil en el servidor y trae lo último. Sin señal deja la copia guardada.
+  async function syncOnline(id) {
+    if (S.syncing) return S.syncing;
+    S.syncing = (async () => {
+      let prof;
+      try {
+        try { await S.user.getIdToken(true); } catch (_) {}
+        const snap = await S.fs.collection('perfiles').doc(id).get();
+        prof = snap.exists ? { id, ...snap.data() } : null;
+        if (!prof) prof = await crearPerfil();
+      } catch (e) {
+        if (id !== uid()) return;
+        if (inApp()) { if (isNetErr(e)) { S.offline = true; renderTop(); renderNotice(); } return; }
+        if (String(e && e.code) === 'permission-denied') { S.profile = null; showWait('sinperfil'); return; }
+        showAuth('login', ['err', friendly(e)]);
+        return;
+      }
+      if (id !== uid()) return;
+      S.profile = prof;
+      if (!usableProfile(prof)) {
+        // Cuenta pendiente, bloqueada o sin zonales: se borra lo guardado en el equipo
+        resetData(); await clearSaved(id);
+        showWait(prof.rol === 'bloqueado' ? 'bloqueado' : prof.rol === 'pendiente' ? 'pendiente' : 'sinzonal');
+        return;
+      }
+      const was = inApp();
+      pickZonal(id);
+      if (!was) enterApp(); else renderTop();
+      await reloadSites();
+      if (id !== uid()) return;
+      if (!was) routeFromHash();
+      renderTop(); renderNotice();
+      if (isAdmin()) loadUsers();
+      // Deja todo descargado para cuando no haya señal
+      if (!S.offline) { loadInstr(); loadContacts(); guardarEnEquipo(); }
+    })();
+    try { return await S.syncing; } finally { S.syncing = null; }
+  }
+
+  // Pide al navegador no borrar los datos guardados cuando falte espacio
+  function guardarEnEquipo() {
+    try { if (navigator.storage && navigator.storage.persist) navigator.storage.persisted().then((ok) => ok || navigator.storage.persist()).catch(() => {}); } catch (_) {}
+  }
+
+  async function actualizarTodo() {
+    if (!navigator.onLine) { toast('Sin conexión. Conéctate a internet para actualizar los datos.'); return; }
+    toast('Actualizando datos…');
     await reloadSites();
+    await Promise.all([loadInstr(true), loadContacts(true)]);
+    renderTop(); renderNotice();
+    if (S.offline) { toast('Sin conexión. Sigues viendo la copia guardada.'); return; }
+    toast('Datos actualizados y guardados en este equipo');
     if (isAdmin()) loadUsers();
-    routeFromHash();
   }
 
   async function reloadSites() {
@@ -2454,15 +2734,21 @@ const GGEE = (() => {
     }
   }
 
-  async function logout() {
-    closeMenu();
-    lsDel('llavero-cache-' + uid()); lsDel('llavero-inst-' + uid());
-    S.loggingOut = true;
-    S.profile = null; S.sites = []; S.byKey = new Map(); S.users = []; S.activeKey = null; S.filters.clear(); S.q = '';
-    lsDel('llavero-contactos-' + uid()); S.ct = null; S.ctStatus = 'idle'; S.cq = ''; S.cz = 'all'; $('#cq').value = '';
-    setGgee([], {}); S.inst = null; S.instStatus = 'idle'; S.instActive = null; S.gActive = null; S.instHtml.clear(); S.iq = ''; S.gq = '';
+  function resetData() {
+    S.sites = []; S.byKey = new Map(); S.users = []; S.activeKey = null; S.filters.clear(); S.q = ''; S.lastLoad = 0; S.offline = false;
+    S.ct = null; S.ctStatus = 'idle'; S.ctErr = null; S.ctSynced = false; S.cq = ''; S.cz = 'all'; $('#cq').value = '';
+    setGgee([], {}); S.inst = null; S.instAt = 0; S.instSynced = false; S.instErr = null; S.instStatus = 'idle'; S.instActive = null; S.gActive = null; S.instHtml.clear(); S.iq = ''; S.gq = '';
     $('#q').value = ''; $('#iq').value = '';
     closeReader(true);
+  }
+
+  async function logout() {
+    closeMenu();
+    const id = uid();
+    S.loggingOut = true;
+    S.profile = null;
+    resetData();
+    await clearSaved(id);
     try { history.replaceState(null, '', location.pathname); } catch (_) {}
     try { await S.auth.signOut(); } catch (_) { S.loggingOut = false; showAuth('login', ['info', 'Cerraste sesión.']); }
   }
@@ -2487,8 +2773,8 @@ const GGEE = (() => {
     $('#zonalSel').innerHTML = (vis.length > 1 ? `<option value="all"${S.zonal === 'all' ? ' selected' : ''}>Todas mis zonales</option>` : '') +
       vis.map((z) => `<option value="${esc(z)}"${S.zonal === z ? ' selected' : ''}>${esc(zLabel(z))}</option>`).join('');
     $('#zselWrap').hidden = S.view !== 'sitios';
-    const f = S.lastLoad ? new Date(S.lastLoad).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) : '';
-    $('#barMeta').innerHTML = f && S.view === 'sitios' ? `${icons.clock}<span>Datos de las ${esc(f)}</span>` : '';
+    const f = S.lastLoad ? fmtWhen(S.lastLoad) : '';
+    $('#barMeta').innerHTML = f && S.view === 'sitios' ? `${icons.clock}<span>Datos de ${esc(f.replace(/^el /, ''))}</span>` : '';
     const mb = $('#btnMask');
     mb.setAttribute('aria-pressed', String(S.mask));
     mb.title = S.mask ? 'Mostrar las claves en pantalla' : 'Ocultar las claves en pantalla';
@@ -2505,7 +2791,7 @@ const GGEE = (() => {
   function renderNotice() {
     const el = $('#notice');
     let msg = '', cls = 'warn';
-    if (S.offline) msg = `Sin conexión. Estás viendo la copia guardada en este equipo${S.lastLoad ? '' : ''}. Los cambios recientes pueden no aparecer.`;
+    if (S.offline) msg = `Sin conexión. Estás viendo la copia guardada en este equipo${S.lastLoad ? ' ' + fmtWhen(S.lastLoad) : ''}. Los cambios posteriores aparecerán cuando vuelva la señal.`;
     else if (S.status === 'error') msg = S.errorMsg || 'No se pudieron cargar los sitios.';
     el.hidden = !msg;
     el.className = 'notice' + (cls ? ' ' + cls : '');
@@ -2718,9 +3004,10 @@ const GGEE = (() => {
         <div class="kf"><span class="kf-l">${icons.bolt}N° de cliente eléctrico</span><div class="kf-v">${kfCli}</div><span class="kf-s">${esc(ciaTxt)}</span></div>
         <div class="kf"><span class="kf-l">${icons.lock}Clave de acceso</span><div class="kf-v">${kfKey}</div><span class="kf-s">${esc(kfKeySub)}</span></div>
       </div>
-      <section class="sec" aria-labelledby="sec-acc"><h2 id="sec-acc">${icons.lock}Acceso al sitio</h2>
+      <section class="sec" aria-labelledby="sec-acc"><h2 id="sec-acc">${icons.lock}Acceso al sitio${canEditClaves(s) ? `<button type="button" class="linkbtn sec-link ed" data-act="edit-claves">${icons.edit}${s.claves.length ? 'Editar claves' : 'Agregar clave'}</button>` : ''}</h2>
         <dl class="fields">
           ${row('Claves', codes)}
+          ${s.claveEdit ? row('Último cambio de clave', `<span class="kedit-who"><span>${esc(s.claveEdit.nombre || 'Sin nombre')}${s.claveEdit.at ? ' · ' + esc(fmtWhen(s.claveEdit.at)) : ''}</span><button type="button" class="linkbtn" data-act="hist-claves">Ver historial</button></span>`) : ''}
           ${row('Notas de acceso', s.notas ? `<p class="notes">${esc(notas)}</p>` : 'Sin notas', s.notas ? '' : 'muted')}
         </dl>
       </section>
@@ -2879,7 +3166,7 @@ const GGEE = (() => {
     $('#viewCargas').hidden = v !== 'cargas';
     renderTop();
     if (v === 'usuarios') { renderUsers(); loadUsers(); }
-    if (v === 'cargas') loadCargas();
+    if (v === 'cargas') { renderKEdits(); loadCargas(); }
     if (v === 'instructivos') { renderInstr(); loadInstr(); }
     if (v === 'contactos') { renderContacts(); loadContacts(); }
   }
@@ -2916,16 +3203,23 @@ const GGEE = (() => {
     const p = S.profile || {};
     const r = ROLES[p.rol] || ['', 'info'];
     const zs = isAdmin() ? 'Todas las zonales' : (p.zonales || []).map(zLabel).join(', ');
-    $('#umenu').innerHTML = `<div class="umenu-h"><strong>${esc(p.nombre || 'Sin nombre')}</strong><span>${esc(p.email || '')}</span><span>${esc(zs)}</span><span class="badge ${r[1]}">${r[0]}</span></div>
+    const nI = (S.inst || []).length, nC = (S.ct || []).length;
+    const off = `<div class="umenu-off${S.offline ? ' off' : ''}">${S.offline ? icons.info : icons.check}<span><b>${S.offline ? 'Sin conexión: usando lo guardado' : 'Disponible sin conexión'}</b>${esc([plural(S.sites.length, 'sitio', 'sitios'), plural(nI, 'instructivo', 'instructivos'), plural(nC, 'contacto', 'contactos')].join(' · '))}${S.lastLoad ? '<br>Guardado ' + esc(fmtWhen(S.lastLoad)) : ''}</span></div>`;
+    $('#umenu').innerHTML = `<div class="umenu-h"><strong>${esc(p.nombre || 'Sin nombre')}</strong><span>${esc(p.email || '')}</span><span>${esc(zs)}</span><span class="badge ${r[1]}">${r[0]}</span></div>${off}
       ${isAdmin() && !S.offline ? `<button type="button" role="menuitem" class="m-only" data-act="import">${icons.upload}Cargar Excel</button><button type="button" role="menuitem" class="m-only" data-act="import-inst">${icons.book}Cargar instructivos</button>` : ''}
       ${isAdmin() && S.sites.length ? `<button type="button" role="menuitem" class="m-only" data-act="export">${icons.file}Descargar Excel</button>` : ''}
       <button type="button" role="menuitem" data-act="reload">${icons.refresh}Actualizar datos</button>
+      ${S.installEvt ? `<button type="button" role="menuitem" data-act="install">${icons.install}Instalar en este equipo</button>` : ''}
       <button type="button" role="menuitem" data-act="logout">${icons.out}Cerrar sesión</button>`;
     $('#umenu').hidden = false; $('#btnUser').setAttribute('aria-expanded', 'true');
     $('#umenu button').focus();
   }
 
   function bind() {
+    window.addEventListener('online', () => { if (S.user && S.profile && inApp()) syncOnline(uid()); });
+    window.addEventListener('offline', () => { if (S.profile && inApp()) { S.offline = true; renderTop(); renderNotice(); renderInstr(); renderContacts(); } });
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); S.installEvt = e; });
+    window.addEventListener('appinstalled', () => { S.installEvt = null; toast('Llavero quedó instalado en este equipo'); });
     document.addEventListener('submit', (e) => { const f = e.target; if (f.closest('#authCard')) { e.preventDefault(); submitAuth(f); } });
     const qi = $('#q');
     qi.addEventListener('input', () => { S.q = qi.value; $('#qClear').hidden = !qi.value; $('#qKbd').hidden = !!qi.value; refreshResults(true); });
@@ -2966,7 +3260,8 @@ const GGEE = (() => {
         if (a.dataset.act === 'import') { closeMenu(); openImport('excel'); }
         if (a.dataset.act === 'import-inst') { closeMenu(); openImport('inst'); }
         if (a.dataset.act === 'export') { closeMenu(); exportExcel(); }
-        if (a.dataset.act === 'reload') { closeMenu(); Promise.all([reloadSites(), S.inst ? loadInstr(true) : null, S.ct ? loadContacts(true) : null]).then(() => { toast('Datos actualizados'); if (isAdmin()) loadUsers(); }); }
+        if (a.dataset.act === 'reload') { closeMenu(); actualizarTodo(); }
+        if (a.dataset.act === 'install') { closeMenu(); const ev = S.installEvt; S.installEvt = null; if (ev) { ev.prompt(); ev.userChoice.catch(() => {}); } }
         return;
       }
       if (!t.closest('#umenu') && !t.closest('#btnUser')) closeMenu();
@@ -2981,6 +3276,8 @@ const GGEE = (() => {
       if (a.dataset.act === 'close') closeDetail();
       if (a.dataset.act === 'reveal') { S.revealed.add(S.activeKey); renderDetail(); renderList(); }
       if (a.dataset.act === 'ficha') { const s = S.byKey.get(S.activeKey); if (s) copyText(fichaText(s), 'Ficha'); }
+      if (a.dataset.act === 'edit-claves') { const s = S.byKey.get(S.activeKey); if (s) openClavesForm(s); }
+      if (a.dataset.act === 'hist-claves') { const s = S.byKey.get(S.activeKey); if (s) openClavesHist(s); }
       if (a.dataset.act === 'ggee') {
         const d = $('#detail');
         if (d.classList.contains('open')) { d.classList.remove('open'); document.documentElement.style.overflow = ''; }
@@ -3075,21 +3372,37 @@ const GGEE = (() => {
   function setInst(items, fromCache) {
     S.inst = items.map(prepInst);
     S.instStatus = 'ready'; S.instErr = null; S.instHtml.clear();
-    if (!fromCache) lsSet('llavero-inst-' + uid(), { items: S.inst.map(({ _p, _hay, ...x }) => x), at: Date.now() });
+    if (!fromCache) { S.instAt = Date.now(); S.instSynced = true; DB.set('inst-' + uid(), { items: S.inst.map(({ _p, _hay, ...x }) => x), at: S.instAt }); }
     if (S.instActive && !TOOLS[S.instActive] && !S.inst.some((d) => d.id === S.instActive)) S.instActive = null;
     renderInstr();
   }
+  // Los instructivos pesan varios MB por sus imágenes: se descargan una vez por sesión, o si la copia
+  // del equipo tiene más de 6 horas. "Actualizar datos" los vuelve a traer siempre.
+  const INST_FRESH = 6 * 3600e3;
+  const OFFLINE_ERR = { code: 'unavailable', message: 'offline' };
   async function loadInstr(force) {
-    if (!S.fs || !S.profile || S.instStatus === 'loading' || (S.inst && !force)) return;
-    if (!S.inst) { const c = lsGet('llavero-inst-' + uid(), null); if (c && Array.isArray(c.items)) S.inst = c.items.map(prepInst); }
-    S.instStatus = 'loading'; renderInstrNav();
-    try {
-      const snap = await S.fs.collection('instructivos').get();
-      setInst(snap.docs.map((d) => ({ id: d.id, ...d.data() })), false);
-    } catch (e) {
-      S.instErr = e; S.instStatus = S.inst ? 'ready' : 'error';
-      renderInstr();
-    }
+    if (!S.fs || !S.profile) return;
+    if (S.instP) { if (!force) return S.instP; try { await S.instP; } catch (_) {} }
+    const id = uid();
+    S.instP = (async () => {
+      if (!S.inst) {
+        const c = await DB.get('inst-' + id);
+        if (id !== uid()) return;
+        if (c && Array.isArray(c.items) && !S.inst) { S.inst = c.items.map(prepInst); S.instAt = c.at || 0; S.instStatus = 'ready'; }
+      }
+      if (S.inst && !force && (S.instSynced || Date.now() - S.instAt < INST_FRESH)) { renderInstr(); return; }
+      if (!navigator.onLine) { S.instErr = OFFLINE_ERR; S.instStatus = S.inst ? 'ready' : 'error'; renderInstr(); return; }
+      S.instStatus = 'loading'; if (S.view === 'instructivos') renderInstrNav();
+      try {
+        const snap = await S.fs.collection('instructivos').get();
+        if (id !== uid()) return;
+        setInst(snap.docs.map((d) => ({ id: d.id, ...d.data() })), false);
+      } catch (e) {
+        S.instErr = e; S.instStatus = S.inst ? 'ready' : 'error';
+        renderInstr();
+      }
+    })();
+    try { return await S.instP; } finally { S.instP = null; }
   }
   function refreshInstrData() { if (S.view !== 'instructivos') return; renderInstrNav(); if (S.instActive === 'ggee') renderReader(); }
 
@@ -3118,7 +3431,9 @@ const GGEE = (() => {
     const nTools = instItems().filter((d) => d.tool).length;
     $('#icount').textContent = S.iq ? `${plural(n, 'resultado', 'resultados')}` : S.inst ? `${plural(docs, 'instructivo', 'instructivos')} y ${plural(nTools, 'herramienta', 'herramientas')}` : '';
     let html = '';
-    if (S.instStatus === 'error' || (S.instErr && S.inst)) {
+    if (S.inst && (S.offline || (S.instErr && isNetErr(S.instErr)))) {
+      html += `<div class="inote warn">${icons.info}<span>Sin conexión. Estás viendo los instructivos guardados en este equipo${S.instAt ? ' ' + esc(fmtWhen(S.instAt)) : ''}.</span></div>`;
+    } else if (S.instStatus === 'error' || (S.instErr && S.inst)) {
       const denied = String(S.instErr && S.instErr.code) === 'permission-denied';
       html += `<div class="inote ${S.inst ? 'warn' : 'crit'}">${icons.info}<span>${S.inst ? 'No se pudo actualizar: estás viendo la copia guardada. ' : 'No se pudieron cargar los instructivos. '}${esc(friendly(S.instErr))}${denied && isAdmin() ? ' Publica en Firebase la versión nueva de firestore.rules.' : ''}</span></div>`;
     }
@@ -3513,17 +3828,30 @@ const GGEE = (() => {
     return { isBook, fromSheets };
   })();
 
+  // Los contactos se traen una vez por sesión con señal; sin señal se usa la copia del equipo
   async function loadContacts(force) {
-    if (!S.fs || !S.profile || S.ctStatus === 'loading' || (S.ct && !force)) return;
-    if (!S.ct) { const c = lsGet('llavero-contactos-' + uid(), null); if (c && Array.isArray(c.items)) S.ct = c.items.map(prepCt); }
-    S.ctStatus = 'loading'; renderContacts();
-    try {
-      const snap = await S.fs.collection('contactos').get();
-      S.ct = snap.docs.map((d) => prepCt({ id: d.id, ...d.data() }));
-      S.ctStatus = 'ready'; S.ctErr = null;
-      lsSet('llavero-contactos-' + uid(), { items: S.ct.map(({ _hay, ...x }) => x), at: Date.now() });
-    } catch (e) { S.ctErr = e; S.ctStatus = S.ct ? 'ready' : 'error'; }
-    renderContacts();
+    if (!S.fs || !S.profile) return;
+    if (S.ctP) { if (!force) return S.ctP; try { await S.ctP; } catch (_) {} }
+    const id = uid();
+    S.ctP = (async () => {
+      if (!S.ct) {
+        const c = await DB.get('contactos-' + id);
+        if (id !== uid()) return;
+        if (c && Array.isArray(c.items) && !S.ct) { S.ct = c.items.map(prepCt); S.ctAt = c.at || 0; S.ctStatus = 'ready'; }
+      }
+      if (S.ct && !force && S.ctSynced) { renderContacts(); return; }
+      if (!navigator.onLine) { S.ctErr = OFFLINE_ERR; S.ctStatus = S.ct ? 'ready' : 'error'; renderContacts(); return; }
+      S.ctStatus = 'loading'; renderContacts();
+      try {
+        const snap = await S.fs.collection('contactos').get();
+        if (id !== uid()) return;
+        S.ct = snap.docs.map((d) => prepCt({ id: d.id, ...d.data() }));
+        S.ctStatus = 'ready'; S.ctErr = null; S.ctSynced = true; S.ctAt = Date.now();
+        DB.set('contactos-' + id, { items: S.ct.map(({ _hay, ...x }) => x), at: S.ctAt });
+      } catch (e) { S.ctErr = e; S.ctStatus = S.ct ? 'ready' : 'error'; }
+      renderContacts();
+    })();
+    try { return await S.ctP; } finally { S.ctP = null; }
   }
 
   const catOrder = (c) => { const i = CT_CATS.indexOf(c); return i < 0 ? (c === 'Otros' ? 99 : 50) : (c === 'Otros' ? 99 : i); };
@@ -3563,7 +3891,9 @@ const GGEE = (() => {
     $('#ctCount').textContent = all.length ? (S.cq || S.cz !== 'all' ? `${res.length} de ${plural(all.length, 'contacto', 'contactos')}` : plural(all.length, 'contacto', 'contactos')) : '';
     const el = $('#ctList');
     let note = '';
-    if (S.ctErr) {
+    if (S.ct && (S.offline || (S.ctErr && isNetErr(S.ctErr)))) {
+      note = `<div class="inote warn">${icons.info}<span>Sin conexión. Estás viendo los contactos guardados en este equipo${S.ctAt ? ' ' + esc(fmtWhen(S.ctAt)) : ''}.</span></div>`;
+    } else if (S.ctErr) {
       const denied = String(S.ctErr.code) === 'permission-denied';
       note = `<div class="inote ${S.ct ? 'warn' : 'crit'}">${icons.info}<span>${S.ct ? 'No se pudo actualizar: estás viendo la copia guardada. ' : 'No se pudieron cargar los contactos. '}${esc(friendly(S.ctErr))}${denied && isAdmin() ? ' Publica en Firebase la versión nueva de firestore.rules.' : ''}</span></div>`;
     }
@@ -3818,6 +4148,8 @@ const GGEE = (() => {
 
   /* ================= Historial de cargas ================= */
   async function loadCargas() {
+    const ke = $('#kedits');
+    if (!ke.dataset.b) { ke.dataset.b = '1'; ke.addEventListener('click', (e) => { const b = e.target.closest('[data-kopen]'); if (!b) return; S.zonal = 'all'; setView('sitios'); try { history.replaceState(null, '', location.pathname); } catch (_) {} rebuildGroups(); select(b.dataset.kopen, true); }); }
     $('#ctable').innerHTML = '<div class="empty-t">Cargando…</div>';
     try { S.cargas = (await S.fs.collection('cargas').orderBy('creado_en', 'desc').limit(200).get()).docs.map((d) => ({ id: d.id, ...d.data() })); }
     catch (e) { $('#ctable').innerHTML = `<div class="empty-t"><strong>No se pudo cargar el historial</strong>${esc(friendly(e))}</div>`; return; }
@@ -4091,6 +4423,8 @@ const GGEE = (() => {
   }
 
   const same = (a, b) => JSON.stringify(a ?? '') === JSON.stringify(b ?? '');
+  // Claves iguales sin importar el orden interno de cada objeto (tipo y clave)
+  const sameK = (a, b) => { const f = (x) => JSON.stringify((x || []).map((c) => [String(c.label || ''), String(c.code || '')])); return f(a) === f(b); };
   function makePlan() {
     const { parsed, fileName } = parsedFile;
     const now = new Date().toISOString();
@@ -4119,19 +4453,23 @@ const GGEE = (() => {
       const patch = {};
       for (const f of ['nombre', 'llavero', 'cliente', 'cia']) if (p.has(f) && !same(inc[f], cur[f])) patch[f] = inc[f];
       if (p.has('notas') && !same(inc.notas, cur.notas)) patch.notas = inc.notas;
-      let claves = cur.claves;
+      // Se compara con la clave de la planilla. Si la planilla no cambió, se mantiene la clave editada en la app;
+      // si la planilla trae una clave distinta, esa pasa a ser la vigente (y la editada queda en el historial).
+      const baseClaves = cur.clavesPlanilla || cur.claves;
+      let claves = baseClaves;
       if (p.has('clave')) claves = inc.claves;
-      else if (inc.claves.length) { const m = new Map(cur.claves.map((c) => [c.code, c])); inc.claves.forEach((c) => m.set(c.code, c)); claves = [...m.values()]; }
-      if (!same(claves, cur.claves)) patch.claves = claves;
+      else if (inc.claves.length) { const m = new Map(baseClaves.map((c) => [c.code, c])); inc.claves.forEach((c) => m.set(c.code, c)); claves = [...m.values()]; }
+      if (!sameK(claves, baseClaves)) patch.claves = claves;
+      const kReplace = !!(patch.claves && cur.claveEdit && !sameK(patch.claves, cur.claves));
       const ex = {}; for (const [k, v] of Object.entries(inc.extras)) if (!same(v, cur.extras[k])) ex[k] = v;
       if (Object.keys(ex).length) patch.extras = { ...cur.extras, ...ex };
       const notas = 'notas' in patch ? patch.notas : cur.notas;
       const tags = SITES.tagsFor((notas || '') + '\n' + claves.map((c) => c.label + ' ' + c.code).join('\n'));
-      if (!same(tags, cur.tags)) patch.tags = tags;
+      if (!same(tags, cur.tagsPlanilla || cur.tags)) patch.tags = tags;
       if (!Object.keys(patch).length) { unchanged++; continue; }
       const changed = Object.keys(patch).filter((k) => k !== 'tags');
       const row = { ...plainSite(cur), ...patch, archivo: fileName, actualizado: now, actualizado_por: me };
-      items.push({ type: 'update', row, changed: changed.length ? changed : ['tags'], label: cur.pop, zonal: z }); bump(z, 'actualizados');
+      items.push({ type: 'update', row, changed: changed.length ? changed : ['tags'], label: cur.pop, zonal: z, kReplace, cur }); bump(z, 'actualizados');
     }
     const zs = Object.keys(perZ);
     const missing = S.sites.filter((s) => zs.includes(s.zonal) && !seen.has(s._key));
@@ -4152,7 +4490,7 @@ const GGEE = (() => {
     const count = (k) => parsed.sites.filter((s) => (s.zona || '') === k).length;
     const mapHtml = `<div class="map">${keys.map((k) => `<div class="map-row"><div class="src"><b>${esc(k || 'Sin nombre de hoja')}</b> <span>${plural(count(k), 'sitio', 'sitios')}</span></div>
       <label><span class="sr-only">Zonal de destino para ${esc(k)}</span><select data-map="${esc(k)}" class="${mapping[k] ? '' : 'need'}"><option value="">Elige la zonal…</option>${S.zonales.map((z) => `<option value="${esc(z.id)}"${mapping[k] === z.id ? ' selected' : ''}>${esc(z.id + ' ' + z.nombre)}</option>`).join('')}<option value="__skip"${mapping[k] === '__skip' ? ' selected' : ''}>No cargar esta hoja</option></select></label></div>`).join('')}</div>`;
-    const rows = P.items.slice(0, 60).map((i) => `<tr><td>${esc(i.zonal)} ${esc(i.label)}</td><td>${i.type === 'new' ? 'Sitio nuevo' : esc(i.changed.map((k) => FIELD_NAMES[k] || k).join(', '))}</td></tr>`).join('');
+    const rows = P.items.slice(0, 60).map((i) => `<tr><td>${esc(i.zonal)} ${esc(i.label)}</td><td>${i.type === 'new' ? 'Sitio nuevo' : esc(i.changed.map((k) => FIELD_NAMES[k] || k).join(', ')) + (i.kReplace ? ' <span class="badge warn">reemplaza la clave editada en la app</span>' : '')}</td></tr>`).join('');
     dlgView('Revisa los cambios',
       `<p>“${esc(fileName)}” trae ${plural(P.total, 'sitio', 'sitios')}. Revisa a qué zonal va cada hoja:</p>
       ${mapHtml}
@@ -4189,6 +4527,10 @@ const GGEE = (() => {
         const bytes = new Blob([JSON.stringify(sitios)]).size;
         if (bytes > 950000) throw new Error(`La zonal ${z} supera el tamaño máximo de un documento de Firestore (${Math.round(bytes / 1024)} KB de 1 MB). Divide sus notas o extras en menos texto.`);
         batch.set(S.fs.collection('zonales').doc(z), { nombre: S.zname.get(z) || z, sitios, total: sitios.length, actualizado: ts(), actualizado_por: uid(), archivo: P.fileName });
+        // Claves editadas en la app que la planilla reemplaza: la de la planilla pasa a ser la vigente
+        P.items.filter((i) => i.zonal === z && i.kReplace).forEach((i) => {
+          batch.set(kRef(i.cur), { claves: i.row.claves || [], at: ts(), por: uid(), nombre: ('Planilla ' + P.fileName).slice(0, 120), sitio: String(i.cur.id), pop: String(i.cur.pop || i.cur.id), historial: kHistFor(i.cur) });
+        });
         const c = P.perZ[z];
         batch.set(S.fs.collection('cargas').doc(), { zonal: z, archivo: P.fileName, nuevos: c.nuevos, actualizados: c.actualizados, eliminados: c.eliminados, usuario: uid(), usuario_nombre: (S.profile && S.profile.nombre) || '', creado_en: ts() });
       }
@@ -4248,6 +4590,10 @@ const GGEE = (() => {
     S.zonales = ZONALES_BASE;
     S.zname = new Map(ZONALES_BASE.map((z) => [z.id, z.nombre]));
     S.auth.onAuthStateChanged((u) => { onUser(u); });
+  }
+  // La página queda guardada en el equipo para abrir sin señal (requiere https, como GitHub Pages)
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname))) {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
   }
   boot();
 })();
