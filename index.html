@@ -751,6 +751,32 @@ img { max-width: 100%; }
 .khist .kh-m { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; font-size: 13px; color: var(--muted); }
 .khist .kh-now { color: var(--ok); font-weight: 600; }
 .dlg-f .k-left { margin-right: auto; }
+.acc-list { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 8px; }
+.acc { display: grid; gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r-l); background: var(--panel-2); }
+@media (min-width: 1100px) { .acc { grid-template-columns: minmax(0, 1fr) auto; align-items: center; } }
+.acc-who { display: grid; gap: 2px; min-width: 0; }
+.acc-who strong { font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+.acc-who span { font-size: 13.5px; color: var(--ink-2); overflow-wrap: anywhere; }
+.acc-who .acc-note { color: var(--muted); font-size: 13px; white-space: pre-line; }
+.acc-acts { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.acc-acts .btn { min-height: 40px; }
+.acc-acts .btn span { font-variant-numeric: tabular-nums; }
+.acc-acts .cbtn { width: 40px; height: 40px; }
+@media (max-width: 720px) { .acc-acts .acc-call { min-height: 44px; font-size: 15px; } }
+@media (max-width: 1099.98px) { .acc { position: relative; } .acc-who { padding-right: 46px; } .acc .acc-copy { position: absolute; top: 10px; right: 10px; } }
+.acc-empty { margin: 6px 0 2px; font-size: 14px; color: var(--muted); }
+.sec .kedit-who.hint { margin: 6px 0 0; }
+.arows { display: grid; gap: 12px; }
+.arow { display: grid; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: var(--r-l); background: var(--panel-2); }
+.arow-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.arow-h .iconbtn { width: 40px; height: 40px; }
+.arow-g { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+@media (min-width: 560px) { .arow-g { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.arow label { display: grid; gap: 4px; min-width: 0; font-size: 13px; font-weight: 500; color: var(--ink-2); }
+.arow input { width: 100%; min-width: 0; height: 44px; padding: 0 12px; border-radius: var(--r); border: 1px solid var(--line-2); background: var(--panel); color: var(--ink); font-size: 16px; font-weight: 400; outline: none; transition: border-color .15s, box-shadow .15s; }
+.arow input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.arow input.bad { border-color: var(--crit); }
+.khist .kh-c .kh-l { display: block; font-family: var(--f-sans); }
 .kedits { margin-bottom: 24px; }
 .kedits h3 { margin: 0 0 10px; font-size: 15px; font-weight: 600; }
 .kedits .ctable button.linkbtn { padding: 0; text-align: left; }
@@ -2215,7 +2241,8 @@ const GGEE = (() => {
     s._nameN = nrm(s.nombre) + ' ' + nrm(s._base);
     s._cliD = digits(s.cliente);
     s._hay = nrm([s.codes.join(' '), s.nombre, s._base, s.llavero && 'llavero ' + s.llavero, s.cliente, s._cliD, s.cia, s.zonal, S.zname.get(s.zonal), s.notas,
-      s.claves.map((c) => c.code + ' ' + c.label).join(' '), Object.values(s.extras).join(' ')].filter(Boolean).join(' \n '));
+      s.claves.map((c) => c.code + ' ' + c.label).join(' '), Object.values(s.extras).join(' '),
+      ((s.accesos && s.accesos.contactos) || []).map((c) => [c.nombre, c.rol, c.telefono, digits(c.telefono), c.nota].join(' ')).join(' ')].filter(Boolean).join(' \n '));
     return s;
   }
   function plainSite(s) {
@@ -2437,27 +2464,173 @@ const GGEE = (() => {
   // Administradores: lista de claves editadas en la app, en el historial de cargas
   function renderKEdits() {
     const el = $('#kedits');
-    const list = S.sites.filter((x) => x.claveEdit).sort((a, b) => String(b.claveEdit.at).localeCompare(String(a.claveEdit.at)));
+    const list = [];
+    S.sites.forEach((x) => {
+      if (x.claveEdit) list.push({ x, at: x.claveEdit.at, nombre: x.claveEdit.nombre, que: 'Clave' });
+      if (x.accesos) list.push({ x, at: x.accesos.at, nombre: x.accesos.nombre, que: 'Contactos de acceso' });
+    });
+    list.sort((a, b) => String(b.at).localeCompare(String(a.at)));
     el.hidden = !list.length;
     if (!list.length) { el.innerHTML = ''; return; }
-    el.innerHTML = `<h3>Claves editadas en la app (${list.length})</h3><div class="tbl tscroll"><table class="ctable"><thead><tr><th>Fecha</th><th>Sitio</th><th>Zonal</th><th>Editada por</th></tr></thead><tbody>${list.map((x) =>
-      `<tr><td>${esc(x.claveEdit.at ? fmtWhen(x.claveEdit.at) : '')}</td><td><button type="button" class="linkbtn" data-kopen="${esc(x._key)}">${esc(x.pop)} · ${esc(x._base || '')}</button></td><td class="mono">${esc(x.zonal)}</td><td>${esc(x.claveEdit.nombre || '')}</td></tr>`).join('')}</tbody></table></div>`;
+    el.innerHTML = `<h3>Cambios hechos en la app (${list.length})</h3><div class="tbl tscroll"><table class="ctable"><thead><tr><th>Fecha</th><th>Sitio</th><th>Zonal</th><th>Qué cambió</th><th>Por</th></tr></thead><tbody>${list.map((e) =>
+      `<tr><td>${esc(e.at ? fmtWhen(e.at) : '')}</td><td><button type="button" class="linkbtn" data-kopen="${esc(e.x._key)}">${esc(e.x.pop)} · ${esc(e.x._base || '')}</button></td><td class="mono">${esc(e.x.zonal)}</td><td>${esc(e.que)}</td><td>${esc(e.nombre || '')}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+
+  /* ---------- Contactos de acceso por sitio ----------
+     accesos/{zonal}/sitios/{sitio}: quién abre o autoriza la entrada (dueño del terreno, conserje, guardia…).
+     Los editan técnicos de la zonal y administradores, con registro de quién y cuándo. Se guardan en el equipo
+     junto con los sitios, así se puede llamar aunque no haya datos móviles. */
+  const A_ROLES = ['Dueño del terreno', 'Conserje', 'Administración del edificio', 'Guardia', 'Vecino con llave', 'Arrendatario', 'Encargado del recinto', 'Municipalidad'];
+  const A_MAX = 8;
+  const aRef = (s) => S.fs.collection('accesos').doc(s.zonal).collection('sitios').doc(encodeURIComponent(String(s.id)));
+  const accOf = (s) => (s && s.accesos && Array.isArray(s.accesos.contactos) ? s.accesos.contactos : []);
+  const sameA = (a, b) => { const f = (x) => JSON.stringify((x || []).map((c) => [c.nombre || '', c.rol || '', c.telefono || '', c.nota || ''])); return f(a) === f(b); };
+  const accLine = (c) => [c.nombre, c.rol ? `(${c.rol})` : '', telShow(c.telefono)].filter(Boolean).join(' ') + (c.nota ? ` – ${c.nota}` : '');
+  function withAccesos(r, o) {
+    const at = toDate(o.at);
+    r.accesos = { contactos: Array.isArray(o.contactos) ? o.contactos : [], at: at && !isNaN(at) ? at.toISOString() : '', por: o.por || '', nombre: o.nombre || '', historial: Array.isArray(o.historial) ? o.historial : [] };
+  }
+  function aHistFor(s) {
+    const a = s.accesos; if (!a) return [];
+    return [{ contactos: a.contactos, at: a.at || '', nombre: a.nombre || '' }, ...(a.historial || [])].slice(0, 10)
+      .map((h) => ({ contactos: (h.contactos || []).slice(0, A_MAX), at: String(h.at || ''), nombre: String(h.nombre || '').slice(0, 120) }));
+  }
+  async function saveAccesos(s, contactos) {
+    const nombre = String((S.profile && (S.profile.nombre || S.profile.email)) || 'Sin nombre').slice(0, 80);
+    const historial = aHistFor(s);
+    await withTimeout(aRef(s).set({ contactos, at: ts(), por: uid(), nombre, sitio: String(s.id), pop: String(s.pop || s.id), historial }), 20000);
+    kRefreshLocal(s, (r) => withAccesos(r, { contactos, at: new Date().toISOString(), por: uid(), nombre, historial }));
+  }
+
+  function accHtml(s) {
+    const list = accOf(s);
+    const can = canEditClaves(s);
+    const btn = can ? `<button type="button" class="linkbtn sec-link ed" data-act="edit-acc">${icons.edit}${list.length ? 'Editar contactos' : 'Agregar contacto'}</button>` : '';
+    const items = list.map((c) => {
+      const tel = telHref(c.telefono), wa = waHref(c.telefono), show = telShow(c.telefono);
+      return `<li class="acc"><div class="acc-who"><strong>${esc(c.nombre)}</strong>${c.rol ? `<span>${esc(c.rol)}</span>` : ''}${c.nota ? `<span class="acc-note">${esc(c.nota)}</span>` : ''}</div>
+        <div class="acc-acts">${tel ? `<a class="btn sm primary acc-call" href="${esc(tel)}" aria-label="Llamar a ${esc(c.nombre)} al ${esc(show)}">${icons.phone}<span>${esc(show)}</span></a>` : `<span class="mono">${esc(c.telefono)}</span>`}${wa ? `<a class="btn sm" href="${esc(wa)}" target="_blank" rel="noopener noreferrer" aria-label="Escribir por WhatsApp a ${esc(c.nombre)}">${icons.chat}<span>WhatsApp</span></a>` : ''}<button type="button" class="cbtn acc-copy" data-copy="${esc(show)}" data-what="Teléfono" aria-label="Copiar el teléfono de ${esc(c.nombre)}" title="Copiar teléfono">${icons.copy}</button></div></li>`;
+    }).join('');
+    const a = s.accesos;
+    const who = a && a.at ? `<p class="kedit-who hint"><span>Último cambio: ${esc(a.nombre || 'Sin nombre')} · ${esc(fmtWhen(a.at))}</span>${(a.historial || []).length ? '<button type="button" class="linkbtn" data-act="hist-acc">Ver historial</button>' : ''}</p>` : '';
+    return `<section class="sec" aria-labelledby="sec-cta"><h2 id="sec-cta">${icons.phone}Contactos para entrar${btn}</h2>
+        ${list.length ? `<ul class="acc-list">${items}</ul>` : `<p class="acc-empty">${can ? 'Sin contactos. Agrega el teléfono de quien abre o autoriza la entrada: dueño del terreno, conserje, guardia…' : 'Sin contactos registrados para este sitio.'}</p>`}${who}
+      </section>`;
+  }
+
+  function openAccesosForm(s) {
+    if (!canEditClaves(s)) return;
+    if (!navigator.onLine || S.offline) { toast('Necesitas conexión para editar los contactos. Sin señal puedes verlos y llamar, pero no cambiarlos.'); return; }
+    const rowHtml = (c) => `<div class="arow"><div class="arow-h"><span class="arow-n"></span><button type="button" class="iconbtn" data-a="rm" title="Quitar">${icons.trash}</button></div>
+      <div class="arow-g">
+        <label>Nombre *<input class="an" value="${esc(c.nombre || '')}" maxlength="80" autocomplete="off" placeholder="Juan Pérez"></label>
+        <label>A quién corresponde<input class="ar" list="aRoles" value="${esc(c.rol || '')}" maxlength="60" autocomplete="off" placeholder="Dueño del terreno"></label>
+        <label>Teléfono *<input class="atel" type="tel" inputmode="tel" value="${esc(c.telefono || '')}" maxlength="30" autocomplete="off" placeholder="+56 9 1234 5678"></label>
+        <label>Nota<input class="ao" value="${esc(c.nota || '')}" maxlength="200" autocomplete="off" placeholder="Horario, avisar con un día…"></label>
+      </div></div>`;
+    const cur = accOf(s);
+    dlgView(`Contactos para entrar · ${esc(s.pop)}`,
+      `<form class="form" id="aForm" novalidate>
+        <p class="hint">${esc(s._base || s.nombre || '')} · ${esc(zLabel(s.zonal))}. Personas a las que hay que llamar para entrar al sitio.</p>
+        <div class="arows" id="aRows">${(cur.length ? cur : [{}]).map(rowHtml).join('')}</div>
+        <div><button type="button" class="btn sm" data-a="add">${icons.plus}Agregar otro contacto</button></div>
+        <datalist id="aRoles">${A_ROLES.map((l) => `<option value="${esc(l)}">`).join('')}</datalist>
+        <p class="hint">Todos los que tienen la zonal ${esc(s.zonal)} los verán al actualizar sus datos, también sin señal. El cambio queda registrado con tu nombre.</p>
+        <p class="err" id="aErr" hidden></p>
+      </form>`,
+      '<button type="button" class="btn" data-dlg="close">Cancelar</button><button type="button" class="btn primary" id="aSave">Guardar contactos</button>');
+    if (!dlg().open) dlg().showModal();
+    const box = $('#aRows');
+    const renumber = () => [...box.children].forEach((r, i) => { r.querySelector('.arow-n').textContent = `Contacto ${i + 1}`; r.querySelector('[data-a="rm"]').setAttribute('aria-label', `Quitar el contacto ${i + 1}`); });
+    renumber();
+    setTimeout(() => { const l = box.querySelectorAll(cur.length ? '.an' : '.an'); if (l.length) l[cur.length ? l.length - 1 : 0].focus(); }, 30);
+    $('#aForm').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-a]'); if (!b) return;
+      if (b.dataset.a === 'add') {
+        if (box.children.length >= A_MAX) { toast(`Máximo ${A_MAX} contactos por sitio`); return; }
+        box.insertAdjacentHTML('beforeend', rowHtml({})); renumber();
+        const l = box.querySelectorAll('.an'); l[l.length - 1].focus();
+      } else if (b.dataset.a === 'rm') {
+        const row = b.closest('.arow');
+        if (box.children.length > 1) row.remove(); else row.querySelectorAll('input').forEach((i) => { i.value = ''; });
+        renumber();
+      }
+    });
+    $('#aForm').addEventListener('input', (e) => { e.target.classList.remove('bad'); $('#aErr').hidden = true; });
+    const save = async () => {
+      const err = $('#aErr'); err.hidden = true;
+      const fail = (m, el) => { err.textContent = m; err.hidden = false; if (el) { el.classList.add('bad'); el.focus(); } };
+      const out = [];
+      for (const [i, row] of [...box.querySelectorAll('.arow')].entries()) {
+        const v = (c) => row.querySelector(c).value.replace(/\s+/g, ' ').trim();
+        const c = { nombre: v('.an'), rol: v('.ar'), telefono: v('.atel'), nota: v('.ao') };
+        if (!c.nombre && !c.rol && !c.telefono && !c.nota) continue;
+        if (!c.nombre) return fail(`Escribe el nombre del contacto ${i + 1}.`, row.querySelector('.an'));
+        if (!c.telefono) return fail(`Falta el teléfono del contacto ${i + 1}.`, row.querySelector('.atel'));
+        if (telDigits(c.telefono).length < 8) return fail(`Revisa el teléfono del contacto ${i + 1}: debe tener al menos 8 dígitos.`, row.querySelector('.atel'));
+        // Celulares chilenos quedan con el formato +56 9 1234 5678
+        if (waHref(c.telefono)) c.telefono = telShow(c.telefono);
+        out.push(c);
+      }
+      if (sameA(out, cur)) { dlg().close(); toast('Sin cambios'); return; }
+      if (!out.length) {
+        dlg().close();
+        if (!(await confirmBox('¿Quitar todos los contactos?', `${s.pop} quedará sin contactos para entrar. Los actuales quedan en el historial.`, 'Quitar contactos', true))) { openAccesosForm(s); return; }
+      }
+      const btn = $('#aSave'); if (btn) { btn.disabled = true; btn.textContent = 'Guardando…'; }
+      try { await saveAccesos(s, out); }
+      catch (e) {
+        if (!dlg().open) { toast(friendly(e)); return; }
+        if (btn) { btn.disabled = false; btn.textContent = 'Guardar contactos'; }
+        return fail(friendly(e) + (String(e && e.code) === 'permission-denied' ? ' Un administrador debe publicar en Firebase las reglas nuevas (firestore.rules).' : ''));
+      }
+      if (dlg().open) dlg().close();
+      renderDetail();
+      toast(out.length ? `Contactos de ${s.pop} guardados` : `${s.pop} quedó sin contactos`);
+    };
+    $('#aSave').addEventListener('click', save);
+    $('#aForm').addEventListener('submit', (e) => { e.preventDefault(); save(); });
+    $('#aForm').addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.tagName === 'INPUT') { e.preventDefault(); save(); } });
+  }
+
+  function openAccesosHist(s) {
+    const a = s.accesos; if (!a) return;
+    const can = canEditClaves(s) && navigator.onLine && !S.offline;
+    const items = [{ contactos: a.contactos, at: a.at, nombre: a.nombre, actual: true }, ...(a.historial || [])];
+    const fmt = (arr) => (arr && arr.length ? arr.map((c) => `<span class="kh-l">${esc(accLine(c))}</span>`).join('') : '<span class="muted">Sin contactos</span>');
+    dlgView(`Historial de contactos · ${esc(s.pop)}`,
+      `<ul class="khist">${items.map((h, i) => `<li><div class="kh-c">${fmt(h.contactos)}</div><div class="kh-m">${h.actual ? '<span class="kh-now">Vigente</span>' : ''}<span>${esc(h.nombre || 'Sin nombre')}</span>${h.at ? `<span>${esc(fmtWhen(h.at))}</span>` : ''}${!h.actual && can && !sameA(h.contactos, a.contactos) ? `<button type="button" class="linkbtn" data-ah="${i}">Volver a esta</button>` : ''}</div></li>`).join('')}</ul>
+      ${navigator.onLine && !S.offline ? '' : '<p class="hint">Sin conexión: puedes ver el historial, pero no cambiar los contactos.</p>'}`,
+      '<button type="button" class="btn primary" data-dlg="close">Cerrar</button>');
+    if (!dlg().open) dlg().showModal();
+    $('#dlgBody').querySelectorAll('[data-ah]').forEach((b) => b.addEventListener('click', async () => {
+      const h = items[Number(b.dataset.ah)];
+      dlg().close();
+      if (!(await confirmBox('Volver a esta versión', `${s.pop} volverá a mostrar ${h.contactos && h.contactos.length ? h.contactos.length === 1 ? '1 contacto' : h.contactos.length + ' contactos' : 'ningún contacto'}. Queda registrado con tu nombre.`, 'Volver a esta versión'))) return;
+      try { await saveAccesos(s, h.contactos || []); } catch (er) { toast(friendly(er)); return; }
+      renderDetail(); toast(`Contactos de ${s.pop} restaurados`);
+    }));
   }
 
   async function fetchSites() {
     const vis = visibleZonales();
     // Los GGEE no deben impedir que carguen los sitios (por ejemplo, si aún no se publican las reglas nuevas)
-    const [docs, gdocs, kdocs] = await Promise.all([
+    const [docs, gdocs, kdocs, adocs] = await Promise.all([
       Promise.all(vis.map((z) => S.fs.collection('zonales').doc(z).get())),
       Promise.all(vis.map((z) => S.fs.collection('ggee').doc(z).get().catch((e) => ({ __err: e })))),
       // Claves editadas en la app (si aún no se publican las reglas nuevas, se ignoran)
-      Promise.all(vis.map((z) => S.fs.collection('claves').doc(z).collection('sitios').get().catch((e) => ({ __err: e }))))
+      Promise.all(vis.map((z) => S.fs.collection('claves').doc(z).collection('sitios').get().catch((e) => ({ __err: e })))),
+      // Contactos de acceso por sitio (si aún no se publican las reglas nuevas, se ignoran)
+      Promise.all(vis.map((z) => S.fs.collection('accesos').doc(z).collection('sitios').get().catch((e) => ({ __err: e }))))
     ]);
     const rows = [], ggee = [], ggeeMeta = {};
     docs.forEach((d, i) => { if (d.exists) (d.data().sitios || []).forEach((s) => rows.push({ ...s, zonal: vis[i] })); });
     const kov = new Map();
     kdocs.forEach((q, i) => { if (q.__err || !q.docs) return; q.docs.forEach((d) => { const o = d.data(); if (o && o.sitio) kov.set(vis[i] + '/' + o.sitio, o); }); });
     rows.forEach((r) => { const o = kov.get(r.zonal + '/' + r.id); if (o) withEdit(r, o); });
+    const aov = new Map();
+    adocs.forEach((q, i) => { if (q.__err || !q.docs) return; q.docs.forEach((d) => { const o = d.data(); if (o && o.sitio) aov.set(vis[i] + '/' + o.sitio, o); }); });
+    rows.forEach((r) => { const o = aov.get(r.zonal + '/' + r.id); if (o) withAccesos(r, o); });
     S.ggeeErr = null;
     gdocs.forEach((d, i) => {
       if (d.__err) { S.ggeeErr = d.__err; return; }
@@ -3011,6 +3184,7 @@ const GGEE = (() => {
           ${row('Notas de acceso', s.notas ? `<p class="notes">${esc(notas)}</p>` : 'Sin notas', s.notas ? '' : 'muted')}
         </dl>
       </section>
+      ${accHtml(s)}
       <section class="sec" aria-labelledby="sec-ele"><h2 id="sec-ele">${icons.bolt}Suministro eléctrico</h2>
         <dl class="fields">
           ${row('N° de cliente', s.cliente ? (NA.test(s.cliente) ? 'No aplica' : `<span class="mono">${esc(s.cliente)}</span>`) : 'Sin registro', s.cliente && !NA.test(s.cliente) ? '' : 'muted')}
@@ -3051,6 +3225,7 @@ const GGEE = (() => {
     L.push(`N° cliente: ${s.cliente || 'sin dato'}${s.cia && !NA.test(s.cia) ? ` (${s.cia})` : ''}`);
     if (s.claves.length) s.claves.forEach((c) => L.push(/^\d+$/.test(c.code) ? `${c.label}: ${c.code}` : `Acceso: ${c.code}`));
     else L.push('Clave: sin clave registrada');
+    accOf(s).forEach((c) => L.push('Contacto para entrar: ' + accLine(c)));
     if (s.notas) L.push('Notas: ' + s.notas.replace(/\n+/g, ' / '));
     const g = ggeeFor(s);
     if (g) {
@@ -3278,6 +3453,8 @@ const GGEE = (() => {
       if (a.dataset.act === 'ficha') { const s = S.byKey.get(S.activeKey); if (s) copyText(fichaText(s), 'Ficha'); }
       if (a.dataset.act === 'edit-claves') { const s = S.byKey.get(S.activeKey); if (s) openClavesForm(s); }
       if (a.dataset.act === 'hist-claves') { const s = S.byKey.get(S.activeKey); if (s) openClavesHist(s); }
+      if (a.dataset.act === 'edit-acc') { const s = S.byKey.get(S.activeKey); if (s) openAccesosForm(s); }
+      if (a.dataset.act === 'hist-acc') { const s = S.byKey.get(S.activeKey); if (s) openAccesosHist(s); }
       if (a.dataset.act === 'ggee') {
         const d = $('#detail');
         if (d.classList.contains('open')) { d.classList.remove('open'); document.documentElement.style.overflow = ''; }
