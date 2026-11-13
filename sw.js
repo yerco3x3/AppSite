@@ -6,7 +6,7 @@
    página en el equipo; este archivo no los toca.
    Si cambias este archivo, sube el número de VERSION.
    ===================================================================== */
-const VERSION = 'llavero-v1';
+const VERSION = 'llavero-v2';
 const SCOPE = self.registration.scope;
 const INDEX = new URL('./', SCOPE).href;
 const LOCAL = ['config.js', 'manifest.json', 'icon-192.png', 'icon-512.png', 'icon-maskable.png'].map((f) => new URL(f, SCOPE).href);
@@ -71,10 +71,12 @@ self.addEventListener('activate', (event) => {
 const wait = (ms) => new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms));
 
 // Página y archivos propios: primero la red (para recibir cambios), y si no hay señal, la copia
+// Siempre se consulta al servidor (cache: 'no-cache'), así una versión nueva subida a GitHub se ve al recargar
 async function networkFirst(event, key) {
   const cache = await caches.open(VERSION);
-  const net = fetch(event.request).then((r) => {
-    if (r && r.ok && r.type === 'basic') event.waitUntil(clean(r.clone()).then((c) => cache.put(key, c)).catch(() => {}));
+  const fresh = new Request(event.request.url, { cache: 'no-cache', credentials: 'same-origin' });
+  const net = fetch(fresh).then(clean).then((r) => {
+    if (r && r.ok && r.type === 'basic') event.waitUntil(cache.put(key, r.clone()).catch(() => {}));
     return r;
   });
   net.catch(() => {});

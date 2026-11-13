@@ -383,6 +383,7 @@ img { max-width: 100%; }
 .umenu-off .i { flex: none; width: 18px; height: 18px; margin-top: 1px; color: var(--ok); }
 .umenu-off.off .i { color: var(--warn); }
 .umenu-off b { display: block; color: var(--ink); font-weight: 600; }
+.umenu-ver { margin: 0; padding: 8px 16px; border-top: 1px solid var(--line); font: 12px var(--f-mono); color: var(--muted); background: var(--panel-2); }
 .umenu button { width: 100%; display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px; border: 0; background: var(--panel); text-align: left; font-size: 14px; color: var(--ink); }
 .umenu button:hover { background: var(--hover); }
 .umenu button + button { border-top: 1px solid var(--line); }
@@ -3437,7 +3438,8 @@ const GGEE = (() => {
       ${isAdmin() && S.sites.length ? `<button type="button" role="menuitem" class="m-only" data-act="export">${icons.file}Descargar Excel</button>` : ''}
       <button type="button" role="menuitem" data-act="reload">${icons.refresh}Actualizar datos</button>
       ${S.installEvt ? `<button type="button" role="menuitem" data-act="install">${icons.install}Instalar en este equipo</button>` : ''}
-      <button type="button" role="menuitem" data-act="logout">${icons.out}Cerrar sesión</button>`;
+      <button type="button" role="menuitem" data-act="logout">${icons.out}Cerrar sesión</button>
+      <p class="umenu-ver">Versión ${APP_VERSION}</p>`;
     $('#umenu').hidden = false; $('#btnUser').setAttribute('aria-expanded', 'true');
     $('#umenu button').focus();
   }
@@ -3811,6 +3813,8 @@ const GGEE = (() => {
      Link para el equipo: #instructivo-<id>[/<sección>]. Pide ingresar y abre el instructivo.
      Link público: #ver-<token>. Copia del instructivo en publicos/{token}, legible sin cuenta mientras el
      registro enlaces/{token} esté vigente (vence en 1, 7 o 30 días) y no se haya anulado. */
+  // Cambia en cada entrega: sirve para confirmar qué versión está abierta (menú de la cuenta)
+  const APP_VERSION = '13 nov 2026 · b';
   const PUB_RE = /^#ver-([A-Za-z0-9]{20,64})$/;
   const baseUrl = () => location.origin + location.pathname;
   const teamUrl = (id, sec) => baseUrl() + '#instructivo-' + encodeURIComponent(id) + (sec ? '/' + encodeURIComponent(sec) : '');
