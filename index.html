@@ -777,6 +777,47 @@ img { max-width: 100%; }
 .arow input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .arow input.bad { border-color: var(--crit); }
 .khist .kh-c .kh-l { display: block; font-family: var(--f-sans); }
+/* Compartir instructivos */
+.share-w { display: grid; gap: 18px; }
+.share-sec { display: grid; gap: 10px; }
+.share-sec + .share-sec { padding-top: 18px; border-top: 1px solid var(--line); }
+.share-sec h3 { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; }
+.share-sec h3 svg.i { width: 17px; height: 17px; color: var(--accent); }
+.share-sec h4 { margin: 4px 0 0; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.share-sel { display: grid; gap: 4px; font-size: 13px; font-weight: 500; color: var(--ink-2); }
+.share-sel select { width: 100%; min-height: 44px; padding: 0 12px; border-radius: var(--r); border: 1px solid var(--line-2); background: var(--panel); color: var(--ink); font-size: 15px; }
+.share-url { width: 100%; min-width: 0; height: 42px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--r); background: var(--panel-2); color: var(--ink-2); font: 13px var(--f-mono); }
+.share-acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.share-acts .btn { min-height: 40px; }
+.share-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.share-l { font-size: 13px; font-weight: 500; color: var(--ink-2); }
+.seg-days { display: inline-flex; border: 1px solid var(--line-2); border-radius: var(--r); overflow: hidden; }
+.seg-days button { min-height: 40px; padding: 0 14px; border: 0; background: var(--panel); color: var(--ink-2); font-size: 14px; }
+.seg-days button + button { border-left: 1px solid var(--line-2); }
+.seg-days button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.plinks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.plink { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line); border-radius: var(--r-l); background: var(--panel-2); min-width: 0; }
+.plink .pl-m { font-size: 13px; color: var(--muted); }
+.plink .pl-m b { color: var(--ink); font-weight: 600; }
+.plink.new { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.md h3[id] .h-share { width: 30px; height: 30px; margin-left: 6px; display: inline-grid; place-items: center; vertical-align: -6px; border: 0; border-radius: 6px; background: none; color: var(--muted); opacity: .6; }
+.md h3[id] .h-share:hover, .md h3[id] .h-share:focus-visible { opacity: 1; color: var(--accent); background: var(--hover); }
+.md h3[id] .h-share svg.i { width: 16px; height: 16px; }
+/* Vista pública de un instructivo (sin ingresar) */
+.pub { min-height: 100dvh; background: var(--panel); }
+.pub .topbar-in { justify-content: space-between; }
+.pub .brand { margin-right: 0; }
+.pub-tag { font-size: 13px; color: var(--bar-muted); text-align: right; }
+.pub .doc { max-width: 1160px; margin: 0 auto; }
+.pub .doc-in { margin: 0 auto; }
+.pub .toc-side { position: sticky; top: 16px; align-self: start; max-height: calc(100dvh - 32px); overflow: auto; }
+.pub-foot { display: grid; gap: 4px; font-size: 13px; color: var(--muted); padding-top: 16px; border-top: 1px solid var(--line); }
+.pub-foot span { display: flex; gap: 8px; align-items: center; }
+.pub-foot svg.i { width: 15px; height: 15px; flex: none; }
+.pub-msg { max-width: 520px; margin: 56px auto; padding: 0 16px; display: grid; gap: 12px; justify-items: center; text-align: center; }
+.pub-msg svg.i { width: 36px; height: 36px; color: var(--muted); }
+.pub-msg h2 { margin: 0; font-size: 20px; font-weight: 600; }
+.pub-msg p { margin: 0; color: var(--ink-2); }
 .kedits { margin-bottom: 24px; }
 .kedits h3 { margin: 0 0 10px; font-size: 15px; font-weight: 600; }
 .kedits .ctable button.linkbtn { padding: 0; text-align: left; }
@@ -1149,6 +1190,11 @@ a.btn { text-decoration: none; }
 
 <!-- ===== Espera de aprobación / sin acceso ===== -->
 <section class="wait" id="waitView" hidden><div class="wait-card" id="waitCard"></div></section>
+<section class="pub" id="pubView" hidden>
+  <header class="topbar"><div class="topbar-in gutter"><div class="brand"><div class="mark lp-mark" aria-hidden="true"><svg class="lp-logo" width="36" height="36" viewBox="0 0 40 40" aria-hidden="true"><path d="M10.99 6.69A11 11 0 0 0 10.99 19.31M29.01 6.69A11 11 0 0 1 29.01 19.31" fill="none" stroke="var(--lp-signal)" stroke-width="2" stroke-linecap="round"/><path d="M7.71 4.4A15 15 0 0 0 7.71 21.6M32.29 4.4A15 15 0 0 1 32.29 21.6" fill="none" stroke="var(--lp-signal)" stroke-width="2" stroke-linecap="round" opacity=".5"/><circle cx="20" cy="13" r="6.5" fill="var(--lp-brass)"/><path d="M17 17.5h6l4 18.5H13z" fill="var(--lp-brass)"/><circle cx="20" cy="13" r="2" fill="var(--lp-night)"/><path d="M15.9 23h8.2M15.1 29.2h9.8M15.9 23l9 6.2M24.1 23l-9 6.2M15.1 29.2l11 6.3M24.9 29.2l-11 6.3" fill="none" stroke="var(--lp-night)" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <h1 class="brand-lock"><span>Llavero</span><small>DE SITIOS</small></h1></div><span class="pub-tag">Instructivo compartido</span></div></header>
+  <main class="pub-body" id="pubBody"></main>
+</section>
 
 <!-- ===== Aplicación ===== -->
 <div class="app" id="appView" hidden>
@@ -1273,6 +1319,7 @@ a.btn { text-decoration: none; }
   <div class="page gutter" id="viewCargas" hidden>
     <div class="page-in">
       <div class="page-h"><div><h2>Historial de cargas</h2><p>Planillas de sitios, planillas de repuestos GGEE e instructivos subidos por los administradores, con lo que se agregó, actualizó y quitó en cada carga.</p></div></div>
+      <div class="kedits" id="pubLinks" hidden></div>
       <div class="kedits" id="kedits" hidden></div>
       <div class="tbl tscroll" id="ctable"></div>
     </div>
@@ -2206,6 +2253,9 @@ const GGEE = (() => {
     edit: I('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>'),
     plus: I('<path d="M12 5v14M5 12h14"/>'),
     gear: I('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9 7 7M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/>'),
+    share: I('<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/>'),
+    link: I('<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'),
+    globe: I('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'),
     install: I('<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 7v7M9 11l3 3 3-3"/>'),
     tower: I('<circle cx="12" cy="8" r="1.6"/><path d="m12 10-4 11M12 10l4 11M9.2 17.5h5.6"/><path d="M8.2 4.6a5 5 0 0 0 0 6.8M15.8 4.6a5 5 0 0 1 0 6.8M5.6 2.5a8.5 8.5 0 0 0 0 11M18.4 2.5a8.5 8.5 0 0 1 0 11"/>')
   };
@@ -2649,12 +2699,14 @@ const GGEE = (() => {
     $('#authView').hidden = which !== 'auth';
     $('#waitView').hidden = which !== 'wait';
     $('#appView').hidden = which !== 'app';
+    $('#pubView').hidden = which !== 'pub';
   }
 
   // ---------- Ingreso ----------
   let authMode = 'login';
   const pwField = (id, label, auto, help) => `<div class="field-f"><label for="${id}">${label}</label><div class="pw"><input id="${id}" type="password" autocomplete="${auto}" required minlength="8"><button type="button" data-pw="${id}" aria-label="Mostrar contraseña">${icons.eye}</button></div>${help ? `<span class="help">${help}</span>` : ''}</div>`;
   function renderAuth(mode, msg, focus) {
+    if (!msg && (mode || authMode) === 'login' && /^#instructivo-/.test(location.hash)) msg = ['info', 'Ingresa con tu cuenta para abrir el instructivo que te compartieron.'];
     authMode = mode || authMode;
     const m = authMode;
     const card = $('#authCard');
@@ -3341,7 +3393,7 @@ const GGEE = (() => {
     $('#viewCargas').hidden = v !== 'cargas';
     renderTop();
     if (v === 'usuarios') { renderUsers(); loadUsers(); }
-    if (v === 'cargas') { renderKEdits(); loadCargas(); }
+    if (v === 'cargas') { renderKEdits(); loadPubLinks(); loadCargas(); }
     if (v === 'instructivos') { renderInstr(); loadInstr(); }
     if (v === 'contactos') { renderContacts(); loadContacts(); }
   }
@@ -3350,7 +3402,7 @@ const GGEE = (() => {
     if (h === 'usuarios' || h === 'cargas' || h === 'contactos') { setView(h); return; }
     if (h === 'instructivos') { S.instActive = null; setView('instructivos'); return; }
     let m;
-    if ((m = /^instructivo-(.+)$/.exec(h))) { S.instActive = m[1]; setView('instructivos'); if (!twoMQ.matches) openReader(); return; }
+    if ((m = /^instructivo-([^/]+)(?:\/(.+))?$/.exec(h))) { S.instActive = m[1]; S.pendingSec = m[2] || null; setView('instructivos'); if (!twoMQ.matches) openReader(); return; }
     if (h === 'alarmas-generador') { S.instActive = 'gen'; setView('instructivos'); if (!twoMQ.matches) openReader(); return; }
     if ((m = /^ggee(?:-(.+))?$/.exec(h))) {
       S.instActive = 'ggee';
@@ -3669,13 +3721,20 @@ const GGEE = (() => {
     if (!body) { body = MD.render(d._p.body, d._p.refs, { directive: (n) => (n === 'generador-alarmas' ? '<div data-gen-slot></div>' : '') }); S.instHtml.set(d.id, body); }
     const toc = MD.toc(d._p.body);
     const tl = toc.map((t) => `<li><button type="button" data-toc="${esc(t.id)}">${esc(t.text)}</button></li>`).join('');
-    const acts = `<button type="button" class="btn sm" data-iact="dl">${icons.file}Descargar .md</button>` + (isAdmin() && !S.offline ? `<button type="button" class="btn sm danger" data-iact="del">${icons.trash}Eliminar</button>` : '');
+    const acts = `<button type="button" class="btn sm primary" data-iact="share">${icons.share}Compartir</button><button type="button" class="btn sm" data-iact="dl">${icons.file}Descargar .md</button>` + (isAdmin() && !S.offline ? `<button type="button" class="btn sm danger" data-iact="del">${icons.trash}Eliminar</button>` : '');
     el.innerHTML = `${readerBar}<article class="doc"><div class="doc-grid"><div class="doc-in">${docHead(d, acts)}
       ${toc.length > 2 ? `<details class="toc-inline"><summary>${icons.list}En este instructivo<span>${plural(toc.length, 'sección', 'secciones')}</span></summary><ol>${tl}</ol></details>` : ''}
       <div class="md">${body}</div>
       ${d.archivo ? `<footer class="rec-foot"><span>${icons.file}Archivo: ${esc(d.archivo)}</span></footer>` : ''}
       </div>${toc.length > 2 ? `<nav class="toc-side" aria-label="En este instructivo"><h3>En este instructivo</h3><ol>${tl}</ol></nav>` : ''}</div></article>`;
     el.querySelectorAll('[data-gen-slot]').forEach((s) => { s.outerHTML = genHtml(); });
+    // Botón para compartir el link de cada sección
+    el.querySelectorAll('.md h3[id]').forEach((h) => h.insertAdjacentHTML('beforeend', `<button type="button" class="h-share" data-hshare="${esc(h.id)}" aria-label="Compartir el link de la sección ${esc(h.textContent)}" title="Compartir esta sección">${icons.link}</button>`));
+    if (S.pendingSec) {
+      const h = document.getElementById(S.pendingSec);
+      S.pendingSec = null;
+      if (h && el.contains(h)) requestAnimationFrame(() => h.scrollIntoView({ block: 'start' }));
+    }
     spyToc();
   }
   // Marca en el índice lateral la sección que se está leyendo
@@ -3739,8 +3798,179 @@ const GGEE = (() => {
       await b.commit();
     } catch (e) { toast(friendly(e)); return; }
     S.instActive = null; updateInstHash(); closeReader(true);
+    try {
+      const q = await S.fs.collection('enlaces').where('instructivo', '==', d.id).get();
+      const act = q.docs.filter((x) => !x.data().revocado);
+      if (act.length) { const b2 = S.fs.batch(); act.forEach((x) => b2.update(x.ref, { revocado: true, revocado_por: uid(), revocado_en: ts() })); await b2.commit(); }
+    } catch (_) {}
     await loadInstr(true);
     toast('Instructivo eliminado');
+  }
+
+  /* ---------- Compartir instructivos ----------
+     Link para el equipo: #instructivo-<id>[/<sección>]. Pide ingresar y abre el instructivo.
+     Link público: #ver-<token>. Copia del instructivo en publicos/{token}, legible sin cuenta mientras el
+     registro enlaces/{token} esté vigente (vence en 1, 7 o 30 días) y no se haya anulado. */
+  const PUB_RE = /^#ver-([A-Za-z0-9]{20,64})$/;
+  const baseUrl = () => location.origin + location.pathname;
+  const teamUrl = (id, sec) => baseUrl() + '#instructivo-' + encodeURIComponent(id) + (sec ? '/' + encodeURIComponent(sec) : '');
+  const pubUrl = (t) => baseUrl() + '#ver-' + t;
+  const waShare = (text) => 'https://wa.me/?text=' + encodeURIComponent(text);
+  const SHARE_DAYS = [1, 7, 30];
+  let shareDays = 7;
+  function newToken() {
+    const C = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+    const a = new Uint32Array(24); crypto.getRandomValues(a);
+    return [...a].map((x) => C[x % C.length]).join('');
+  }
+  function fmtVence(v) {
+    const d = toDate(v); if (!d || isNaN(d)) return '';
+    return d.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' }) + ', ' + d.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+  }
+  const vigente = (l) => !l.revocado && toDate(l.vence) > new Date();
+  function shareActs(url, text) {
+    return `<div class="share-acts"><button type="button" class="btn sm primary" data-sh-copy="${esc(url)}">${icons.copy}Copiar link</button><a class="btn sm" href="${esc(waShare(text + '\n' + url))}" target="_blank" rel="noopener noreferrer">${icons.chat}WhatsApp</a>${navigator.share ? `<button type="button" class="btn sm" data-sh-native="${esc(url)}" data-sh-text="${esc(text)}">${icons.share}Más opciones</button>` : ''}</div>`;
+  }
+  async function myLinks(instId) {
+    const q = await withTimeout(S.fs.collection('enlaces').where('por', '==', uid()).get(), 20000);
+    return q.docs.map((x) => ({ id: x.id, ...x.data() })).filter((l) => l.instructivo === instId && vigente(l)).sort((a, b) => toDate(b.vence) - toDate(a.vence));
+  }
+
+  function openShare(d, sec) {
+    const toc = MD.toc(d._p.body);
+    const secSel = toc.length ? `<label class="share-sel">Abrir en<select id="shSec"><option value="">El comienzo del instructivo</option>${toc.map((t) => `<option value="${esc(t.id)}"${t.id === sec ? ' selected' : ''}>${esc(t.text)}</option>`).join('')}</select></label>` : '';
+    dlgView(`Compartir · ${esc(d.titulo)}`,
+      `<div class="share-w" id="shWrap">
+        <section class="share-sec"><h3>${icons.lock}Con el equipo</h3>
+          <p class="hint">Solo lo abre personal con cuenta aprobada. Si aún no ingresó, la página le pide ingresar y después abre el instructivo.</p>
+          ${secSel}
+          <input class="share-url" id="shTeam" readonly aria-label="Link para el equipo">
+          <div id="shTeamActs"></div>
+        </section>
+        <section class="share-sec"><h3>${icons.globe}Con alguien sin cuenta</h3>
+          <p class="hint">Crea un link público: quien lo tenga verá este instructivo sin ingresar, hasta que venza o lo anules. Muestra el instructivo tal como está hoy; si después cambia, crea un link nuevo.</p>
+          <div id="shPub"></div>
+        </section>
+      </div>`,
+      '<button type="button" class="btn primary" data-dlg="close">Listo</button>');
+    if (!dlg().open) dlg().showModal();
+    const upd = () => {
+      const sv = $('#shSec') ? $('#shSec').value : '';
+      const t = toc.find((x) => x.id === sv);
+      const u = teamUrl(d.id, sv);
+      $('#shTeam').value = u;
+      $('#shTeamActs').innerHTML = shareActs(u, `Instructivo: ${d.titulo}${t ? ' – ' + t.text : ''}`);
+    };
+    upd();
+    if ($('#shSec')) $('#shSec').addEventListener('change', upd);
+    const wrap = $('#shWrap');
+    wrap.addEventListener('click', async (e) => {
+      const c = e.target.closest('[data-sh-copy]'); if (c) { copyText(c.dataset.shCopy, 'Link'); return; }
+      const nv = e.target.closest('[data-sh-native]'); if (nv) { try { await navigator.share({ title: d.titulo, text: nv.dataset.shText, url: nv.dataset.shNative }); } catch (_) {} return; }
+      const dy = e.target.closest('[data-sh-days]'); if (dy) { shareDays = Number(dy.dataset.shDays); wrap.querySelectorAll('[data-sh-days]').forEach((b) => b.setAttribute('aria-pressed', String(b === dy))); return; }
+      if (e.target.closest('[data-sh-create]')) { createPublic(d); return; }
+      const rv = e.target.closest('[data-sh-revoke]'); if (rv) { const ok = await revokePublic(rv.dataset.shRevoke); if (ok) renderPubPart(d); }
+    });
+    wrap.addEventListener('focusin', (e) => { if (e.target.classList.contains('share-url')) e.target.select(); });
+    renderPubPart(d);
+  }
+
+  async function renderPubPart(d, fresh) {
+    const el = $('#shPub'); if (!el) return;
+    if (!navigator.onLine || S.offline) { el.innerHTML = '<p class="hint">Necesitas conexión para crear o anular links públicos.</p>'; return; }
+    el.innerHTML = `<div class="share-row"><span class="share-l" id="shDL">Vence en</span><div class="seg-days" role="group" aria-labelledby="shDL">${SHARE_DAYS.map((n) => `<button type="button" data-sh-days="${n}" aria-pressed="${n === shareDays}">${n === 1 ? '1 día' : n + ' días'}</button>`).join('')}</div></div>
+      <div><button type="button" class="btn" data-sh-create id="shCreate">${icons.plus}Crear link público</button></div>
+      <p class="err" id="shErr" hidden></p>
+      <div id="shList"><p class="hint">Buscando tus links públicos…</p></div>`;
+    let list;
+    try { list = await myLinks(d.id); }
+    catch (e) { const l = $('#shList'); if (l) l.innerHTML = `<p class="hint">${esc(friendly(e))}${String(e && e.code) === 'permission-denied' ? ' Un administrador debe publicar en Firebase las reglas nuevas (firestore.rules).' : ''}</p>`; return; }
+    const l = $('#shList'); if (!l) return;
+    l.innerHTML = list.length ? `<h4>Tus links públicos activos</h4><ul class="plinks">${list.map((x) => `<li class="plink${x.id === fresh ? ' new' : ''}">
+        <input class="share-url" readonly value="${esc(pubUrl(x.id))}" aria-label="Link público">
+        <span class="pl-m">Vence el <b>${esc(fmtVence(x.vence))}</b></span>
+        <div class="share-acts">${shareActs(pubUrl(x.id), `Instructivo: ${d.titulo}`).replace(/^<div class="share-acts">|<\/div>$/g, '')}<button type="button" class="btn sm danger" data-sh-revoke="${esc(x.id)}">Anular</button></div>
+      </li>`).join('')}</ul>` : '';
+  }
+
+  async function createPublic(d) {
+    const btn = $('#shCreate'), err = $('#shErr');
+    if (btn) { btn.disabled = true; btn.textContent = 'Creando link…'; }
+    if (err) err.hidden = true;
+    const t = newToken();
+    const V = firebase.firestore.Timestamp.fromDate(new Date(Date.now() + shareDays * 864e5));
+    const nombre = String((S.profile && (S.profile.nombre || S.profile.email)) || 'Sin nombre').slice(0, 80);
+    const b = S.fs.batch();
+    b.set(S.fs.collection('enlaces').doc(t), { instructivo: d.id, titulo: String(d.titulo || '').slice(0, 300), por: uid(), nombre, creado: ts(), vence: V, revocado: false });
+    b.set(S.fs.collection('publicos').doc(t), { instructivo: d.id, titulo: d.titulo || '', seccion: d.seccion || '', equipos: d.equipos || '', resumen: d.resumen || '', contenido: d.contenido || '', vence: V });
+    try { await withTimeout(b.commit(), 30000); }
+    catch (e) {
+      if (btn) { btn.disabled = false; btn.innerHTML = `${icons.plus}Crear link público`; }
+      if (err) { err.textContent = friendly(e) + (String(e && e.code) === 'permission-denied' ? ' Puede que el instructivo haya cambiado: toca "Actualizar datos" en el menú de tu cuenta y vuelve a intentarlo. Si sigue igual, un administrador debe publicar las reglas nuevas.' : ''); err.hidden = false; }
+      return;
+    }
+    copyText(pubUrl(t), 'Link');
+    renderPubPart(d, t);
+  }
+
+  async function revokePublic(id) {
+    if (!(await confirmBox('Anular link público', 'Quien tenga este link ya no podrá abrir el instructivo. No se puede deshacer.', 'Anular link', true))) return false;
+    try { await withTimeout(S.fs.collection('enlaces').doc(id).update({ revocado: true, revocado_por: uid(), revocado_en: ts() }), 20000); }
+    catch (e) { toast(friendly(e)); return false; }
+    toast('Link anulado');
+    return true;
+  }
+
+  // Administradores: links públicos vigentes de todo el equipo (en Cargas)
+  async function loadPubLinks() {
+    const el = $('#pubLinks');
+    if (!isAdmin() || S.offline) { el.hidden = true; return; }
+    if (!el.dataset.b) {
+      el.dataset.b = '1';
+      el.addEventListener('click', async (e) => {
+        const c = e.target.closest('[data-sh-copy]'); if (c) { copyText(c.dataset.shCopy, 'Link'); return; }
+        const rv = e.target.closest('[data-sh-revoke]'); if (rv && (await revokePublic(rv.dataset.shRevoke))) loadPubLinks();
+      });
+    }
+    let list;
+    try { list = (await withTimeout(S.fs.collection('enlaces').get(), 20000)).docs.map((x) => ({ id: x.id, ...x.data() })).filter(vigente); }
+    catch (_) { el.hidden = true; return; }
+    el.hidden = !list.length;
+    list.sort((a, b) => toDate(a.vence) - toDate(b.vence));
+    el.innerHTML = list.length ? `<h3>Links públicos vigentes (${list.length})</h3><div class="tbl tscroll"><table class="ctable"><thead><tr><th>Instructivo</th><th>Creado por</th><th>Vence</th><th></th></tr></thead><tbody>${list.map((x) =>
+      `<tr><td>${esc(x.titulo || x.instructivo)}</td><td>${esc(x.nombre || '')}</td><td>${esc(fmtVence(x.vence))}</td><td><div class="share-acts"><button type="button" class="btn sm" data-sh-copy="${esc(pubUrl(x.id))}">${icons.copy}Copiar</button><button type="button" class="btn sm danger" data-sh-revoke="${esc(x.id)}">Anular</button></div></td></tr>`).join('')}</tbody></table></div>` : '';
+  }
+
+  // Vista pública: el instructivo sin ingresar
+  async function showPublic(token) {
+    show('pub');
+    const box = $('#pubBody');
+    box.innerHTML = '<div class="pub-msg"><div class="spin" aria-hidden="true"></div><p>Abriendo el instructivo…</p></div>';
+    let d;
+    try {
+      const snap = await withTimeout(S.fs.collection('publicos').doc(token).get(), 20000);
+      if (!snap.exists) throw Object.assign(new Error('no existe'), { code: 'permission-denied' });
+      d = snap.data();
+    } catch (e) {
+      const gone = /permission-denied|not-found/.test(String(e && e.code));
+      document.title = 'Link no disponible · Llavero de Sitios';
+      box.innerHTML = `<div class="pub-msg">${gone ? icons.ban : icons.info}<h2>${gone ? 'Este link ya no está disponible' : 'No se pudo abrir el instructivo'}</h2><p>${gone ? 'Venció o fue anulado. Pide un link nuevo a quien te lo envió.' : esc(friendly(e))}</p>${gone ? '' : '<button type="button" class="btn primary" id="pubRetry">Reintentar</button>'}</div>`;
+      const r = $('#pubRetry'); if (r) r.addEventListener('click', () => showPublic(token));
+      return;
+    }
+    const pp = MD.parse(d.contenido || '');
+    const body = MD.render(pp.body, pp.refs, { directive: (n) => (n === 'generador-alarmas' ? '<div data-gen-slot></div>' : '') });
+    const toc = MD.toc(pp.body);
+    const tl = toc.map((t) => `<li><button type="button" data-toc="${esc(t.id)}">${esc(t.text)}</button></li>`).join('');
+    const doc = { titulo: d.titulo || 'Instructivo', seccion: d.seccion || '', equipos: d.equipos || '', resumen: d.resumen || '' };
+    box.innerHTML = `<article class="doc"><div class="doc-grid"><div class="doc-in">${docHead(doc, '')}
+      ${toc.length > 2 ? `<details class="toc-inline"><summary>${icons.list}En este instructivo<span>${plural(toc.length, 'sección', 'secciones')}</span></summary><ol>${tl}</ol></details>` : ''}
+      <div class="md">${body}</div>
+      <footer class="pub-foot"><span>${icons.clock}Link disponible hasta el ${esc(fmtVence(d.vence))}.</span><span>${icons.lock}Compartido desde Llavero de Sitios para uso en terreno. No lo reenvíes.</span></footer>
+      </div>${toc.length > 2 ? `<nav class="toc-side" aria-label="En este instructivo"><h3>En este instructivo</h3><ol>${tl}</ol></nav>` : ''}</div></article>`;
+    box.querySelectorAll('[data-gen-slot]').forEach((x) => { x.outerHTML = genHtml(); });
+    document.title = (d.titulo || 'Instructivo') + ' · Llavero de Sitios';
+    if (!box.dataset.b) { box.dataset.b = '1'; box.addEventListener('click', onReaderClick); box.addEventListener('input', onReaderInput); box.addEventListener('change', onReaderChange); }
   }
 
   /* ---------- Generador de comandos de alarmas externas ---------- */
@@ -3883,8 +4113,10 @@ const GGEE = (() => {
     if (tc) { const h = document.getElementById(tc.dataset.toc); if (h) h.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }); const det = tc.closest('details'); if (det) det.open = false; return; }
     const img = t.closest('.md-img img');
     if (img) { const lb = $('#lbox'); lb.querySelector('img').src = img.src; lb.querySelector('img').alt = img.alt; lb.querySelector('p').textContent = img.alt; lb.showModal(); return; }
-    const gu = t.closest('[data-gu]'); if (gu) { G.unit = gu.dataset.gu; genRefresh($('#ireader'), true, `[data-gu="${gu.dataset.gu}"]`); return; }
-    if (t.closest('[data-gen-reset]')) { genReset(); genRefresh($('#ireader'), true); toast('Valores estándar restablecidos'); return; }
+    const hs = t.closest('[data-hshare]');
+    if (hs) { const dd = (S.inst || []).find((x) => x.id === S.instActive); if (dd) openShare(dd, hs.dataset.hshare); return; }
+    const gu = t.closest('[data-gu]'); if (gu) { G.unit = gu.dataset.gu; genRefresh(ev.currentTarget, true, `[data-gu="${gu.dataset.gu}"]`); return; }
+    if (t.closest('[data-gen-reset]')) { genReset(); genRefresh(ev.currentTarget, true); toast('Valores estándar restablecidos'); return; }
     if (t.closest('[data-gen-dl]')) { downloadText(genScript().replace(/\n/g, '\r\n') + '\r\n', `alarmas_externas_${G.unit}.txt`); toast('Script descargado'); return; }
     const inst = t.closest('[data-inst]'); if (inst) { openInst(inst.dataset.inst); return; }
     const g = t.closest('[data-g]'); if (g) { S.gActive = g.dataset.g; updateInstHash(); renderReader(); $('#ireader').scrollTop = 0; return; }
@@ -3892,6 +4124,7 @@ const GGEE = (() => {
     const act = a.dataset.iact;
     const d = (S.inst || []).find((x) => x.id === S.instActive);
     if (act === 'close') closeReader();
+    if (act === 'share' && d) openShare(d);
     if (act === 'dl' && d) { downloadText(d.contenido || '', d.archivo && /\.md$/i.test(d.archivo) ? d.archivo : d.id + '.md', 'text/markdown;charset=utf-8'); toast('Archivo descargado'); }
     if (act === 'del' && d) deleteInst(d);
     if (act === 'ggee-import') openImport('excel');
@@ -3910,14 +4143,14 @@ const GGEE = (() => {
   function onReaderInput(ev) {
     const t = ev.target;
     if (t.id === 'gq') { S.gq = t.value; renderGgeeList(); return; }
-    if (t.dataset.gsl) { const p = G.ports[Number(t.dataset.gsl) - 1]; p.slogan = t.value.replace(/[\r\n]+/g, ' '); genRefresh($('#ireader'), false); }
+    if (t.dataset.gsl) { const p = G.ports[Number(t.dataset.gsl) - 1]; p.slogan = t.value.replace(/[\r\n]+/g, ' '); genRefresh(ev.currentTarget, false); }
   }
   function onReaderChange(ev) {
     const t = ev.target;
-    if (t.dataset.gon) { G.ports[Number(t.dataset.gon) - 1].on = t.checked; genRefresh($('#ireader'), true, `[data-gon="${t.dataset.gon}"]`); return; }
-    if (t.dataset.gnc) { G.ports[Number(t.dataset.gnc) - 1].nc = t.checked; genRefresh($('#ireader'), false); return; }
-    if (t.dataset.gopt) { G[t.dataset.gopt] = t.checked; genRefresh($('#ireader'), false); return; }
-    if ('gsev' in t.dataset) { G.sev = t.value; genRefresh($('#ireader'), false); }
+    if (t.dataset.gon) { G.ports[Number(t.dataset.gon) - 1].on = t.checked; genRefresh(ev.currentTarget, true, `[data-gon="${t.dataset.gon}"]`); return; }
+    if (t.dataset.gnc) { G.ports[Number(t.dataset.gnc) - 1].nc = t.checked; genRefresh(ev.currentTarget, false); return; }
+    if (t.dataset.gopt) { G[t.dataset.gopt] = t.checked; genRefresh(ev.currentTarget, false); return; }
+    if ('gsev' in t.dataset) { G.sev = t.value; genRefresh(ev.currentTarget, false); }
   }
 
   /* ================= Contactos ================= */
@@ -4766,10 +4999,16 @@ const GGEE = (() => {
     S.fs = firebase.firestore();
     S.zonales = ZONALES_BASE;
     S.zname = new Map(ZONALES_BASE.map((z) => [z.id, z.nombre]));
+    const pv = PUB_RE.exec(location.hash);
+    if (pv) { showPublic(pv[1]); return; }
     S.auth.onAuthStateChanged((u) => { onUser(u); });
+    window.addEventListener('hashchange', () => {
+      if (PUB_RE.test(location.hash)) { location.reload(); return; }
+      if (/^#instructivo-/.test(location.hash) && S.profile && inApp()) routeFromHash();
+    });
   }
   // La página queda guardada en el equipo para abrir sin señal (requiere https, como GitHub Pages)
-  if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname))) {
+  if ('serviceWorker' in navigator && !PUB_RE.test(location.hash) && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname))) {
     window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
   }
   boot();
