@@ -4196,11 +4196,13 @@ const GGEE = (() => {
 
   // Lectura de planillas de contactos
   const CT = (() => {
-    const COLS = [['nombre', /^(nombre|contacto|persona)/], ['cargo', /^(cargo|rol|puesto|funcion)/], ['empresa', /^(empresa|area|institucion|compania)/],
-      ['categoria', /^(categoria|tipo|grupo)/], ['correo', /(correo|e ?mail|^mail)/], ['telefono', /(telefono|celular|fono|movil|whatsapp|numero)/],
-      ['zonal', /^(zonal|zona)/], ['notas', /^(nota|observ|comentario|detalle)/]];
+    const COLS = [['apellido', /^apellidos?\b/], ['nombre', /^(nombres?|contacto|persona|responsable|encargad[oa]|funcionari[oa]|colaborador|trabajador|tecnico|razon social)\b/],
+      ['cargo', /^(cargo|rol|puesto|funcion|especialidad)/], ['empresa', /^(empresa|area|institucion|compania|departamento|depto|organizacion|proveedor|contratista)/],
+      ['categoria', /^(categoria|tipo|grupo|clasificacion)/], ['correo', /(correo|e ?mail|^mail)/],
+      ['telefono', /(telefono|celular|fono|movil|whatsapp|numero|^tel\b|^tlf|^cel\b|^anexo|^n de contacto)/],
+      ['zonal', /^(zonal|zona|sector|ciudad|comuna)\b/], ['notas', /^(nota|observ|comentario|detalle|horario|turno)/]];
     function headerOf(sh) {
-      for (let i = 0; i < Math.min(sh.rows.length, 10); i++) {
+      for (let i = 0; i < Math.min(sh.rows.length, 20); i++) {
         const m = {}, used = new Set();
         sh.rows[i].cells.forEach((v, ci) => {
           const n = nrm(v).replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -4212,11 +4214,19 @@ const GGEE = (() => {
             return;
           }
         });
-        if (used.has('nombre') && (used.has('telefono') || used.has('correo'))) return { idx: i, map: m };
+        if ((used.has('nombre') || used.has('apellido')) && (used.has('telefono') || used.has('correo'))) return { idx: i, map: m };
       }
       return null;
     }
     const isBook = (sheets) => sheets.some((sh) => headerOf(sh));
+    // Para el mensaje de error: los encabezados que sí trae la planilla
+    function columnsSeen(sheets) {
+      for (const sh of sheets) {
+        const r = sh.rows.slice(0, 20).map((x) => (x.cells || []).filter((v) => v != null && String(v).trim()).map((v) => String(v).trim())).find((c) => c.length >= 2);
+        if (r) return { hoja: sh.name, cols: r.slice(0, 10) };
+      }
+      return null;
+    }
     function fromSheets(sheets) {
       const out = [], warnings = [];
       for (const sh of sheets) {
@@ -4225,6 +4235,8 @@ const GGEE = (() => {
         for (const row of sh.rows.slice(h.idx + 1)) {
           const o = {}, present = [];
           for (const [ci, k] of Object.entries(h.map)) { const v = row.cells[ci]; if (v != null && String(v).trim()) { o[k] = String(v); present.push(k); } }
+          if (o.apellido) { o.nombre = [o.nombre, o.apellido].filter(Boolean).join(' '); delete o.apellido; if (!present.includes('nombre')) present.push('nombre'); }
+          present.splice(0, present.length, ...present.filter((k) => k !== 'apellido'));
           if (!o.nombre) { if (present.length) skipped++; continue; }
           if (!o.categoria && sheets.length > 1 && !/^hoja|^sheet|^contacto/i.test(sh.name)) o.categoria = sh.name;
           const c = cleanCt(o);
@@ -4235,7 +4247,7 @@ const GGEE = (() => {
       }
       return { contactos: out, warnings };
     }
-    return { isBook, fromSheets };
+    return { isBook, fromSheets, columnsSeen };
   })();
 
   // Los contactos se traen una vez por sesión con señal; sin señal se usa la copia del equipo
@@ -4389,7 +4401,18 @@ const GGEE = (() => {
   let ctPlan = null;
   async function handleContacts(sheets, fileName) {
     const r = CT.fromSheets(sheets);
-    if (!r.contactos.length) throw new Error('No se encontraron contactos. La primera fila debe tener al menos las columnas Nombre y Teléfono (o Correo).');
+    if (!r.contactos.length) {
+      const seen = CT.columnsSeen(sheets);
+      const hasHeader = sheets.some((sh) => CT.isBook([sh]));
+      dlgView('No se encontraron contactos',
+        `<p class="err">${hasHeader ? 'La planilla tiene los encabezados correctos, pero ninguna fila trae un nombre.' : 'No se reconocieron las columnas de la planilla.'}</p>
+        ${seen && !hasHeader ? `<p>En la hoja “${esc(seen.hoja)}” se leyeron estas columnas: ${seen.cols.map((c) => `<b>${esc(c)}</b>`).join(', ')}.</p>` : ''}
+        <p>La planilla necesita una fila de títulos con al menos una columna <b>Nombre</b> y una <b>Teléfono</b> (o <b>Correo</b>). También sirven Cargo, Empresa, Categoría, Otro teléfono, Zonal y Notas. Lo más fácil es usar la plantilla.</p>
+        <p class="hint">Si tu archivo es PDF o Word, copia la tabla a la plantilla de Excel y vuelve a importarla.</p>`,
+        '<button type="button" class="btn" id="ctTpl">Descargar plantilla</button><button type="button" class="btn" data-dlg="close">Cerrar</button><label class="btn primary" for="file">Elegir otro archivo</label>');
+      $('#ctTpl').addEventListener('click', exportContacts);
+      return;
+    }
     if (!S.ct) await loadContacts();
     const byName = new Map((S.ct || []).map((c) => [nrm(c.nombre), c]));
     const seen = new Set(), items = [];
@@ -4418,6 +4441,7 @@ const GGEE = (() => {
   }
   async function applyContacts() {
     const P = ctPlan;
+    if (!navigator.onLine || S.offline) { dlgView('Sin conexión', '<p class="err">Necesitas conexión para guardar los contactos. Conéctate y vuelve a intentarlo.</p>', '<button type="button" class="btn primary" data-dlg="close">Cerrar</button>'); return; }
     dlgView('Guardando contactos', '<div style="display:flex;gap:12px;align-items:center"><div class="spin" aria-hidden="true"></div><p class="hint">Guardando en la base de datos…</p></div>');
     const nNew = P.items.filter((i) => i.type === 'new').length;
     try {
@@ -4425,7 +4449,7 @@ const GGEE = (() => {
         const b = S.fs.batch();
         P.items.slice(s, s + 400).forEach((i) => b.set(i.type === 'new' ? S.fs.collection('contactos').doc() : S.fs.collection('contactos').doc(i.id), { ...i.data, actualizado: ts(), actualizado_por: uid() }));
         if (s + 400 >= P.items.length) b.set(S.fs.collection('cargas').doc(), { tipo: 'contactos', zonal: '-', archivo: P.fileName.slice(0, 300), nuevos: nNew, actualizados: P.items.length - nNew, eliminados: 0, usuario: uid(), usuario_nombre: (S.profile && S.profile.nombre) || '', creado_en: ts() });
-        await b.commit();
+        await withTimeout(b.commit(), 30000);
       }
     } catch (e) {
       dlgView('No se guardaron los contactos', `<p class="err">${esc(friendly(e))}</p>${String(e && e.code) === 'permission-denied' ? '<p>Revisa que estén publicadas en Firebase las reglas nuevas (firestore.rules).</p>' : ''}`, '<button type="button" class="btn primary" data-dlg="close">Cerrar</button>');
@@ -4816,10 +4840,10 @@ const GGEE = (() => {
       if ((ext === 'xlsx' || ext === 'xlsm') && supportsDeflateRaw()) sheets = await XL.parseXlsx(u8, (n) => { const m = $('#readMsg'); if (m) m.textContent = `Revisando fila ${n.toLocaleString('es-CL')}…`; });
       else if (ext === 'csv' || ext === 'txt') sheets = [{ name: file.name.replace(/\.[^.]+$/, ''), rows: XW.parseCsv(decodeText(u8)), comments: {} }];
       else sheets = await viaSheetJS(u8);
-      if (S.importKind === 'contactos') { handleContacts(sheets, file.name); return; }
+      if (S.importKind === 'contactos') { await handleContacts(sheets, file.name); return; }
       if (GGEE.isGgeeBook(sheets)) { handleGgee(GGEE.fromSheets(sheets), file.name); return; }
       const parsed = SITES.fromSheets(sheets, file.name);
-      if (!parsed.sites.length && CT.isBook(sheets)) { handleContacts(sheets, file.name); return; }
+      if (!parsed.sites.length && CT.isBook(sheets)) { await handleContacts(sheets, file.name); return; }
       if (!parsed.sites.length) throw new Error(parsed.warnings[0] || 'No se encontraron sitios. Revisa que la primera fila tenga una columna POP.');
       parsedFile = { parsed, fileName: file.name };
       mapping = {};
