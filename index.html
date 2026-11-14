@@ -1289,6 +1289,12 @@ button.d-chip:disabled { color: var(--muted); cursor: progress; }
 .lp-block dd { margin: 4px 0 0; font-size: 18px; font-weight: 700; }
 .lp-tower { display: none; width: 100%; height: auto; color: rgba(255, 255, 255, .72); }
 @media (min-width: 1180px) { .lp-tower { display: block; } }
+.lp-tower path { vector-effect: non-scaling-stroke; }
+/* En el teléfono la torre va arriba del titular, más chica, con su cota legible */
+@media (max-width: 899.98px) {
+  .lp-tower { display: block; order: -1; justify-self: center; width: auto; height: clamp(230px, 36vh, 300px); margin: 0 0 -12px; }
+  .lp-tower .lp-dim-t { font-size: 20px; }
+}
 .lp-dim { stroke: var(--bp-orange); fill: none; }
 .lp-dim-t { fill: var(--bp-orange); font: 500 12px var(--f-mono); }
 
