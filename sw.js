@@ -6,12 +6,12 @@
    página en el equipo; este archivo no los toca.
    Si cambias este archivo, sube el número de VERSION.
    ===================================================================== */
-const VERSION = 'llavero-v2';
+const VERSION = 'llavero-v4';
 const SCOPE = self.registration.scope;
 const INDEX = new URL('./', SCOPE).href;
 const LOCAL = ['config.js', 'manifest.json', 'icon-192.png', 'icon-512.png', 'icon-maskable.png'].map((f) => new URL(f, SCOPE).href);
 const SDK = ['app', 'auth', 'firestore'].map((m) => `https://www.gstatic.com/firebasejs/10.14.1/firebase-${m}-compat.js`);
-const FONTS_CSS = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&family=IBM+Plex+Mono:wght@500;600&display=swap';
+const FONTS_CSS = 'https://fonts.googleapis.com/css2?family=Jura:wght@500;600;700&family=Red+Hat+Mono:wght@500;600;700&family=Work+Sans:wght@400;500;600;700;800&display=swap';
 const NET_WAIT = 4000; // con señal débil, a los 4 s se usa la copia guardada
 
 // Copia limpia (sin marca de redirección) para poder responder a una navegación

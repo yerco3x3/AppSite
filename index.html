@@ -7,17 +7,17 @@
 <meta name="description" content="Llavero, N° de cliente eléctrico, datos de acceso, instructivos y contactos de cada sitio de las zonales Z15 a Z18. Acceso solo para personal aprobado.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<meta name="theme-color" content="#0F1B26">
+<meta name="theme-color" content="#0A3896">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Llavero">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%230F1B26'/%3E%3Cpath d='M10.99 6.69A11 11 0 0 0 10.99 19.31M29.01 6.69A11 11 0 0 1 29.01 19.31' fill='none' stroke='%234EB2C3' stroke-width='3.2' stroke-linecap='round'/%3E%3Ccircle cx='20' cy='13' r='7' fill='%23C8A24A'/%3E%3Cpath d='M16.6 17.5h6.8l4.4 18.5H12.2z' fill='%23C8A24A'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%230A3896'/%3E%3Cpath d='M10.99 6.69A11 11 0 0 0 10.99 19.31M29.01 6.69A11 11 0 0 1 29.01 19.31' fill='none' stroke='%23BFD2FF' stroke-width='3.2' stroke-linecap='round'/%3E%3Ccircle cx='20' cy='13' r='7' fill='%23F57917'/%3E%3Cpath d='M16.6 17.5h6.8l4.4 18.5H12.2z' fill='%23F57917'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jura:wght@500;600;700&family=Red+Hat+Mono:wght@500;600;700&family=Work+Sans:wght@400;500;600;700;800&display=swap">
 <style>
 
 /* Layout: consola de operaciones. Barra superior oscura; debajo un marco con tres paneles
@@ -1045,6 +1045,319 @@ a.btn { text-decoration: none; }
   .lp-typing { width: 3.1ch; }
 }
 
+
+/* =====================================================================
+   Tema "Plano + Mapa de cobertura" (nov 2026)
+   Portada: plano técnico azul con cuadrícula, torre dibujada con su cota
+   y el ingreso dentro de un teléfono.
+   App: superficies claras de mapa, barra blanca, lista con puntos y
+   distancias y una franja de mapa sobre la ficha.
+   Naranjo: lo que está activo. Azul: acciones y ubicación.
+   ===================================================================== */
+:root {
+  --canvas: #F3F7FD; --panel: #FFFFFF; --panel-2: #F7FAFE; --hover: #EEF3FC;
+  --line: #DCE4F2; --line-2: #C2CEE4;
+  --ink: #0B1533; --ink-2: #33415F; --muted: #5D6A86;
+  --accent: #0050D8; --accent-hover: #003FB0; --accent-ink: #FFFFFF; --accent-soft: #EAF1FF; --accent-track: #C8D8FF;
+  --bar: #FFFFFF; --bar-2: #EEF3FC; --bar-ink: #0B1533; --bar-muted: #5D6A86; --bar-line: #DCE4F2;
+  --info: #2E4A84; --info-soft: #E6EDFB;
+  --shadow-pop: 0 16px 40px rgba(11, 21, 51, .16), 0 2px 6px rgba(11, 21, 51, .08);
+  --f-sans: "Work Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-cond: "Work Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "Red Hat Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --f-plano: "Jura", "Work Sans", system-ui, sans-serif;
+  --r: 10px; --r-l: 12px;
+  --naranjo: #F57917; --naranjo-ink: #1A0A00;
+  --map: #E4ECFF; --map-line: #B5CCFA; --map-route: #0050D8; --map-me: #0B1533; --map-chip: #FFFFFF;
+  --code-bg: #0B1533; --code-bar: #13204A; --code-ink: #E8EEFF; --code-muted: #9AA9D1; --code-line: #24326A;
+  --bp: #0A3896; --bp-deep: #031A4D; --bp-muted: #BFD2FF; --bp-soft: #D6E2FF; --bp-line: rgba(255, 255, 255, .7); --bp-orange: #FF9A3D;
+  --lp-night: var(--bar); --lp-tag: #0A3896; --lp-brass: #F57917; --lp-signal: #0050D8; --lp-foot: #031A4D;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --canvas: #070D24; --panel: #0C1533; --panel-2: #0A1230; --hover: #13204A;
+    --line: #1C2A55; --line-2: #2A3C72;
+    --ink: #E8EEFF; --ink-2: #B6C3E6; --muted: #8494BE;
+    --accent: #5C9BFF; --accent-hover: #7DB0FF; --accent-ink: #04102E; --accent-soft: #132656; --accent-track: #1E3A80;
+    --bar: #0C1533; --bar-2: #13204A; --bar-ink: #E8EEFF; --bar-muted: #8494BE; --bar-line: #1C2A55;
+    --info: #AFC2F2; --info-soft: #13224A;
+    --map: #0F1D47; --map-line: #233B73; --map-route: #5C9BFF; --map-me: #E8EEFF; --map-chip: #0C1533;
+    --code-bg: #050A1E; --code-bar: #0C1533; --code-line: #1C2A55;
+    --lp-signal: #5C9BFF;
+    --shadow-pop: 0 18px 44px rgba(0, 0, 0, .6);
+  }
+}
+:root[data-theme="dark"] {
+  --canvas: #070D24; --panel: #0C1533; --panel-2: #0A1230; --hover: #13204A;
+  --line: #1C2A55; --line-2: #2A3C72;
+  --ink: #E8EEFF; --ink-2: #B6C3E6; --muted: #8494BE;
+  --accent: #5C9BFF; --accent-hover: #7DB0FF; --accent-ink: #04102E; --accent-soft: #132656; --accent-track: #1E3A80;
+  --bar: #0C1533; --bar-2: #13204A; --bar-ink: #E8EEFF; --bar-muted: #8494BE; --bar-line: #1C2A55;
+  --info: #AFC2F2; --info-soft: #13224A;
+  --map: #0F1D47; --map-line: #233B73; --map-route: #5C9BFF; --map-me: #E8EEFF; --map-chip: #0C1533;
+  --code-bg: #050A1E; --code-bar: #0C1533; --code-line: #1C2A55;
+  --lp-signal: #5C9BFF;
+  --shadow-pop: 0 18px 44px rgba(0, 0, 0, .6);
+}
+body { -webkit-font-smoothing: antialiased; }
+
+/* ---------- Barra de la app: blanca, pestaña activa subrayada ---------- */
+.topbar-in { min-height: 62px; padding-block: 0; gap: 18px; }
+.brand { margin-right: 4px; gap: 10px; }
+.brand .mark.lp-mark, .brand .mark.lp-mark .lp-logo { width: 32px; height: 32px; }
+.brand-lock { flex-direction: row; align-items: baseline; gap: .28em; white-space: nowrap; }
+.brand-lock span, .brand-lock small { font: 800 17px/1 var(--f-sans); letter-spacing: -.015em; color: var(--bar-ink); }
+.tabs { align-self: stretch; gap: 2px; }
+.tabs a { min-height: 0; height: 100%; padding: 0 14px; border-radius: 0; color: var(--ink-2); font-weight: 500; background: none; }
+.tabs a:hover { color: var(--accent); background: none; }
+.tabs a[aria-current="page"] { color: var(--accent); font-weight: 700; background: none; box-shadow: inset 0 -3px 0 var(--accent); }
+.zchips { display: flex; gap: 4px; }
+.zchips button { min-height: 32px; padding: 0 9px; border: 0; border-radius: 6px; background: none; font: 700 12px/1 var(--f-mono); color: var(--muted); white-space: nowrap; }
+.zchips button:hover { background: var(--hover); color: var(--ink); }
+.zchips button[aria-pressed="true"] { background: var(--naranjo); color: var(--naranjo-ink); }
+.zsel select { background: var(--panel); border-color: var(--line-2); color: var(--ink); }
+.zsel select:hover { border-color: var(--muted); }
+.bbtn { border-color: var(--line-2); color: var(--ink-2); }
+.bbtn:hover { background: var(--hover); border-color: var(--muted); }
+.bbtn[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.bbtn.primary { color: var(--accent-ink); }
+.avatar { background: #0B1533; border-color: transparent; color: #FFFFFF; font-weight: 700; }
+.avatar:hover { border-color: var(--naranjo); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .avatar { background: var(--accent-soft); color: var(--ink); } }
+:root[data-theme="dark"] .avatar { background: var(--accent-soft); color: var(--ink); }
+.toast { background: #0B1533; color: #FFFFFF; }
+.toast svg.i { color: #7DB0FF; }
+@media (min-width: 720.02px) { .zchips:not([hidden]) ~ .zsel { display: none; } }
+@media (max-width: 720px) {
+  .zchips { display: none !important; }
+  .topbar-in { padding-block: 8px 0; }
+  .brand { margin-right: auto; }
+  .brand h1 { display: none; }
+  .tabs { align-self: auto; width: calc(100% + 2 * max(16px, env(safe-area-inset-left, 0px))); margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding-inline: 8px; border-top: 1px solid var(--line); }
+  .tabs a { height: auto; min-height: 46px; }
+}
+
+/* ---------- Marco de trabajo a todo el ancho ---------- */
+@media (min-width: 880px) {
+  .workspace { padding: 0; }
+  .workspace > .notice { margin: 12px 16px; }
+  .frame { border: 0; border-radius: 0; }
+  #viewSitios .pane-detail { background: var(--canvas); }
+}
+@media (min-width: 1200px) {
+  #viewSitios .frame { grid-template-columns: minmax(340px, 380px) minmax(0, 1fr); }
+  #viewSitios .pane-facets { display: none; }
+  #viewSitios .btn-filters { display: inline-flex !important; }
+}
+
+/* ---------- Lista: punto de ubicación, código y distancia ---------- */
+.list-head { padding: 14px 16px 12px; }
+.row { grid-template-columns: 12px minmax(0, 1fr) auto; align-items: start; column-gap: 12px; padding: 13px 16px; }
+.list > li + li .row { border-top: 1px solid var(--line); }
+.r-dot { width: 12px; height: 12px; margin-top: 4px; border-radius: 50%; border: 3px solid var(--line-2); }
+.r-dot.loc { border-color: var(--accent); }
+.row[aria-current="true"] { background: var(--accent-soft); }
+.row[aria-current="true"] .r-dot { border: 0; background: var(--naranjo); box-shadow: 0 0 0 4px rgba(245, 121, 23, .2); }
+.r-main { display: grid; gap: 3px; min-width: 0; }
+.r-pop { font: 700 15px/1.3 var(--f-mono); letter-spacing: 0; }
+.row[aria-current="true"] .r-pop { color: var(--ink); }
+.r-km { margin-top: 1px; font-size: 13px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.row[aria-current="true"] .r-km { color: var(--accent); font-weight: 700; }
+.r3 .f b { font-family: var(--f-mono); font-weight: 600; }
+.loc-sort { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.loc-sort .linkbtn { font-size: 13px; }
+
+/* ---------- Franja de mapa sobre la ficha ---------- */
+.d-map { position: relative; height: 168px; background: var(--map); border-bottom: 1px solid var(--line); overflow: hidden; }
+.d-map > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.d-map .ct path { fill: none; stroke: var(--map-line); stroke-width: 1.2; }
+.d-map .route { fill: none; stroke: var(--map-route); stroke-width: 2; stroke-dasharray: 6 6; }
+.d-map .ring { fill: none; stroke: var(--map-route); stroke-width: 1.5; opacity: .45; }
+.d-map .pin { fill: var(--naranjo); }
+.d-map .me { fill: var(--map-me); }
+.d-map-ft { position: absolute; left: 24px; right: 24px; bottom: 14px; display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.d-map-l, .d-map-r { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.d-src { position: absolute; top: 12px; left: 24px; right: 24px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
+.d-src span { min-width: 0; padding: 3px 8px; border-radius: 6px; background: var(--map-chip); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.d-src .linkbtn { flex: none; font-size: 12px; font-weight: 600; }
+button.d-chip { min-height: 34px; border: 0; color: var(--accent); font-family: inherit; cursor: pointer; }
+button.d-chip:disabled { color: var(--muted); cursor: progress; }
+.d-chip svg.i { width: 15px; height: 15px; }
+.d-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 8px; background: var(--map-chip); color: var(--ink); font-size: 13px; font-weight: 700; box-shadow: 0 1px 2px rgba(11, 21, 51, .08); }
+.d-chip small { font-weight: 500; color: var(--muted); font-size: 12px; }
+.d-chip .linkbtn { font-size: 13px; }
+.d-go { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: var(--r); background: #0B1533; color: #FFFFFF; font-size: 14px; font-weight: 700; text-decoration: none; border: 0; }
+.d-go:hover { background: #1B2A55; color: #FFFFFF; }
+.d-go svg.i { width: 16px; height: 16px; }
+.d-map-empty { position: absolute; left: 24px; right: 24px; top: 50%; transform: translateY(-50%); display: grid; gap: 10px; justify-items: start; max-width: 520px; }
+.d-map-empty p { margin: 0; padding: 8px 12px; border-radius: 8px; background: var(--map-chip); font-size: 14px; color: var(--ink-2); }
+.d-map-empty p b { color: var(--ink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .d-go { background: #FFFFFF; color: #0B1533; } }
+:root[data-theme="dark"] .d-go { background: #FFFFFF; color: #0B1533; }
+@media (max-width: 879.98px) {
+  .d-map { height: 160px; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); }
+  .d-map-ft, .d-src { left: 16px; right: 16px; }
+  .d-map-ft { bottom: 12px; }
+  .d-map-empty { left: 16px; right: 16px; }
+}
+
+/* ---------- Ficha: filas con regla, como un plano de terreno ---------- */
+.rec-in { max-width: 1080px; padding: 22px 28px 40px; gap: 22px; }
+@media (max-width: 879.98px) { .rec-in { padding: 18px 0 8px; gap: 20px; } }
+.d-pop { font: 800 34px/1 var(--f-sans); letter-spacing: -.02em; }
+.d-name { font-size: 15px; font-weight: 400; color: var(--ink-2); }
+.d-grid { display: grid; gap: 22px 28px; align-items: start; }
+@container (min-width: 700px) { .d-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.d-grid .keyfacts { grid-template-columns: minmax(0, 1fr); border: 0; border-top: 2px solid var(--ink); border-radius: 0; background: none; overflow: visible; }
+.d-grid .kf { grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; row-gap: 0; align-items: center; padding: 10px 0; border: 0; border-bottom: 1px solid var(--line); }
+.d-grid .kf + .kf { border-left: 0; border-top: 0; }
+.d-grid .kf-l { grid-column: 1; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); }
+.d-grid .kf-l svg.i { display: none; }
+.d-grid .kf-s { grid-column: 1; font-size: 12px; }
+.d-grid .kf-v { grid-column: 2; grid-row: 1 / span 2; justify-content: flex-end; min-height: 36px; }
+.d-grid .kf-v .val, .d-grid .kf-v .val.cond { font: 700 18px/1.2 var(--f-mono); letter-spacing: .02em; }
+.d-grid .kf-key .kf-v .val:not(.na) { color: var(--accent); }
+.d-grid .kf-v .val.na { font: 500 14px var(--f-sans); }
+.sec { gap: 2px; }
+.sec h2 { margin: 0; padding: 12px 0 8px; border-top: 2px solid var(--ink); border-bottom: 0; font-size: 14px; font-weight: 700; }
+.sec h2 > svg.i { display: none; }
+.d-grid .sec h2 { padding-top: 12px; }
+.fields > div + div { border-top: 1px solid var(--line); }
+.code .val { color: var(--accent); }
+.code .val.txt { color: var(--ink); }
+.acc-list { gap: 10px; }
+.d-grid .acc { position: relative; grid-template-columns: minmax(0, 1fr); }
+.d-grid .acc-who { padding-right: 46px; }
+.d-grid .acc .acc-copy { position: absolute; top: 10px; right: 10px; }
+.rec-foot { border-top: 2px solid var(--ink); }
+@media (max-width: 879.98px) { .d-bar { border-bottom: 1px solid var(--line); } }
+
+/* Bloques de comandos de los instructivos: siempre oscuros */
+.md-code { border-color: var(--code-line); background: var(--code-bg); }
+.md-code figcaption { background: var(--code-bar); color: var(--code-muted); border-bottom-color: var(--code-line); }
+.md-copy { border-color: var(--code-line); color: var(--code-ink); }
+.md-copy:hover { background: var(--code-bg); border-color: var(--code-muted); }
+.md-code pre { color: var(--code-ink); }
+
+/* =====================================================================
+   Portada: plano técnico
+   ===================================================================== */
+.lp {
+  color-scheme: light;
+  --canvas: #F3F7FD; --panel: #FFFFFF; --panel-2: #F7FAFE; --hover: #EEF3FC; --line: #C2CEE4; --line-2: #AFC0DD;
+  --ink: #0B1533; --ink-2: #33415F; --muted: #5D6A86;
+  --accent: #0050D8; --accent-hover: #003FB0; --accent-ink: #FFFFFF; --accent-soft: #EAF1FF;
+  --lp-night: var(--bp); --lp-signal: var(--bp-muted); --lp-brass: var(--naranjo); --lp-foot: var(--bp-deep);
+  background-color: var(--bp); color: #FFFFFF;
+  background-image: linear-gradient(rgba(255, 255, 255, .09) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .09) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+  background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+  background-attachment: local;
+}
+.lp-in { max-width: 1200px; }
+.lp :focus-visible { outline: 2px solid var(--naranjo); outline-offset: 2px; }
+.lp-card :focus-visible { outline-color: var(--accent); }
+
+.lp-bar { background: transparent; border-bottom: 1.5px solid rgba(255, 255, 255, .28); }
+.lp-bar-in { min-height: 72px; gap: 12px; }
+.lp-brand { margin-right: 0; color: #FFFFFF; gap: 12px; }
+.lp-brand:hover { color: #FFFFFF; }
+.lp-word { display: inline-block; padding: 7px 10px; border: 1.5px solid #FFFFFF; font: 700 13px/1 var(--f-mono); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
+.lp-sheet { margin-right: auto; font: 500 13px var(--f-mono); color: var(--bp-muted); white-space: nowrap; }
+@media (max-width: 700px) { .lp-sheet { display: none; } .lp-brand { margin-right: auto; } }
+@media (max-width: 420px) { .lp-word { display: none; } }
+
+.lp-btn { border-radius: 0; font-family: var(--f-sans); font-weight: 700; }
+.lp-btn.primary { background: var(--naranjo); border: 1.5px solid var(--naranjo); color: var(--naranjo-ink); }
+.lp-btn.primary:hover { background: #FF8A2E; border-color: #FF8A2E; filter: none; }
+.lp-btn.ghost { background: transparent; border: 1.5px solid #FFFFFF; color: #FFFFFF; font-weight: 700; }
+.lp-btn.ghost:hover { background: rgba(255, 255, 255, .12); border-color: #FFFFFF; }
+.lp-sec:not(.dark) .lp-btn.ghost { border-color: var(--ink); color: var(--ink); }
+
+.lp-hero { background: transparent; color: #FFFFFF; }
+.lp-hero-in { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: 44px; padding-top: clamp(36px, 6vw, 72px); padding-bottom: clamp(48px, 7vw, 88px); }
+@media (min-width: 900px) { .lp-hero-in { grid-template-columns: minmax(0, 1fr) minmax(330px, 380px); gap: 48px; } }
+@media (min-width: 1180px) { .lp-hero-in { grid-template-columns: minmax(0, 1fr) 210px 380px; gap: 40px; } }
+.lp-copy { max-width: 540px; gap: 22px; }
+.lp-h1 { font-family: var(--f-plano); font-weight: 700; font-size: clamp(36px, 4.6vw, 56px); line-height: 1.04; letter-spacing: -.02em; }
+.lp-lead { font-size: 17px; color: var(--bp-soft); max-width: 32em; }
+.lp-note { color: var(--bp-muted); }
+.lp-block { margin: 6px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 120px)); border: 1.5px solid var(--bp-line); font-family: var(--f-mono); align-self: flex-start; }
+.lp-block > div { padding: 10px 12px; }
+.lp-block > div + div { border-left: 1.5px solid var(--bp-line); }
+.lp-block dt { font-size: 12px; color: var(--bp-muted); }
+.lp-block dd { margin: 4px 0 0; font-size: 18px; font-weight: 700; }
+.lp-tower { display: none; width: 100%; height: auto; color: rgba(255, 255, 255, .72); }
+@media (min-width: 1180px) { .lp-tower { display: block; } }
+.lp-dim { stroke: var(--bp-orange); fill: none; }
+.lp-dim-t { fill: var(--bp-orange); font: 500 12px var(--f-mono); }
+
+/* El ingreso va dentro de un teléfono */
+.lp-card { width: 100%; max-width: 420px; justify-self: center; padding: 0; overflow: hidden; border-radius: 36px; border: 10px solid var(--bp-deep); background: #FFFFFF; color: var(--ink);
+  box-shadow: 0 30px 70px rgba(1, 10, 40, .45); -webkit-backdrop-filter: none; backdrop-filter: none; }
+.lp-phone-bar { display: flex; justify-content: space-between; gap: 12px; padding: 14px 18px; background: var(--bp); color: #FFFFFF; font: 500 12px/1.2 var(--f-mono); letter-spacing: .04em; text-transform: uppercase; }
+.lp-card .auth-card { padding: 22px 22px 26px; }
+.lp-card .auth-card h2 { font-family: var(--f-plano); font-weight: 700; }
+@media (max-width: 480px) { .lp-card { border-width: 6px; border-radius: 26px; } .lp-card .auth-card { padding: 18px 16px 22px; } }
+
+/* Secciones: hoja blanca con cuadrícula fina, o plano azul */
+.lp-sec { color: var(--ink); border: 0; background-color: #FFFFFF;
+  background-image: linear-gradient(rgba(10, 56, 150, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(10, 56, 150, .05) 1px, transparent 1px);
+  background-size: 20px 20px; }
+.lp-sec.alt { background-color: #F3F7FD; border: 0; }
+.lp-sec.dark { background: transparent; color: #FFFFFF; border-top: 1.5px solid rgba(255, 255, 255, .28); }
+.lp-head h2, .lp-h2 { font-family: var(--f-plano); font-weight: 700; letter-spacing: -.015em; }
+.lp-eyebrow { font: 600 13px var(--f-mono); letter-spacing: 0; color: var(--accent); }
+.lp-sec.dark .lp-eyebrow { color: var(--bp-orange); }
+.lp-sec.dark .lp-head p { color: var(--bp-soft); }
+
+.lp-feats { gap: 26px 32px; }
+.lp-feat { padding-top: 14px; border-top: 1.5px solid var(--ink); gap: 8px; }
+.lp-feat-i { width: 28px; height: 28px; border-radius: 0; border: 1.5px solid var(--accent); background: none; color: var(--accent); font: 700 13px/1 var(--f-mono); }
+.lp-feat h3, .lp-tile h3, .lp-step h3 { font-family: var(--f-plano); font-weight: 700; }
+
+.lp-demo { display: flex; justify-content: center; background: none; border: 0; border-radius: 0; box-shadow: none; overflow: visible; }
+.lp-phone { width: min(320px, 100%); overflow: hidden; border-radius: 36px; border: 10px solid var(--bp-deep); background: #FFFFFF; box-shadow: 0 24px 60px rgba(3, 26, 77, .25); }
+.lp-phone-in { padding: 18px 18px 20px; display: flex; flex-direction: column; }
+.lp-demo-pop { font: 700 30px/1.1 var(--f-plano); letter-spacing: 0; }
+.lp-demo-name { margin: 2px 0 12px; font-size: 13px; color: var(--ink-2); }
+.lp-rows { margin: 0; border-top: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink); }
+.lp-rows > div { display: grid; grid-template-columns: 92px minmax(0, 1fr); align-items: center; min-height: 42px; }
+.lp-rows > div + div { border-top: 1px solid var(--line); }
+.lp-rows dt { font: 500 12px var(--f-mono); color: var(--ink-2); text-transform: uppercase; }
+.lp-rows dd { margin: 0; display: flex; align-items: center; gap: 8px; font: 700 16px var(--f-mono); }
+.lp-rows dd.txt { font: 700 14px var(--f-sans); }
+.lp-rows .key dd { font-size: 20px; color: #B54F00; }
+.lp-code { min-width: 3.2em; letter-spacing: .08em; }
+.lp-reveal { margin-left: auto; border-radius: 0; font: 600 13px var(--f-sans); }
+.lp-ct-l { margin-top: 14px; font: 500 11px var(--f-mono); color: var(--ink-2); text-transform: uppercase; }
+.lp-ct-n { margin: 4px 0 10px; font-size: 14px; font-weight: 700; }
+.lp-call { min-height: 44px; display: grid; place-items: center; background: var(--bp); color: #FFFFFF; font-size: 14px; font-weight: 800; }
+.lp-phone .lp-small { margin-top: 12px; font-size: 12px; }
+
+.lp-steps { gap: 1.5px; background: var(--bp-line); border: 1.5px solid var(--bp-line); }
+.lp-step { padding: 20px 22px 24px; border: 0; background: var(--bp); gap: 8px; }
+.lp-num { font: 700 14px var(--f-mono); color: var(--bp-orange); }
+.lp-step h3 { font-size: 20px; color: #FFFFFF; }
+.lp-step p, .lp-sec.dark .lp-feat p { color: var(--bp-soft); }
+
+.lp-tiles { gap: 1.5px; background: var(--ink); border: 1.5px solid var(--ink); }
+.lp-tile { border: 0; border-radius: 0; background: #FFFFFF; }
+.lp-tile svg { color: var(--accent); }
+
+.lp-checks li { border-top: 1.5px solid rgba(255, 255, 255, .3); }
+.lp-checks svg { color: var(--bp-orange); }
+
+.lp-node { border-radius: 0; border: 1.5px solid var(--ink); background: #FFFFFF; padding: 8px 18px 8px 8px; }
+.lp-node:hover { border-color: var(--naranjo); }
+.lp-node span { width: 48px; height: 48px; border-radius: 0; background: var(--bp); color: #FFFFFF; font: 700 14px var(--f-mono); }
+.lp-node b { font-family: var(--f-plano); font-weight: 700; }
+.lp-link { margin-left: 31px; background: repeating-linear-gradient(180deg, var(--naranjo) 0 6px, transparent 6px 12px); background-size: 2px 24px; }
+
+.lp-faqs, .lp-faq { border-color: var(--line); }
+.lp-final .lp-h1 { font-size: clamp(30px, 4vw, 46px); }
+.lp-foot { background: var(--bp-deep); color: var(--bp-muted); border-top: 0; }
+.lp-foot-brand { color: #FFFFFF; }
 </style>
 <script src="config.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -1055,11 +1368,14 @@ a.btn { text-decoration: none; }
 <div class="boot" id="boot" role="status" aria-label="Cargando"><div class="spin" aria-hidden="true"></div></div>
 
 <!-- ===== Página pública: presentación, ingreso y registro ===== -->
+<!-- Estilo "plano técnico": fondo azul de plano con cuadrícula, torre dibujada con su cota
+     y el ingreso dentro de un teléfono. Las secciones alternan plano azul y hoja blanca. -->
 <section class="lp" id="authView" hidden>
   <div id="lpTop"></div>
   <header class="lp-bar">
     <div class="lp-in lp-bar-in">
-      <a class="lp-brand" href="#" data-lp="top" aria-label="Llavero de Sitios, volver arriba"><svg class="lp-logo" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><path d="M10.99 6.69A11 11 0 0 0 10.99 19.31M29.01 6.69A11 11 0 0 1 29.01 19.31" fill="none" stroke="var(--lp-signal)" stroke-width="2" stroke-linecap="round"/><path d="M7.71 4.4A15 15 0 0 0 7.71 21.6M32.29 4.4A15 15 0 0 1 32.29 21.6" fill="none" stroke="var(--lp-signal)" stroke-width="2" stroke-linecap="round" opacity=".5"/><circle cx="20" cy="13" r="6.5" fill="var(--lp-brass)"/><path d="M17 17.5h6l4 18.5H13z" fill="var(--lp-brass)"/><circle cx="20" cy="13" r="2" fill="var(--lp-night)"/><path d="M15.9 23h8.2M15.1 29.2h9.8M15.9 23l9 6.2M24.1 23l-9 6.2M15.1 29.2l11 6.3M24.9 29.2l-11 6.3" fill="none" stroke="var(--lp-night)" stroke-width="1.2" stroke-linecap="round"/></svg><span class="lp-word"><b>Llavero</b><small>DE SITIOS</small></span></a>
+      <a class="lp-brand" href="#" data-lp="top" aria-label="Llavero de Sitios, volver arriba"><svg class="lp-logo" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><path d="M10.99 6.69A11 11 0 0 0 10.99 19.31M29.01 6.69A11 11 0 0 1 29.01 19.31" fill="none" stroke="var(--lp-signal)" stroke-width="2" stroke-linecap="round"/><path d="M7.71 4.4A15 15 0 0 0 7.71 21.6M32.29 4.4A15 15 0 0 1 32.29 21.6" fill="none" stroke="var(--lp-signal)" stroke-width="2" stroke-linecap="round" opacity=".5"/><circle cx="20" cy="13" r="6.5" fill="var(--lp-brass)"/><path d="M17 17.5h6l4 18.5H13z" fill="var(--lp-brass)"/><circle cx="20" cy="13" r="2" fill="var(--lp-night)"/><path d="M15.9 23h8.2M15.1 29.2h9.8M15.9 23l9 6.2M24.1 23l-9 6.2M15.1 29.2l11 6.3M24.9 29.2l-11 6.3" fill="none" stroke="var(--lp-night)" stroke-width="1.2" stroke-linecap="round"/></svg><span class="lp-word">Llavero / Sitios</span></a>
+      <span class="lp-sheet">Hoja 1 de 1 · Z15–Z18</span>
       <button type="button" class="lp-btn ghost" data-lp="login">Ingresar</button>
       <button type="button" class="lp-btn primary" data-lp="signup">Crear cuenta</button>
     </div>
@@ -1068,57 +1384,80 @@ a.btn { text-decoration: none; }
   <div class="lp-hero">
     <div class="lp-in lp-hero-in">
       <div class="lp-copy">
-        <div class="lp-kicker"><svg class="lp-tag" width="22" height="30" viewBox="0 0 22 30" aria-hidden="true"><rect x="1" y="1" width="20" height="28" rx="5" fill="#C8A24A"/><circle cx="11" cy="6.5" r="2.4" fill="var(--lp-night)"/><path d="M6 15h10M6 19h7" stroke="var(--lp-night)" stroke-width="1.6" stroke-linecap="round"/></svg><span>Uso interno · Zonales Z15 a Z18</span></div>
-        <h1 class="lp-h1">Llegas al sitio.<br><span>Ya sabes cómo entrar.</span></h1>
-        <p class="lp-lead">Llavero, N° de cliente eléctrico, datos de acceso, instructivos y contactos de cada sitio de Valdivia a Chiloé, en tu teléfono y en segundos.</p>
+        <h1 class="lp-h1">La ficha técnica de cada sitio, en tu bolsillo.</h1>
+        <p class="lp-lead">Llavero, empalme eléctrico, acceso, grupo electrógeno y procedimientos de cada sitio de Valdivia a Chiloé, con la precisión de un plano.</p>
         <div class="lp-ctas">
-          <button type="button" class="lp-btn primary lg" data-lp="signup">Crear cuenta <svg class="lp-arr" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <button type="button" class="lp-btn primary lg" data-lp="signup">Crear cuenta</button>
           <button type="button" class="lp-btn ghost lg" data-lp="login">Ya tengo cuenta</button>
         </div>
         <p class="lp-note"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Acceso solo para personal aprobado por un administrador.</span></p>
+        <dl class="lp-block" aria-label="Datos del plano">
+          <div><dt>Zonales</dt><dd>4</dd></div>
+          <div><dt>Escala</dt><dd>1:1</dd></div>
+          <div><dt>Rev.</dt><dd id="lpRev">14.11</dd></div>
+        </dl>
       </div>
-      <div class="lp-card" id="lpCard"><div class="auth-card" id="authCard"></div></div>
+      <svg class="lp-tower" width="220" height="470" viewBox="0 0 220 470" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="1.4">
+          <path d="M100 34 L52 452 M100 34 L148 452"/>
+          <path d="M88 134 H112 M78 218 H122 M69 302 H131 M60 386 H140"/>
+          <path d="M88 134 L122 218 M112 134 L78 218 M78 218 L131 302 M122 218 L69 302 M69 302 L140 386 M131 302 L60 386 M60 386 L148 452 M140 386 L52 452"/>
+          <path d="M100 34 V8"/>
+          <path d="M74 58 A34 34 0 0 1 74 8 M126 8 A34 34 0 0 1 126 58" stroke-dasharray="4 4"/>
+          <path d="M30 452 H170" stroke-dasharray="2 5"/>
+        </g>
+        <g class="lp-dim" stroke-width="1.2"><path d="M178 34 H206 M178 452 H206 M198 34 V452"/></g>
+        <text class="lp-dim-t" x="210" y="243" transform="rotate(90 210 243)">42 m</text>
+      </svg>
+      <div class="lp-card" id="lpCard">
+        <div class="lp-phone-bar" aria-hidden="true"><span>‹ Sitios</span><span>Ingreso</span></div>
+        <div class="auth-card" id="authCard"></div>
+      </div>
     </div>
   </div>
 
   <section class="lp-sec" aria-labelledby="lp-res">
-    <div class="lp-in lp-stack">
-      <div class="lp-head"><span class="lp-eyebrow">Qué resuelve</span><h2 id="lp-res">Todo lo del sitio, en una ficha.</h2></div>
-      <div class="lp-split">
-        <div class="lp-demo" aria-label="Ficha de ejemplo">
-          <div class="lp-demo-search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="lp-mono"><span class="lp-typing">LA4</span><span class="lp-caret"></span></span><span class="lp-kbd">/</span></div>
-          <div class="lp-demo-body">
-            <div class="lp-demo-head">
-              <div><span class="lp-demo-pop">LA000</span><span class="lp-demo-name">Sitio de ejemplo · Z16 Osorno</span></div>
-              <div class="lp-badges"><span class="badge ok">Clave registrada</span><span class="badge">Con grupo electrógeno</span></div>
-            </div>
-            <div class="lp-kf">
-              <div><span class="lp-kf-l">Llavero</span><div class="lp-kf-v"><svg class="lp-tag" width="30" height="40" viewBox="0 0 30 40" aria-hidden="true"><rect x="1" y="1" width="28" height="38" rx="7" fill="var(--lp-tag)"/><circle cx="15" cy="8.5" r="3" fill="#FFFFFF"/><text x="15" y="29" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="#C8A24A">112</text></svg><span class="lp-cond">112</span></div></div>
-              <div><span class="lp-kf-l">N° de cliente</span><div class="lp-kf-v"><span class="lp-mono lp-big">1234 5678</span></div></div>
-              <div><span class="lp-kf-l">Clave de acceso</span><div class="lp-kf-v"><span class="lp-mono lp-big lp-code" id="lpCode">••••</span><button type="button" class="lp-reveal" id="lpReveal" data-lp="reveal" aria-pressed="false">Mostrar</button></div></div>
-            </div>
+    <div class="lp-in lp-split lp-center">
+      <div class="lp-stack">
+        <div class="lp-head"><span class="lp-eyebrow">Qué resuelve</span><h2 id="lp-res">Todo lo del sitio, en una ficha.</h2><p>Busca por POP, nombre, llavero o N° de cliente. La ficha aparece mientras escribes, con o sin señal.</p></div>
+        <div class="lp-feats">
+          <div class="lp-feat"><span class="lp-feat-i">A</span><h3>Sitios</h3><p>Llavero, N° de cliente, clave del candado y cómo entrar. Ordenados por cercanía cuando estás en ruta.</p></div>
+          <div class="lp-feat"><span class="lp-feat-i">B</span><h3>Instructivos</h3><p>Comisionamiento, alarmas y transmisión paso a paso, con los comandos listos para copiar.</p></div>
+          <div class="lp-feat"><span class="lp-feat-i">C</span><h3>Repuestos GGEE</h3><p>El filtro instalado en terreno y sus reemplazos, antes de salir a comprar.</p></div>
+          <div class="lp-feat"><span class="lp-feat-i">D</span><h3>Contactos</h3><p>NOC, supervisión, empresas eléctricas y quien abre cada sitio, a un toque de llamada.</p></div>
+        </div>
+      </div>
+      <div class="lp-demo" aria-label="Ficha de ejemplo">
+        <div class="lp-phone">
+          <div class="lp-phone-bar" aria-hidden="true"><span>‹ Sitios</span><span>Ficha LA000</span></div>
+          <div class="lp-phone-in">
+            <span class="lp-demo-pop">LA000</span>
+            <span class="lp-demo-name">Sitio de ejemplo · Z16 Osorno</span>
+            <dl class="lp-rows">
+              <div><dt>Llavero</dt><dd>112</dd></div>
+              <div><dt>Cliente</dt><dd>1234 5678</dd></div>
+              <div><dt>Cía</dt><dd class="txt">SAESA</dd></div>
+              <div class="key"><dt>Candado</dt><dd><span class="lp-code" id="lpCode">••••</span><button type="button" class="lp-reveal" id="lpReveal" data-lp="reveal" aria-pressed="false">Mostrar</button></dd></div>
+            </dl>
+            <span class="lp-ct-l">Contacto para entrar</span>
+            <span class="lp-ct-n">Pedro Soto · dueño del terreno</span>
+            <span class="lp-call" aria-hidden="true">Llamar</span>
             <p class="lp-small">Datos de ejemplo. Las claves pueden ocultarse en pantalla con un toque.</p>
           </div>
-        </div>
-        <div class="lp-feats">
-          <div class="lp-feat"><span class="lp-feat-i"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span><h3>Sitios</h3><p>Busca por POP, nombre, llavero o N° de cliente. La ficha aparece mientras escribes.</p></div>
-          <div class="lp-feat"><span class="lp-feat-i"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M12 15h5"/></svg></span><h3>Instructivos</h3><p>Comisionamiento, alarmas y transmisión paso a paso, con los comandos listos para copiar.</p></div>
-          <div class="lp-feat"><span class="lp-feat-i"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="13" height="10" rx="1.5"/><path d="M7 8V5h7v3M17 11h3v4h-3M9 11l-1.5 3h3L9 17"/></svg></span><h3>Repuestos GGEE</h3><p>El filtro instalado en terreno y sus reemplazos, antes de salir a comprar.</p></div>
-          <div class="lp-feat"><span class="lp-feat-i"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span><h3>Contactos</h3><p>NOC, supervisión y empresas eléctricas a un toque de llamada.</p></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="lp-sec alt" aria-labelledby="lp-acc">
+  <section class="lp-sec dark" aria-labelledby="lp-acc">
     <div class="lp-in lp-stack">
       <div class="lp-head"><span class="lp-eyebrow">Cómo obtener acceso</span><h2 id="lp-acc">Tres pasos y estás dentro.</h2></div>
       <ol class="lp-steps">
-        <li class="lp-step"><svg class="lp-tag" width="36" height="48" viewBox="0 0 36 48" aria-hidden="true"><rect x="1" y="1" width="34" height="46" rx="8" fill="var(--lp-tag)"/><circle cx="18" cy="10" r="3.5" fill="#FFFFFF"/><text x="18" y="35" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="600" fill="#C8A24A">01</text></svg><h3>Crea tu cuenta</h3><p>Con tu nombre y tu correo de trabajo. El administrador lo verá al aprobarte.</p></li>
-        <li class="lp-step"><svg class="lp-tag" width="36" height="48" viewBox="0 0 36 48" aria-hidden="true"><rect x="1" y="1" width="34" height="46" rx="8" fill="var(--lp-tag)"/><circle cx="18" cy="10" r="3.5" fill="#FFFFFF"/><text x="18" y="35" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="600" fill="#C8A24A">02</text></svg><h3>Confirma tu correo</h3><p>Abre el enlace que te enviamos. Si no lo ves, revisa la carpeta de spam.</p></li>
-        <li class="lp-step"><svg class="lp-tag" width="36" height="48" viewBox="0 0 36 48" aria-hidden="true"><rect x="1" y="1" width="34" height="46" rx="8" fill="var(--lp-tag)"/><circle cx="18" cy="10" r="3.5" fill="#FFFFFF"/><text x="18" y="35" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="600" fill="#C8A24A">03</text></svg><h3>Espera la aprobación</h3><p>Un administrador aprueba tu cuenta y te asigna las zonales que puedes ver.</p></li>
+        <li class="lp-step"><span class="lp-num">01</span><h3>Crea tu cuenta</h3><p>Con tu nombre y tu correo de trabajo. El administrador lo verá al aprobarte.</p></li>
+        <li class="lp-step"><span class="lp-num">02</span><h3>Confirma tu correo</h3><p>Abre el enlace que te enviamos. Si no lo ves, revisa la carpeta de spam.</p></li>
+        <li class="lp-step"><span class="lp-num">03</span><h3>Espera la aprobación</h3><p>Un administrador aprueba tu cuenta y te asigna las zonales que puedes ver.</p></li>
       </ol>
-      <div><button type="button" class="lp-btn primary lg" data-lp="signup">Crear cuenta <svg class="lp-arr" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+      <div><button type="button" class="lp-btn primary lg" data-lp="signup">Crear cuenta</button></div>
     </div>
   </section>
 
@@ -1127,9 +1466,9 @@ a.btn { text-decoration: none; }
       <div class="lp-head"><span class="lp-eyebrow">Hecho para terreno</span><h2 id="lp-ter">Pensado para el sitio, no para la oficina.</h2></div>
       <div class="lp-tiles">
         <div class="lp-tile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M8.5 16.5a5 5 0 0 1 7 0M5 12.5a10 10 0 0 1 4-2.4M12 20h.01M15.5 10.5A10 10 0 0 1 19 12.5M2 8.8a15 15 0 0 1 4.2-2.6M10.7 5a15 15 0 0 1 11.3 3.8"/></svg><h3>Sin señal</h3><p>Muestra la última copia guardada en tu equipo.</p></div>
-        <div class="lp-tile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg><h3>Una mano</h3><p>Botones grandes y llamada directa desde el teléfono.</p></div>
+        <div class="lp-tile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><h3>Cerca de ti</h3><p>Los sitios con ubicación se ordenan por distancia y abren la ruta en el mapa.</p></div>
         <div class="lp-tile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6C3.8 8.4 2 12 2 12s3.5 7 10 7c1.8 0 3.3-.5 4.6-1.2"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg><h3>Discreto</h3><p>Oculta las claves en pantalla con un toque.</p></div>
-        <div class="lp-tile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><h3>Rápido</h3><p>Escribe tres letras y aparece el sitio.</p></div>
+        <div class="lp-tile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg><h3>Una mano</h3><p>Botones grandes y llamada directa desde el teléfono.</p></div>
       </div>
     </div>
   </section>
@@ -1163,6 +1502,7 @@ a.btn { text-decoration: none; }
       <h2 id="lp-faq" class="lp-h2">Preguntas frecuentes</h2>
       <div class="lp-faqs">
         <details class="lp-faq"><summary>¿Funciona sin señal?<svg class="lp-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><p>Sí. Entra una vez con señal y quedan guardados en tu equipo los sitios, instructivos, repuestos y contactos de tus zonales. En el teléfono, agrégala a la pantalla de inicio: se abre como una app, aunque no haya señal. Con señal, toca “Actualizar datos” en el menú de tu cuenta para traer lo último.</p></details>
+        <details class="lp-faq"><summary>¿Cómo sabe qué sitio está más cerca?<svg class="lp-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><p>Usa la ubicación de tu teléfono solo cuando eliges ordenar por cercanía, y no la guarda. Cada sitio necesita su ubicación: viene de la planilla si trae latitud y longitud, o la guarda un técnico parado en el sitio.</p></details>
         <details class="lp-faq"><summary>¿Quién aprueba mi cuenta?<svg class="lp-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><p>Un administrador de tu zonal. Al aprobarte, también define qué zonales puedes ver.</p></details>
         <details class="lp-faq"><summary>No me llegó el correo de confirmación<svg class="lp-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><p>Revisa la carpeta de spam. Si no está, ingresa con tu correo y contraseña y toca “Reenviar correo”.</p></details>
         <details class="lp-faq"><summary>Olvidé mi contraseña<svg class="lp-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><p>En el formulario de ingreso, toca “¿Olvidaste tu contraseña?” y te enviaremos un enlace para crear una nueva.</p></details>
@@ -1174,7 +1514,7 @@ a.btn { text-decoration: none; }
     <div class="lp-in lp-final-in">
       <h2 class="lp-h1 sm">Tu próximo sitio ya está en la lista.</h2>
       <div class="lp-ctas">
-        <button type="button" class="lp-btn primary lg" data-lp="signup">Crear cuenta <svg class="lp-arr" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button type="button" class="lp-btn primary lg" data-lp="signup">Crear cuenta</button>
         <button type="button" class="lp-btn ghost lg" data-lp="login">Ingresar</button>
       </div>
     </div>
@@ -1193,7 +1533,7 @@ a.btn { text-decoration: none; }
 <section class="wait" id="waitView" hidden><div class="wait-card" id="waitCard"></div></section>
 <section class="pub" id="pubView" hidden>
   <header class="topbar"><div class="topbar-in gutter"><div class="brand"><div class="mark lp-mark" aria-hidden="true"><svg class="lp-logo" width="36" height="36" viewBox="0 0 40 40" aria-hidden="true"><path d="M10.99 6.69A11 11 0 0 0 10.99 19.31M29.01 6.69A11 11 0 0 1 29.01 19.31" fill="none" stroke="var(--lp-signal)" stroke-width="2" stroke-linecap="round"/><path d="M7.71 4.4A15 15 0 0 0 7.71 21.6M32.29 4.4A15 15 0 0 1 32.29 21.6" fill="none" stroke="var(--lp-signal)" stroke-width="2" stroke-linecap="round" opacity=".5"/><circle cx="20" cy="13" r="6.5" fill="var(--lp-brass)"/><path d="M17 17.5h6l4 18.5H13z" fill="var(--lp-brass)"/><circle cx="20" cy="13" r="2" fill="var(--lp-night)"/><path d="M15.9 23h8.2M15.1 29.2h9.8M15.9 23l9 6.2M24.1 23l-9 6.2M15.1 29.2l11 6.3M24.9 29.2l-11 6.3" fill="none" stroke="var(--lp-night)" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-        <h1 class="brand-lock"><span>Llavero</span><small>DE SITIOS</small></h1></div><span class="pub-tag">Instructivo compartido</span></div></header>
+        <h1 class="brand-lock"><span>Llavero</span> <small>de Sitios</small></h1></div><span class="pub-tag">Instructivo compartido</span></div></header>
   <main class="pub-body" id="pubBody"></main>
 </section>
 
@@ -1203,7 +1543,7 @@ a.btn { text-decoration: none; }
     <div class="topbar-in gutter">
       <div class="brand">
         <div class="mark lp-mark" aria-hidden="true"><svg class="lp-logo" width="36" height="36" viewBox="0 0 40 40" aria-hidden="true"><path d="M10.99 6.69A11 11 0 0 0 10.99 19.31M29.01 6.69A11 11 0 0 1 29.01 19.31" fill="none" stroke="var(--lp-signal)" stroke-width="2" stroke-linecap="round"/><path d="M7.71 4.4A15 15 0 0 0 7.71 21.6M32.29 4.4A15 15 0 0 1 32.29 21.6" fill="none" stroke="var(--lp-signal)" stroke-width="2" stroke-linecap="round" opacity=".5"/><circle cx="20" cy="13" r="6.5" fill="var(--lp-brass)"/><path d="M17 17.5h6l4 18.5H13z" fill="var(--lp-brass)"/><circle cx="20" cy="13" r="2" fill="var(--lp-night)"/><path d="M15.9 23h8.2M15.1 29.2h9.8M15.9 23l9 6.2M24.1 23l-9 6.2M15.1 29.2l11 6.3M24.9 29.2l-11 6.3" fill="none" stroke="var(--lp-night)" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-        <h1 class="brand-lock"><span>Llavero</span><small>DE SITIOS</small></h1>
+        <h1 class="brand-lock"><span>Llavero</span> <small>de Sitios</small></h1>
       </div>
       <nav class="tabs" id="tabs" aria-label="Secciones" hidden>
         <a href="#sitios" data-view="sitios">Sitios</a>
@@ -1213,6 +1553,7 @@ a.btn { text-decoration: none; }
         <a href="#cargas" data-view="cargas" data-admin="1" hidden>Cargas</a>
       </nav>
       <div class="spacer"></div>
+      <div class="zchips" id="zChips" role="group" aria-label="Zonal" hidden></div>
       <label class="zsel" id="zselWrap"><span class="sr-only">Zonal</span><select id="zonalSel"></select>
         <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></label>
       <span class="bar-meta" id="barMeta"></span>
@@ -1252,10 +1593,11 @@ a.btn { text-decoration: none; }
               <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtros<span class="badge-n" id="fCount" hidden></span>
             </button>
             <label class="sortsel"><span class="sr-only">Ordenar por</span>
-              <select id="sort"><option value="pop">Ordenar: POP</option><option value="llavero">Ordenar: Llavero</option><option value="nombre">Ordenar: Nombre</option></select>
+              <select id="sort"><option value="pop">Ordenar: POP</option><option value="cerca">Ordenar: Cercanía</option><option value="llavero">Ordenar: Llavero</option><option value="nombre">Ordenar: Nombre</option></select>
               <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
             </label>
           </div>
+          <div class="loc-sort" id="locSort" role="status" hidden></div>
           <div class="active-f" id="activeF" hidden></div>
           <div class="recents" id="recents" hidden></div>
         </div>
@@ -2258,6 +2600,8 @@ const GGEE = (() => {
     link: I('<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'),
     globe: I('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'),
     install: I('<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 7v7M9 11l3 3 3-3"/>'),
+    pin: I('<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>'),
+    nav: I('<path d="M3 11 21 3l-8 18-2-8z"/>'),
     tower: I('<circle cx="12" cy="8" r="1.6"/><path d="m12 10-4 11M12 10l4 11M9.2 17.5h5.6"/><path d="M8.2 4.6a5 5 0 0 0 0 6.8M15.8 4.6a5 5 0 0 1 0 6.8M5.6 2.5a8.5 8.5 0 0 0 0 11M18.4 2.5a8.5 8.5 0 0 1 0 11"/>')
   };
 
@@ -2288,6 +2632,7 @@ const GGEE = (() => {
     ['nombre', 'llavero', 'cliente', 'cia', 'notas'].forEach((k) => { if (s[k] == null) s[k] = ''; });
     const nm = splitName(s.nombre);
     s._key = keyOf(s); s._base = nm.base; s._tech = nm.tech;
+    s.ubic = ubicOf(s);
     s._codesN = s.codes.map((c) => nrm(c));
     s._nameN = nrm(s.nombre) + ' ' + nrm(s._base);
     s._cliD = digits(s.cliente);
@@ -2663,16 +3008,188 @@ const GGEE = (() => {
     }));
   }
 
+  /* ---------- Ubicación de cada sitio y distancia desde donde estoy ---------- */
+  // La ubicación de un sitio sale de la planilla (columnas de latitud y longitud, o una de
+  // "coordenadas") o la guarda un técnico parado en el sitio (colección ubicaciones; gana esta).
+  // La ubicación del teléfono solo se pide al ordenar por cercanía o al tocar "Ver distancia",
+  // y nunca se envía al servidor: solo se usa para calcular distancias en el equipo.
+  const uRef = (s) => S.fs.collection('ubicaciones').doc(s.zonal).collection('sitios').doc(encodeURIComponent(String(s.id)));
+  // Z15 a Z18 están en Chile continental: latitud sur y longitud oeste
+  const okLat = (v) => v <= -17 && v >= -56.5, okLng = (v) => v <= -66 && v >= -76.5;
+  function coordNum(v, kind) {
+    const t = String(v ?? '').trim();
+    if (!t) return null;
+    let n;
+    if (/[°º'"′″]|\d\s+\d/.test(t) || /\d\s*[NSEWO]\s*$/i.test(t)) {
+      const p = (t.match(/\d+(?:[.,]\d+)?/g) || []).map((x) => parseFloat(x.replace(',', '.')));
+      if (!p.length) return null;
+      n = p[0] + (p[1] || 0) / 60 + (p[2] || 0) / 3600;
+    } else {
+      const m = t.replace(/\s/g, '').match(/^[-+−]?\d+(?:[.,]\d+)?$/);
+      if (!m) return null;
+      n = parseFloat(m[0].replace('−', '-').replace(',', '.'));
+    }
+    if (!isFinite(n)) return null;
+    n = -Math.abs(n);
+    return (kind === 'lat' ? okLat(n) : okLng(n)) ? Math.round(n * 1e6) / 1e6 : null;
+  }
+  function coordPair(v) {
+    const t = String(v ?? '');
+    const u = t.match(/[@=](-?\d{1,2}\.\d+),\s*(-?\d{2,3}\.\d+)/);
+    if (u) { const la = coordNum(u[1], 'lat'), lo = coordNum(u[2], 'lng'); if (la != null && lo != null) return { lat: la, lng: lo }; }
+    const dms = t.match(/(\d{1,2}\s*[°º][^NSns]*?)\s*([NSns])[\s,;]*(\d{2,3}\s*[°º][^EWOewo]*?)\s*([EWOewo])/);
+    if (dms) { const la = coordNum(dms[1] + dms[2], 'lat'), lo = coordNum(dms[3] + dms[4], 'lng'); if (la != null && lo != null) return { lat: la, lng: lo }; }
+    const cd = t.match(/(-?\d{1,2},\d{3,})\s*[;\s]\s*(-?\d{2,3},\d{3,})/) || t.match(/(-?\d{1,2}\.\d+)\s*[,;\s]\s*(-?\d{2,3}\.\d+)/);
+    if (cd) { const la = coordNum(cd[1], 'lat'), lo = coordNum(cd[2], 'lng'); if (la != null && lo != null) return { lat: la, lng: lo }; }
+    return null;
+  }
+  function coordsFromExtras(ex) {
+    let lat = null, lng = null, both = null;
+    for (const [k, v] of Object.entries(ex || {})) {
+      const n = nrm(k).replace(/[^a-z ]/g, ' ').trim();
+      if (/^lat(itud)?\b/.test(n)) lat = lat ?? coordNum(v, 'lat');
+      else if (/^(lon|long|lng|longitud)\b/.test(n)) lng = lng ?? coordNum(v, 'lng');
+      else if (/coordenad|ubicacion|gps|georref|google maps|\bmapa\b/.test(n)) both = both || coordPair(v);
+    }
+    return lat != null && lng != null ? { lat, lng } : both;
+  }
+  function withUbic(r, o) {
+    const at = toDate(o.at);
+    r.ubicacion = { lat: Number(o.lat), lng: Number(o.lng), prec: Number(o.prec) || 0, at: at && !isNaN(at) ? at.toISOString() : '', nombre: o.nombre || '', por: o.por || '' };
+  }
+  function ubicOf(s) {
+    const a = s.ubicacion;
+    if (a && okLat(a.lat) && okLng(a.lng)) return { lat: a.lat, lng: a.lng, fuente: 'app', prec: a.prec, at: a.at, nombre: a.nombre };
+    const p = coordsFromExtras(s.extras);
+    return p ? { ...p, fuente: 'planilla' } : null;
+  }
+  function kmBetween(a, b) {
+    const r = Math.PI / 180, dLa = (b.lat - a.lat) * r, dLo = (b.lng - a.lng) * r;
+    const h = Math.sin(dLa / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLo / 2) ** 2;
+    return 2 * 6371 * Math.asin(Math.min(1, Math.sqrt(h)));
+  }
+  function bearingOf(a, b) {
+    const r = Math.PI / 180, dLo = (b.lng - a.lng) * r;
+    return Math.atan2(Math.sin(dLo) * Math.cos(b.lat * r), Math.cos(a.lat * r) * Math.sin(b.lat * r) - Math.sin(a.lat * r) * Math.cos(b.lat * r) * Math.cos(dLo));
+  }
+  const fmtKm = (km) => (km < 1 ? `${Math.max(10, Math.round(km * 100) * 10)} m` : `${km < 10 ? km.toFixed(1).replace('.', ',') : Math.round(km)} km`);
+  const distOf = (s) => (S.here && s.ubic ? kmBetween(S.here, s.ubic) : null);
+  const routeHref = (u) => `https://www.google.com/maps/dir/?api=1&destination=${u.lat},${u.lng}`;
+  const geoMsg = (e) => (e && e.code === 1 ? 'Sin permiso para usar tu ubicación. Permítelo en los ajustes del navegador para esta página.'
+    : e && e.code === 'no-geo' ? 'Este navegador no puede entregar tu ubicación.'
+    : 'No se pudo obtener tu ubicación. Revisa que el GPS esté encendido e inténtalo de nuevo.');
+  function locate(fresh) {
+    if (!('geolocation' in navigator)) return Promise.reject(Object.assign(new Error('no-geo'), { code: 'no-geo' }));
+    if (!fresh && S.here && Date.now() - S.here.t < 60000) return Promise.resolve(S.here);
+    if (S.locP) return S.locP;
+    S.locBusy = true;
+    S.locP = new Promise((res, rej) => navigator.geolocation.getCurrentPosition(
+      (p) => { S.here = { lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, t: Date.now() }; S.hereErr = null; res(S.here); },
+      (e) => { S.hereErr = e; rej(e); },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: fresh ? 0 : 30000 }))
+      .finally(() => { S.locP = null; S.locBusy = false; });
+    return S.locP;
+  }
+  // Ordenar por cercanía: pide la ubicación y vuelve a ordenar; cada minuto la actualiza mientras la app está a la vista
+  function nearSort() {
+    const p = locate(false);
+    renderLocSort();
+    return p.then(() => { refreshResults(false); }, () => { renderLocSort(); });
+  }
+  setInterval(() => {
+    if (S.sort !== 'cerca' || document.visibilityState !== 'visible' || !inApp() || S.view !== 'sitios' || S.locP) return;
+    const prev = S.here;
+    locate(true).then((h) => { if (!prev || kmBetween(prev, h) > 0.1) refreshResults(false); }, () => {});
+  }, 60000);
+  function renderLocSort() {
+    const el = $('#locSort');
+    if (!el) return;
+    if (S.sort !== 'cerca') { el.hidden = true; el.innerHTML = ''; return; }
+    const base = scopeSites(), con = base.filter((s) => s.ubic).length;
+    let txt;
+    if (S.locBusy && !S.here) txt = 'Buscando tu ubicación…';
+    else if (!S.here) txt = S.hereErr ? geoMsg(S.hereErr) : 'Ordenados por código hasta tener tu ubicación.';
+    else if (!con) txt = 'Ningún sitio de esta vista tiene ubicación todavía. Abre un sitio y guarda su ubicación cuando estés ahí.';
+    else txt = `Ordenados por cercanía · ${con === base.length ? 'todos con ubicación' : `${con} de ${plural(base.length, 'sitio', 'sitios')} con ubicación`}`;
+    el.hidden = false;
+    el.innerHTML = `${icons.pin}<span>${esc(txt)}</span>${!S.here && !S.locBusy ? '<button type="button" class="linkbtn" data-act="loc-here">Reintentar</button>' : ''}`;
+  }
+
+  // Franja de mapa de la ficha: dibujo esquemático (no es un mapa real) con el sitio y, si se sabe, dónde estoy
+  function mapHtml(s) {
+    const u = s.ubic, can = canEditClaves(s);
+    const seed = [...String(s.zonal + s.id)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 100003, 7);
+    const rnd = (i) => (Math.sin(seed * 12.9898 + i * 78.233) + 1) / 2;
+    const ct = [16, 54, 92, 130, 168].map((y, i) => `<path d="M-80 ${y} C 240 ${(y + (rnd(i) - .5) * 64).toFixed(1)}, 640 ${(y + (rnd(i + 7) - .5) * 64).toFixed(1)}, 1080 ${(y + (rnd(i + 13) - .5) * 40).toFixed(1)}"/>`).join('');
+    let marks = '', top = '', left = '', right = '';
+    if (u) {
+      // El sitio al centro; yo, en la dirección real y a una distancia en escala logarítmica,
+      // sin salir de la franja visible ni quedar bajo los botones de abajo
+      const P = { x: 500, y: 76 }, km = distOf(s);
+      if (km != null && km < 0.05) {
+        left = '<span class="d-chip">Estás en el sitio</span>';
+      } else if (km != null) {
+        // La franja es ancha y baja: el norte-sur se comprime para que el punto no se salga
+        const th = bearingOf(u, S.here), r = 70 + 100 * Math.min(1, Math.log10(1 + km) / Math.log10(61));
+        let dx = Math.sin(th) * r, dy = -Math.cos(th) * r * 0.45;
+        dx = Math.max(-170, Math.min(170, dx)); dy = Math.max(-50, Math.min(38, dy));
+        if (Math.abs(dx) < 36) dx = dx < 0 ? -36 : 36;
+        const me = { x: (P.x + dx).toFixed(1), y: (P.y + dy).toFixed(1) };
+        marks = `<path class="route" d="M${me.x} ${me.y} L${P.x} ${P.y}"/><circle class="me" cx="${me.x}" cy="${me.y}" r="7"/>`;
+        left = `<span class="d-chip">Estás a ${fmtKm(km)}<small>en línea recta</small></span>`;
+      } else {
+        left = `<button type="button" class="d-chip" data-act="loc-here"${S.locBusy ? ' disabled' : ''}>${icons.pin}${S.locBusy ? 'Buscando tu ubicación…' : 'Ver a qué distancia estoy'}</button>`;
+      }
+      marks += `<circle class="ring" cx="${P.x}" cy="${P.y}" r="34"/><circle class="pin" cx="${P.x}" cy="${P.y}" r="12"/>`;
+      const src = u.fuente === 'app' ? `Guardada por ${u.nombre || 'un técnico'}${u.at ? ' · ' + fmtWhen(u.at) : ''}${u.prec ? ` · ± ${Math.round(u.prec)} m` : ''}` : 'Ubicación de la planilla';
+      top = `<div class="d-src"><span>${esc(src)}</span>${can ? '<button type="button" class="linkbtn" data-act="loc-save">Actualizar</button>' : ''}</div>`;
+      right = `<a class="d-go" href="${esc(routeHref(u))}" target="_blank" rel="noopener noreferrer">${icons.nav}Cómo llegar</a>`;
+      return `<div class="d-map" role="group" aria-label="Ubicación del sitio"><svg viewBox="0 0 1000 176" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g class="ct">${ct}</g>${marks}</svg>
+        ${top}<div class="d-map-ft"><div class="d-map-l">${left}</div><div class="d-map-r">${right}</div></div></div>`;
+    }
+    return `<div class="d-map" role="group" aria-label="Ubicación del sitio"><svg viewBox="0 0 1000 176" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g class="ct">${ct}</g></svg>
+      <div class="d-map-empty"><p><b>Este sitio aún no tiene ubicación.</b> ${can ? 'Guárdala cuando estés en el sitio: así todos ven la distancia y la ruta.' : 'Un técnico de la zonal puede guardarla desde el sitio.'}</p>${can ? `<button type="button" class="d-go" data-act="loc-save">${icons.pin}Guardar mi ubicación aquí</button>` : ''}</div></div>`;
+  }
+
+  async function saveUbic(s) {
+    if (!canEditClaves(s)) return;
+    if (!navigator.onLine || S.offline) { toast('Necesitas conexión para guardar la ubicación del sitio.', true); return; }
+    let h;
+    try { h = await locate(true); } catch (e) { toast(geoMsg(e), true); return; }
+    const prec = Math.round(h.acc || 0);
+    if (prec > 150) {
+      await confirmBox('Ubicación poco precisa', `Tu teléfono indica una precisión de ± ${prec} m, demasiado amplia para marcar el sitio. Sal al exterior, espera unos segundos con el GPS encendido y vuelve a intentarlo.`, 'Entendido');
+      return;
+    }
+    if (!okLat(h.lat) || !okLng(h.lng)) { toast('Tu ubicación no está dentro de Chile: no se puede usar para este sitio.', true); return; }
+    const ok = await confirmBox(`Guardar ubicación de ${s.pop}`, `Se guardará el punto donde estás ahora (precisión ± ${prec} m) como la ubicación del sitio. Hazlo solo si estás en el sitio: todos los que ven esta zonal la usarán para llegar.`, 'Guardar ubicación');
+    if (!ok) return;
+    const nombre = String((S.profile && (S.profile.nombre || S.profile.email)) || 'Sin nombre').slice(0, 80);
+    const data = { lat: Math.round(h.lat * 1e6) / 1e6, lng: Math.round(h.lng * 1e6) / 1e6, prec, at: ts(), por: uid(), nombre, sitio: String(s.id), pop: String(s.pop || s.id).slice(0, 120) };
+    try {
+      await withTimeout(uRef(s).set(data), 20000);
+    } catch (e) {
+      const c = String((e && e.code) || '');
+      toast(c === 'permission-denied' ? 'El servidor no aceptó la ubicación. Si eres administrador, publica las reglas nuevas de Firestore (paso 17 de la guía).' : friendly(e), true);
+      return;
+    }
+    kRefreshLocal(s, (r) => withUbic(r, { ...data, at: new Date().toISOString() }));
+    const row = document.querySelector('#list .row[aria-current="true"]'); if (row) row.scrollIntoView({ block: 'nearest' });
+    toast('Ubicación guardada');
+  }
+
   async function fetchSites() {
     const vis = visibleZonales();
     // Los GGEE no deben impedir que carguen los sitios (por ejemplo, si aún no se publican las reglas nuevas)
-    const [docs, gdocs, kdocs, adocs] = await Promise.all([
+    const [docs, gdocs, kdocs, adocs, udocs] = await Promise.all([
       Promise.all(vis.map((z) => S.fs.collection('zonales').doc(z).get())),
       Promise.all(vis.map((z) => S.fs.collection('ggee').doc(z).get().catch((e) => ({ __err: e })))),
       // Claves editadas en la app (si aún no se publican las reglas nuevas, se ignoran)
       Promise.all(vis.map((z) => S.fs.collection('claves').doc(z).collection('sitios').get().catch((e) => ({ __err: e })))),
       // Contactos de acceso por sitio (si aún no se publican las reglas nuevas, se ignoran)
-      Promise.all(vis.map((z) => S.fs.collection('accesos').doc(z).collection('sitios').get().catch((e) => ({ __err: e }))))
+      Promise.all(vis.map((z) => S.fs.collection('accesos').doc(z).collection('sitios').get().catch((e) => ({ __err: e })))),
+      // Ubicaciones guardadas desde la app (si aún no se publican las reglas nuevas, se ignoran)
+      Promise.all(vis.map((z) => S.fs.collection('ubicaciones').doc(z).collection('sitios').get().catch((e) => ({ __err: e }))))
     ]);
     const rows = [], ggee = [], ggeeMeta = {};
     docs.forEach((d, i) => { if (d.exists) (d.data().sitios || []).forEach((s) => rows.push({ ...s, zonal: vis[i] })); });
@@ -2682,6 +3199,9 @@ const GGEE = (() => {
     const aov = new Map();
     adocs.forEach((q, i) => { if (q.__err || !q.docs) return; q.docs.forEach((d) => { const o = d.data(); if (o && o.sitio) aov.set(vis[i] + '/' + o.sitio, o); }); });
     rows.forEach((r) => { const o = aov.get(r.zonal + '/' + r.id); if (o) withAccesos(r, o); });
+    const uov = new Map();
+    udocs.forEach((q, i) => { if (q.__err || !q.docs) return; q.docs.forEach((d) => { const o = d.data(); if (o && o.sitio) uov.set(vis[i] + '/' + o.sitio, o); }); });
+    rows.forEach((r) => { const o = uov.get(r.zonal + '/' + r.id); if (o) withUbic(r, o); });
     S.ggeeErr = null;
     gdocs.forEach((d, i) => {
       if (d.__err) { S.ggeeErr = d.__err; return; }
@@ -2696,6 +3216,9 @@ const GGEE = (() => {
 
   /* ================= Pantallas ================= */
   function show(which) {
+    // Color de la barra del navegador: azul de plano en la portada, el de la barra en la app
+    const tc = document.querySelector('meta[name="theme-color"]');
+    if (tc) tc.content = which === 'auth' ? '#0A3896' : (getComputedStyle(document.documentElement).getPropertyValue('--bar').trim() || '#FFFFFF');
     $('#boot').hidden = which !== 'boot';
     $('#authView').hidden = which !== 'auth';
     $('#waitView').hidden = which !== 'wait';
@@ -2876,6 +3399,10 @@ const GGEE = (() => {
     const id = uid();
     S.recent = lsGet('llavero-recientes-' + id, []);
     if (!Array.isArray(S.recent)) S.recent = [];
+    S.sort = ['pop', 'cerca', 'llavero', 'nombre'].includes(lsGet('llavero-orden-' + id, 'pop')) ? lsGet('llavero-orden-' + id, 'pop') : 'pop';
+    $('#sort').value = S.sort;
+    // Si ya había elegido ordenar por cercanía y el permiso está dado, la ubicación se pide sola
+    if (S.sort === 'cerca' && navigator.permissions && navigator.permissions.query) navigator.permissions.query({ name: 'geolocation' }).then((p) => { if (p.state === 'granted' && id === uid()) nearSort(); }, () => {});
     // Primero la copia guardada en el equipo: la app abre al instante, con o sin señal.
     const c = await DB.get('cache-' + id);
     if (id !== uid()) return;
@@ -2999,6 +3526,11 @@ const GGEE = (() => {
     $('#zonalSel').innerHTML = (vis.length > 1 ? `<option value="all"${S.zonal === 'all' ? ' selected' : ''}>Todas mis zonales</option>` : '') +
       vis.map((z) => `<option value="${esc(z)}"${S.zonal === z ? ' selected' : ''}>${esc(zLabel(z))}</option>`).join('');
     $('#zselWrap').hidden = S.view !== 'sitios';
+    // En pantallas anchas la zonal se elige con fichas (Z15, Z16…); en el teléfono, con la lista desplegable
+    const zc = $('#zChips');
+    zc.hidden = S.view !== 'sitios' || !vis.length;
+    zc.innerHTML = zc.hidden ? '' : [...(vis.length > 1 ? [['all', 'Todas', 'Todas mis zonales']] : []), ...vis.map((z) => [z, vis.length > 1 ? z : zLabel(z), zLabel(z)])]
+      .map(([v, t, title]) => `<button type="button" data-zchip="${esc(v)}" aria-pressed="${S.zonal === v}" title="${esc(title)}">${esc(t)}</button>`).join('');
     const f = S.lastLoad ? fmtWhen(S.lastLoad) : '';
     $('#barMeta').innerHTML = f && S.view === 'sitios' ? `${icons.clock}<span>Datos de ${esc(f.replace(/^el /, ''))}</span>` : '';
     const mb = $('#btnMask');
@@ -3088,8 +3620,10 @@ const GGEE = (() => {
     const bySort = {
       pop: (a, b) => collator.compare(a.pop, b.pop),
       llavero: (a, b) => (parseInt(a.llavero, 10) || 1e9) - (parseInt(b.llavero, 10) || 1e9) || collator.compare(a.pop, b.pop),
-      nombre: (a, b) => collator.compare(a._base, b._base)
-    }[S.sort];
+      nombre: (a, b) => collator.compare(a._base, b._base),
+      // Cercanía: primero los sitios con ubicación, del más cercano al más lejano; luego el resto por código
+      cerca: (a, b) => { const da = distOf(a), db = distOf(b); return da == null && db == null ? collator.compare(a.pop, b.pop) : da == null ? 1 : db == null ? -1 : da - db; }
+    }[S.sort] || ((a, b) => collator.compare(a.pop, b.pop));
     res.sort((a, b) => (qn ? b[0] - a[0] : 0) || bySort(a[1], b[1]) || collator.compare(a[1].zonal, b[1].zonal));
     S.results = res.map((r) => r[1]);
   }
@@ -3117,13 +3651,12 @@ const GGEE = (() => {
       ${m('Llavero', base.filter((s) => s.llavero).length)}
       ${m('Clave de acceso', base.filter((s) => s.claves.length).length)}</div>`;
   }
-  function renderFacets() { $('#facets').innerHTML = facetsHtml(true); $('#facets2').innerHTML = facetsHtml(false); }
+  function renderFacets() { $('#facets').innerHTML = facetsHtml(true); $('#facets2').innerHTML = facetsHtml(true); }
 
   function renderHead() {
     const r = S.results, n = scopeSites().length;
     const filtered = S.q || S.filters.size;
-    const where = S.zonal === 'all' ? '' : ` en ${zLabel(S.zonal)}`;
-    $('#count').textContent = !n ? '' : filtered ? `${r.length} de ${plural(n, 'sitio', 'sitios')}` : plural(n, 'sitio', 'sitios') + where;
+    $('#count').textContent = !n ? '' : filtered ? `${r.length} de ${plural(n, 'sitio', 'sitios')}` : plural(n, 'sitio', 'sitios');
     const fc = $('#fCount'); fc.hidden = !S.filters.size; fc.textContent = S.filters.size;
     const af = $('#activeF');
     af.hidden = !S.filters.size;
@@ -3131,6 +3664,7 @@ const GGEE = (() => {
     const rec = S.recent.map((k) => S.byKey.get(k)).filter(Boolean).filter((s) => S.zonal === 'all' || s.zonal === S.zonal).slice(0, 6);
     const rc = $('#recents');
     rc.hidden = !(rec.length && !filtered);
+    renderLocSort();
     rc.innerHTML = rec.length ? '<span class="lbl">Recientes</span>' + rec.map((s) => `<button type="button" class="rchip" data-open="${esc(s._key)}" title="${esc(s._base)}">${esc(s.pop)}</button>`).join('') : '';
   }
 
@@ -3143,10 +3677,12 @@ const GGEE = (() => {
     }
     const flags = ['vandalizado', 'sin-llaves'].filter((t) => s.tags.includes(t)).map((t) => `<span class="badge ${TAG_INFO[t][1]}">${TAG_INFO[t][0]}</span>`).join('');
     const zt = S.zonal === 'all' && visibleZonales().length > 1 ? `<span class="ztag" title="${esc(zLabel(s.zonal))}">${esc(s.zonal)}</span>` : '';
+    const km = distOf(s);
     return `<li><button type="button" class="row" data-id="${esc(s._key)}" aria-current="${s._key === S.activeKey}">
-      <span class="r1"><span class="r-pop">${zt}${esc(s.pop)}</span><span class="r-ll">${icons.tag}${s.llavero ? `Llavero <b>${esc(s.llavero)}</b>` : 'Sin llavero'}</span></span>
+      <span class="r-dot${s.ubic ? ' loc' : ''}" aria-hidden="true"></span>
+      <span class="r-main"><span class="r1"><span class="r-pop">${zt}${esc(s.pop)}</span><span class="r-ll">${icons.tag}${s.llavero ? `Llavero <b>${esc(s.llavero)}</b>` : 'Sin llavero'}</span></span>
       <span class="r-name">${esc(s._base || 'Sin nombre')}</span>
-      <span class="r3">${cli}${code}${flags}</span></button></li>`;
+      <span class="r3">${cli}${code}${flags}</span></span>${km != null ? `<span class="r-km">${fmtKm(km)}</span>` : ''}</button></li>`;
   }
 
   function renderList() {
@@ -3216,7 +3752,7 @@ const GGEE = (() => {
     const row = (k, v, cls = '') => `<div><dt>${k}</dt><dd${cls ? ` class="${cls}"` : ''}>${v}</dd></div>`;
     const notas = hidden ? s.notas.replace(/(?<!\d)\d{4,6}(?!\d)/g, (m) => dots(m)) : s.notas;
     el.innerHTML = `<div class="d-bar gutter"><button type="button" class="back" data-act="close">${icons.back}Sitios</button></div>
-    <article class="rec"><div class="rec-in">
+    <article class="rec">${mapHtml(s)}<div class="rec-in">
       <header class="d-head">
         <div class="d-id">
           <h2 class="d-pop">${esc(s.pop)}</h2>
@@ -3225,10 +3761,13 @@ const GGEE = (() => {
         </div>
         <div class="d-actions"><button type="button" class="btn primary" data-act="ficha">${icons.copy}Copiar ficha</button></div>
       </header>
+      <div class="d-grid">
       <div class="keyfacts" role="group" aria-label="Datos clave">
         <div class="kf"><span class="kf-l">${icons.tag}Llavero</span><div class="kf-v">${kfLl}</div><span class="kf-s">${s.llavero ? 'Tablero de llaves' : 'No tiene llavero asignado'}</span></div>
         <div class="kf"><span class="kf-l">${icons.bolt}N° de cliente eléctrico</span><div class="kf-v">${kfCli}</div><span class="kf-s">${esc(ciaTxt)}</span></div>
-        <div class="kf"><span class="kf-l">${icons.lock}Clave de acceso</span><div class="kf-v">${kfKey}</div><span class="kf-s">${esc(kfKeySub)}</span></div>
+        <div class="kf kf-key"><span class="kf-l">${icons.lock}Clave de acceso</span><div class="kf-v">${kfKey}</div><span class="kf-s">${esc(kfKeySub)}</span></div>
+      </div>
+      ${accHtml(s)}
       </div>
       <section class="sec" aria-labelledby="sec-acc"><h2 id="sec-acc">${icons.lock}Acceso al sitio${canEditClaves(s) ? `<button type="button" class="linkbtn sec-link ed" data-act="edit-claves">${icons.edit}${s.claves.length ? 'Editar claves' : 'Agregar clave'}</button>` : ''}</h2>
         <dl class="fields">
@@ -3237,7 +3776,6 @@ const GGEE = (() => {
           ${row('Notas de acceso', s.notas ? `<p class="notes">${esc(notas)}</p>` : 'Sin notas', s.notas ? '' : 'muted')}
         </dl>
       </section>
-      ${accHtml(s)}
       <section class="sec" aria-labelledby="sec-ele"><h2 id="sec-ele">${icons.bolt}Suministro eléctrico</h2>
         <dl class="fields">
           ${row('N° de cliente', s.cliente ? (NA.test(s.cliente) ? 'No aplica' : `<span class="mono">${esc(s.cliente)}</span>`) : 'Sin registro', s.cliente && !NA.test(s.cliente) ? '' : 'muted')}
@@ -3279,6 +3817,7 @@ const GGEE = (() => {
     if (s.claves.length) s.claves.forEach((c) => L.push(/^\d+$/.test(c.code) ? `${c.label}: ${c.code}` : `Acceso: ${c.code}`));
     else L.push('Clave: sin clave registrada');
     accOf(s).forEach((c) => L.push('Contacto para entrar: ' + accLine(c)));
+    if (s.ubic) L.push(`Ubicación: https://www.google.com/maps?q=${s.ubic.lat},${s.ubic.lng}`);
     if (s.notas) L.push('Notas: ' + s.notas.replace(/\n+/g, ' / '));
     const g = ggeeFor(s);
     if (g) {
@@ -3322,10 +3861,10 @@ const GGEE = (() => {
 
   /* ================= Interacción ================= */
   let toastT;
-  function toast(msg) {
+  function toast(msg, warn) {
     const t = $('#toast');
-    t.innerHTML = icons.check + '<span>' + esc(msg) + '</span>'; t.classList.add('show');
-    clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2200);
+    t.innerHTML = (warn ? icons.info : icons.check) + '<span>' + esc(msg) + '</span>'; t.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), warn ? 4200 : 2200);
   }
   function copyText(text, what) {
     const w = what || 'Texto', fem = /^(ficha|clave)/i.test(w), pl = /s$/i.test(w);
@@ -3464,7 +4003,16 @@ const GGEE = (() => {
       } else if (e.key === 'Enter') { e.preventDefault(); select((r[i] || r[0])._key, true); }
     });
     $('#qClear').addEventListener('click', () => { qi.value = ''; qi.dispatchEvent(new Event('input')); qi.focus(); });
-    $('#sort').addEventListener('change', (e) => { S.sort = e.target.value; refreshResults(false); });
+    $('#sort').addEventListener('change', (e) => {
+      S.sort = e.target.value; lsSet('llavero-orden-' + uid(), S.sort);
+      refreshResults(false);
+      if (S.sort === 'cerca') nearSort();
+    });
+    $('#zChips').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-zchip]'); if (!b) return;
+      const sel = $('#zonalSel'); if (sel.value === b.dataset.zchip) return;
+      sel.value = b.dataset.zchip; sel.dispatchEvent(new Event('change'));
+    });
     $('#zonalSel').addEventListener('change', (e) => {
       S.zonal = e.target.value; lsSet('llavero-zonal-' + uid(), S.zonal);
       if (S.activeKey && S.zonal !== 'all' && !S.activeKey.startsWith(S.zonal + '/')) S.activeKey = null;
@@ -3499,6 +4047,7 @@ const GGEE = (() => {
     $('#btnFilters').addEventListener('click', () => $('#fdlg').showModal());
     $('#fClear').addEventListener('click', () => toggleFilter('*'));
     $('#list').addEventListener('click', (e) => { const b = e.target.closest('.row'); if (b) select(b.dataset.id, true); });
+    $('#locSort').addEventListener('click', (e) => { if (e.target.closest('[data-act="loc-here"]')) nearSort(); });
     $('#detail').addEventListener('click', (e) => {
       const c = e.target.closest('[data-copy]'); if (c) { copyText(c.dataset.copy, c.dataset.what); return; }
       const a = e.target.closest('[data-act]'); if (!a) return;
@@ -3509,6 +4058,14 @@ const GGEE = (() => {
       if (a.dataset.act === 'hist-claves') { const s = S.byKey.get(S.activeKey); if (s) openClavesHist(s); }
       if (a.dataset.act === 'edit-acc') { const s = S.byKey.get(S.activeKey); if (s) openAccesosForm(s); }
       if (a.dataset.act === 'hist-acc') { const s = S.byKey.get(S.activeKey); if (s) openAccesosHist(s); }
+      if (a.dataset.act === 'loc-here') {
+        const p = locate(true); renderDetail(); renderLocSort();
+        p.then(() => { refreshResults(false); }, (er) => { toast(geoMsg(er), true); renderDetail(); renderLocSort(); });
+      }
+      if (a.dataset.act === 'loc-save') {
+        const s = S.byKey.get(S.activeKey);
+        if (s) { a.disabled = true; a.lastChild.textContent = 'Buscando tu ubicación…'; saveUbic(s).finally(() => { if (S.byKey.get(S.activeKey) === s) renderDetail(); }); }
+      }
       if (a.dataset.act === 'ggee') {
         const d = $('#detail');
         if (d.classList.contains('open')) { d.classList.remove('open'); document.documentElement.style.overflow = ''; }
@@ -3814,7 +4371,7 @@ const GGEE = (() => {
      Link público: #ver-<token>. Copia del instructivo en publicos/{token}, legible sin cuenta mientras el
      registro enlaces/{token} esté vigente (vence en 1, 7 o 30 días) y no se haya anulado. */
   // Cambia en cada entrega: sirve para confirmar qué versión está abierta (menú de la cuenta)
-  const APP_VERSION = '13 nov 2026 · b';
+  const APP_VERSION = '14 nov 2026 · plano y mapa';
   const PUB_RE = /^#ver-([A-Za-z0-9]{20,64})$/;
   const baseUrl = () => location.origin + location.pathname;
   const teamUrl = (id, sec) => baseUrl() + '#instructivo-' + encodeURIComponent(id) + (sec ? '/' + encodeURIComponent(sec) : '');
